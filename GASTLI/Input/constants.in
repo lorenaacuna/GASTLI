@@ -1,0 +1,16 @@
+#-----------------------------------#
+#          INPUT CONSTANTS          #
+#              General              #
+#-----------------------------------#
+
+# This file lists some thermodynamical constants needed by the model.
+
+#_____________________
+# WATER TRIPLE POINTS \__________________________________________
+# Temperature "Ttp" [K]	Pressure "Ptp" [Pa]	Phases			Reference
+273.16d0		6.11657d2		Ih/Liquid/Vapor		Wagner & Pruß (2002)
+251.165d0		2.08566d8		Ih/III/Liquid		IAPWS 2011 Release
+256.164d0		3.501d8			III/V/Liquid		Wagner & Pruß (2002)
+273.31d0		6.324d8			V/VI/Liquid		Wagner & Pruß (2002)
+355.d0			2.216d9			VI/VII/Liquid		Wagner & Pruß (2002)
+647.096d0		2.2064d7		Critical point		Wagner & Pruß (2002)

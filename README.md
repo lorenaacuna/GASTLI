@@ -21,7 +21,7 @@ Install GASTLI:
 pip install .
 ```
 
-If installed correctly, this should work:
+If installed correctly, this should work in python:
 ```
 import gastli.dimensions as dim
 print(dim.dimensions.n_lay)

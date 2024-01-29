@@ -48,7 +48,7 @@
                                                    cf_T_0(n_lay,n_mat_max),   & ! Coefficients for reference temperature
                                                    cf_K_0(n_lay,n_mat_max),   & ! Coefficients for reference bulk modulus
                                                    cf_Kp_0(n_lay,n_mat_max),  & ! Coefficients for pressure derivative of bulk mod.
-                                                   cf_gam_0(n_lay,n_mat_max), & ! Coefficients for reference Grüneisen parameter
+                                                   cf_gam_0(n_lay,n_mat_max), & ! Coefficients for reference Gruneisen parameter
                                                    cf_q(n_lay,n_mat_max),     & ! Coefficients for adiabatic power exponent
                                                    cf_a_T(n_lay,n_mat_max),   & ! Coefficients for 1st alpha parameter
                                                    cf_b_T(n_lay,n_mat_max),   & ! Coefficients for 2nd alpha parameter
@@ -242,8 +242,7 @@
 
     DOUBLE PRECISION, DIMENSION(7,64*41) :: table_sesame
 
-    !------
-
+   !-----
   OPEN(UNIT = 158,file="Input/SESAME/logPcgs_sesame.dat", status='OLD', action = 'READ') 
   READ(158,*) logP_sesame
   CLOSE(UNIT = 158)
@@ -585,7 +584,7 @@
                                                    cf_T_0(n_lay,n_mat_max),   & ! Coefficients for reference temperature
                                                    cf_K_0(n_lay,n_mat_max),   & ! Coefficients for reference bulk modulus
                                                    cf_Kp_0(n_lay,n_mat_max),  & ! Coefficients for pressure derivative of bulk mod.
-                                                   cf_gam_0(n_lay,n_mat_max), & ! Coefficients for reference Grüneisen parameter
+                                                   cf_gam_0(n_lay,n_mat_max), & ! Coefficients for reference Gruneisen parameter
                                                    cf_q(n_lay,n_mat_max),     & ! Coefficients for adiabatic power exponent
                                                    cf_a_T(n_lay,n_mat_max),   & ! Coefficients for 1st alpha parameter
                                                    cf_b_T(n_lay,n_mat_max),   & ! Coefficients for 2nd alpha parameter
@@ -623,7 +622,7 @@
                                                         T_0,                 & ! Reference temperature [K]
                                                         K_0,                 & ! Reference bulk modulus [Pa]
                                                         Kp_0,                & ! Pressure derivative of bulk modulus
-                                                        gam_0,               & ! Reference Grüneisen parameter
+                                                        gam_0,               & ! Reference Gruneisen parameter
                                                         q,                   & ! Adiabatic power exponant
                                                         a_T,                 & ! 1st alpha parameter [K-1]
                                                         b_T,                 & ! 2nd alpha parameter [K-2]

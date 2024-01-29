@@ -18,10 +18,13 @@ conda install pip
 
 Install GASTLI:
 ```
-pip install -e .
+pip install .
 ```
 
 If installed correctly, this should work:
 ```
-python -c "import gastli"
+import gastli.dimensions as dim
+print(dim.dimensions.n_lay)
+import gastli.constants as cte
+print(cte.constants.f_alloy_e)
 ```

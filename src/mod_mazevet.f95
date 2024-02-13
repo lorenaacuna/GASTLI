@@ -11,10 +11,10 @@ USE funcmazevet
 
   !IMPLICIT NONE
 
-! ————
+! ---- 
 
      !DOUBLE PRECISION   :: PnkT,FNkT,UNkT,CV,CHIT,CHIR,PMbar,USPEC
-! ———  
+! ---- 
 
 CONTAINS
 
@@ -52,11 +52,11 @@ SUBROUTINE h2ofit(RHO,T,PnkT,FNkT,UNkT,CV,CHIT,CHIR,PMbar,USPEC)
 !         PMbar - total pressure (Mbar)
 !         USPEC - specific internal energy [erg/g]
 
-!———
+!---
 
 IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
-! ——————
+! ----
 
  
       PI_con = 3.141592653d0
@@ -269,11 +269,14 @@ IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
   SUBROUTINE elecnr(DENSE,TEMP,CHI,FEid,PEid,UEid,SEid,CVE,CHITE,CHIRE)
 
-  !———
+  !----
 
   IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
-  !———
+  ! Added by Lorena to avoid errors with meson
+  INTEGER :: KRUN
+
+  !----
 
      PI_con = 3.14159265d0
      TwoPI = 2.d0*PI_con
@@ -321,7 +324,7 @@ IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
   SUBROUTINE FERINT(X,N,F)
 
-  !———
+  !-----
 
   IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
@@ -333,7 +336,10 @@ IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
   DIMENSION A(0:7,0:3),B(0:7,0:3),C(0:11,0:3),D(0:11,0:3)
 
-  !———  
+  ! Added by Lorena to avoid errors in meson
+  INTEGER :: N, i
+
+  !----
    
 
      A = reshape((/1.71446374704454d7,3.88148302324068d7,3.16743385304962d7, &
@@ -467,7 +473,7 @@ IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
   SUBROUTINE FINVER(F,N,X,XDF,XDFF)
 
-  !———
+  !---
 
   IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
@@ -479,7 +485,10 @@ IMPLICIT DOUBLE PRECISION (A-H), DOUBLE PRECISION (O-Z)
 
   DIMENSION A(0:5,0:3),B(0:6,0:3),C(0:6,0:3),D(0:6,0:3)
 
-  !———  
+  ! Added by Lorena to avoid errors with meson
+  INTEGER :: N, i
+
+  !---
 
      A = reshape((/-1.570044577033d4,1.001958278442d4,-2.805343454951d3, &
          4.121170498099d2,-3.174780572961d1,1.d0, & ! X_{-1/2}

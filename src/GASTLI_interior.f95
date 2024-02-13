@@ -1,5 +1,23 @@
 
-SUBROUTINE GASTLI_interior(j_maxin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EOSin, EOS_lim_Pin, corEOSin, Ttpin, Ptpin, &
+MODULE GASTLI_interior
+
+  USE funcmazevet
+  USE mazevet
+  USE constants
+  USE dimensions
+  USE parameters
+  USE functions
+  USE modEOS
+  USE subroutines
+
+
+  IMPLICIT NONE
+
+CONTAINS
+
+
+SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EOSin, EOS_lim_Pin, &
+           corEOSin, Ttpin, Ptpin, &
            f_alloyin, MgDin, MgSiin, ilayerin, use_layin, iEOSin, EOS_thin, n_matin, del_Tin, xin, Mmolin, Z_effin, &
            rho_0in, T_0in, K_0in, Kp_0in, gam_0in, qin, a_Tin, b_Tin, c_Tin, a_Pin,T_D0in, &
            logT_sesamein,        & ! ok from here ...
@@ -37,17 +55,6 @@ SUBROUTINE GASTLI_interior(j_maxin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EO
 
 
 
-  USE funcmazevet
-  USE mazevet
-  USE constants
-  USE dimensions
-  USE parameters
-  USE functions
-  USE modEOS
-  USE subroutines
-
-
-  IMPLICIT NONE
 
     ! INPUT
 
@@ -88,7 +95,7 @@ SUBROUTINE GASTLI_interior(j_maxin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EO
                                                      T_0in,                 & ! Reference temperature [K]
                                                      K_0in,                 & ! Reference bulk modulus [Pa]
                                                      Kp_0in,                & ! Pressure derivative of bulk modulus
-                                                     gam_0in,               & ! Reference Grüneisen parameter
+                                                     gam_0in,               & ! Reference Gruneisen parameter
                                                      qin,                   & ! Adiabatic power exponant
                                                      a_Tin,                 & ! 1st alpha parameter [K-1]
                                                      b_Tin,                 & ! 2nd alpha parameter [K-2]
@@ -873,4 +880,6 @@ SUBROUTINE GASTLI_interior(j_maxin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EO
   ! END PROGRAM
   ! -----------
 
-END SUBROUTINE GASTLI_interior
+END SUBROUTINE GASTLI_interior_subroutine
+
+END MODULE GASTLI_interior

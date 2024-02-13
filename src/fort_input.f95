@@ -8,6 +8,13 @@
 ! in order to be able to use them everywhere in the code.
 
   
+MODULE fort_input
+
+  IMPLICIT NONE
+
+  
+CONTAINS
+
 
   !----------------------------------------------!
   !                                              !
@@ -238,31 +245,28 @@
                                                          dlS_dlT_p_sesame,   &
                                                          dlrho_dlP_t_sesame 
 
-
-
     DOUBLE PRECISION, DIMENSION(7,64*41) :: table_sesame
+    
+    OPEN(UNIT = 158,file="Input/SESAME/logPcgs_sesame.dat", status='OLD', action = 'READ') 
+    READ(158,*) logP_sesame
+    CLOSE(UNIT = 158)
 
-   !-----
-  OPEN(UNIT = 158,file="Input/SESAME/logPcgs_sesame.dat", status='OLD', action = 'READ') 
-  READ(158,*) logP_sesame
-  CLOSE(UNIT = 158)
 
+    OPEN(UNIT = 160,file="Input/SESAME/sesame_sand_eos.dat", status='OLD', action = 'READ') 
+    READ(160,*) table_sesame
+    CLOSE(UNIT = 160)
 
-  OPEN(UNIT = 160,file="Input/SESAME/sesame_sand_eos.dat", status='OLD', action = 'READ') 
-  READ(160,*) table_sesame
-  CLOSE(UNIT = 160)
+    logrho_sesame = table_sesame(3,1:)
+    logS_sesame = table_sesame(4,1:)
+    dlrho_dlT_p_sesame = table_sesame(5,1:)
+    dlS_dlT_p_sesame = table_sesame(6,1:)
+    dlrho_dlP_t_sesame = table_sesame(7,1:)
 
-  logrho_sesame = table_sesame(3,1:)
-  logS_sesame = table_sesame(4,1:)
-  dlrho_dlT_p_sesame = table_sesame(5,1:)
-  dlS_dlT_p_sesame = table_sesame(6,1:)
-  dlrho_dlP_t_sesame = table_sesame(7,1:)
-
-  logT_sesame = (/1.89,1.94,1.99,2.04,2.09,2.14,2.19,2.24,2.29, &
-  2.34,2.39,2.44,2.49,2.54,2.59,2.64,2.69,2.74,2.79,2.84,2.89,2.94,2.99,3.04, &
-  3.09,3.14,3.19,3.24,3.29,3.34,3.39,3.44,3.49,3.54,3.59,3.64,3.69,3.74,3.79, &
-  3.84,3.89,3.94,3.99,4.04,4.09,4.14,4.19,4.24,4.29,4.34,4.39,4.44,4.49,4.54, &
-  4.59,4.64,4.69,4.74,4.79,4.84,4.89,4.94,4.99,5.04/)
+    logT_sesame = (/1.89,1.94,1.99,2.04,2.09,2.14,2.19,2.24,2.29, &
+    2.34,2.39,2.44,2.49,2.54,2.59,2.64,2.69,2.74,2.79,2.84,2.89,2.94,2.99,3.04, &
+    3.09,3.14,3.19,3.24,3.29,3.34,3.39,3.44,3.49,3.54,3.59,3.64,3.69,3.74,3.79, &
+    3.84,3.89,3.94,3.99,4.04,4.09,4.14,4.19,4.24,4.29,4.34,4.39,4.44,4.49,4.54, &
+    4.59,4.64,4.69,4.74,4.79,4.84,4.89,4.94,4.99,5.04/)
 
 
 
@@ -821,3 +825,6 @@
     !------
         
   END SUBROUTINE calc_parameters
+
+END MODULE fort_input
+

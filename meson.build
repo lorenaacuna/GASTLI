@@ -64,34 +64,35 @@ fortranobject_dep = declare_dependency(
 # We create a custom target to compile and make the module
 
 ## dimensions ##
-#dimensions_source = custom_target('dimensionsmodule.c',
-#  input : ['src/mod_dimensions.f95'],
-#  output : ['dimensionsmodule.c', 'dimensions-f2pywrappers2.f90'],
-#  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'dimensions', '--lower']
-#  )
-#
-#py3.extension_module('dimensions',
-#  ['src/mod_dimensions.f95', dimensions_source],
-#  include_directories: inc_dirs,
-#  dependencies : [py3_dep, fortranobject_dep],
-#  subdir: 'gastli',   # if you want to install this part as a submodule
-#  install : true
-#)
+dimensions_source = custom_target('dimensionsmodule.c',
+  input : ['src/mod_dimensions.f95'],
+  output : ['dimensionsmodule.c', 'dimensions-f2pywrappers2.f90'],
+  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'dimensions', '--lower']
+  )
+
+py3.extension_module('dimensions',
+  ['src/mod_dimensions.f95', dimensions_source],
+  include_directories: inc_dirs,
+  dependencies : [py3_dep, fortranobject_dep],
+  subdir: 'gastli',   # if you want to install this part as a submodule
+  install : true
+)
 
 ## constants ##
-#constants_source = custom_target('constantsmodule.c',
-#  input : ['src/mod_constants.f95'],
-#  output : ['constantsmodule.c', 'constants-f2pywrappers2.f90'],
-#  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'constants', '--lower']
-#  )
-#
-#py3.extension_module('constants',
-#  ['src/mod_constants.f95', constants_source],
-#  include_directories: inc_dirs,
-#  dependencies : [py3_dep, fortranobject_dep],
-#  subdir: 'gastli',   # if you want to install this part as a submodule
-#  install : true
-#)
+constants_source = custom_target('constantsmodule.c',
+  input : ['src/mod_constants.f95'],
+  output : ['constantsmodule.c', 'constants-f2pywrappers2.f90'],
+  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'constants', '--lower']
+  )
+
+py3.extension_module('constants',
+  ['src/mod_constants.f95', constants_source],
+  include_directories: inc_dirs,
+  dependencies : [py3_dep, fortranobject_dep],
+  subdir: 'gastli',   # if you want to install this part as a submodule
+  install : true
+)
+
 
 ## fort_input ##
 fort_input_source = custom_target('fortinputmodule.c',
@@ -109,27 +110,34 @@ py3.extension_module('fortinput',
 )
 
 ## GASTLI_interior ##
-#gastli_interior_source = custom_target('gastli_interiormodule.c',
-#  input : ['src/mod_funcmazevet.f95',\
-#           'src/mod_mazevet.f95',\
-#           'src/mod_constants.f95',\
-#           'src/mod_dimensions.f95',\
-#           'src/mod_parameters.f95',\
-#           'src/mod_functions.f95',\
-#           'src/mod_modEOS.f95',\
-#           'src/mod_subroutines.f95',\
-#           'src/GASTLI_interior.f95'],
-#  output : ['gastli_interiormodule.c', 'gastli_interior-f2pywrappers2.f90'],
-#  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'gastli_interior', '--lower']
-#  )
-#
-#py3.extension_module('gastli_interior',
-#  ['src/GASTLI_interior.f95', gastli_interior_source],
-#  include_directories: inc_dirs,
-#  dependencies : [py3_dep, fortranobject_dep],
-#  subdir: 'gastli',   # if you want to install this part as a submodule
-#  install : true
-#)
+gastli_interior_source = custom_target('gastli_interiormodule.c',
+  input : ['src/mod_funcmazevet.f95',
+           'src/mod_mazevet.f95',
+           'src/mod_constants.f95',
+           'src/mod_dimensions.f95',
+           'src/mod_parameters.f95',
+           'src/mod_functions.f95',
+           'src/mod_modEOS.f95',
+           'src/mod_subroutines.f95',
+           'src/GASTLI_interior.f95'],
+  output : ['gastli_interiormodule.c', 'gastli_interior-f2pywrappers2.f90'],
+  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'gastli_interior', '--lower']
+  )
+
+py3.extension_module('gastli_interior',
+  ['src/mod_funcmazevet.f95',
+   'src/mod_mazevet.f95',
+   'src/mod_constants.f95',
+   'src/mod_dimensions.f95',
+   'src/mod_parameters.f95',
+   'src/mod_functions.f95',
+   'src/mod_modEOS.f95',
+   'src/mod_subroutines.f95', 'src/GASTLI_interior.f95', gastli_interior_source],
+  include_directories: inc_dirs,
+  dependencies : [py3_dep, fortranobject_dep],
+  subdir: 'gastli',   # if you want to install this part as a submodule
+  install : true
+)
 
 
 

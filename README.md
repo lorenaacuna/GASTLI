@@ -11,11 +11,6 @@ Activate environment:
 conda activate GASTLI_packaging_test
 ```
 
-Install pip:
-```
-conda install pip
-```
-
 Install GASTLI:
 ```
 pip install .

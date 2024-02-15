@@ -5,11 +5,12 @@ project('gastli', 'c',
   license: 'BSD-3',
   meson_version: '>=0.64.0',
     default_options: [
-    'buildtype=debugoptimized',
+    #'buildtype=debugoptimized',
+    'buildtype=release',
     # TODO: the below -Wno flags are all needed to silence warnings in
     # f2py-generated code. This should be fixed in f2py itself.
     'c_args=-Wno-unused-function -Wno-conversion -Wno-misleading-indentation -Wno-incompatible-pointer-types',
-    'fortran_args=-Wno-conversion',  # silence "conversion from REAL(8) to INTEGER(4)"
+    'fortran_args=-Wno-conversion',   # silence "conversion from REAL(8) to INTEGER(4)"
     'fortran_std=legacy',
     'warning_level=3']
 )
@@ -141,8 +142,12 @@ py3.extension_module('gastli_interior',
 
 
 
-py3.install_sources([],
+py3.install_sources(['src/GASTLI.py',
+                     'src/atm_models_interp.py',
+                     'src/Coupling.py',
+                     'src/Thermal_evolution.py'],
   pure: false,
   subdir: 'gastli'
 )
+
 

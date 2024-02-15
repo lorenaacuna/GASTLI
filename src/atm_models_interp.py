@@ -3,13 +3,13 @@
 import numpy as np
 import pandas as pd
 import math
-from scipy import integrate
 from scipy import interpolate
 from scipy.integrate import odeint
 import h5py
 from scipy.interpolate import RegularGridInterpolator
 import sys
-import constants as cte
+import os
+
 
 # Auxiliary functions
 # Functions for interpolation of tables
@@ -64,9 +64,9 @@ def interp2d_opt(x_in,y_in,x_array,y_array,z_array):
     f21 = z_array[i_y1*Nx+i_x2]
     f22 = z_array[i_y2*Nx+i_x2]
 
-    cte = 1/((x2-x1)*(y2-y1))
+    conste = 1/((x2-x1)*(y2-y1))
 
-    interp = cte*( f11*(x2-x_in)*(y2-y_in) + f21*(x_in-x1)*(y2-y_in) +\
+    interp = conste*( f11*(x2-x_in)*(y2-y_in) + f21*(x_in-x1)*(y2-y_in) +\
                  f12*(x2-x_in)*(y_in-y1) + f22*(x_in-x1)*(y_in-y1) )
 
     return interp
@@ -176,7 +176,7 @@ class atm_models_interp:
         and a recommended value for a np.nan model
     """
 
-    def __init__(self,path_grid="Input/Atmospheric data/CO_055_grid.hdf5"):
+    def __init__(self,path_to_file):
         '''
         - Initialises parameters
         - Loads in data from atmospheric models and water and H/He EOS
@@ -192,8 +192,9 @@ class atm_models_interp:
         self.npoints = 130
 
         # Load atmosphere data
-        self.path_grid = path_grid
-        file_atm = h5py.File(self.path_grid, 'r')
+        self.path_to_file = path_to_file
+
+        file_atm = h5py.File(self.path_to_file+"Input/Atmospheric data/CO_055_grid.hdf5", 'r')
 
         self.data_set_atm = file_atm['PT_profiles'][()]
         self.FeH_atm = file_atm['FeH'][()]
@@ -228,7 +229,7 @@ class atm_models_interp:
 
         c = 0
 
-        file = open('Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1', 'r')
+        file = open(self.path_to_file+'Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1', 'r')
         Lines = file.readlines()
 
         for j in range(1, Nt + 1):
@@ -240,22 +241,24 @@ class atm_models_interp:
                 self.logrho[c] = float_arr[2]  # Decimal logarithm of density [g/cm3]
                 c = c + 1
 
-        data = pd.read_csv('Tables/aqua_eos_pt_v1_0.dat', sep='\s+', header=None, skiprows=19)
+
+        data = pd.read_csv(self.path_to_file+"Tables/aqua_eos_pt_v1_0.dat",\
+                           sep='\s+', header=None, skiprows=19)
         self.rho_aqua = np.asarray(data[2])
 
-        data = pd.read_csv('Tables/P_AQUA_Pa.dat', sep='\s+', header=None)
+        data = pd.read_csv(self.path_to_file+"Tables/P_AQUA_Pa.dat", sep='\s+', header=None)
         self.press_aqua = np.asarray(data[0])  # Pressure in Pa
 
-        data = pd.read_csv('Tables/T_AQUA_K.dat', sep='\s+', header=None)
+        data = pd.read_csv(self.path_to_file+"Tables/T_AQUA_K.dat", sep='\s+', header=None)
         self.temp_aqua = np.asarray(data[0])  # Temperature in K
 
-        data = pd.read_csv('Input/Chabrier/HG23_Vmix_Smix.csv', sep=',', header=0)
+        data = pd.read_csv(self.path_to_file+"Input/Chabrier/HG23_Vmix_Smix.csv", sep=',', header=0)
         self.V_mix = np.asarray(data['Vmix'])
 
-        data = pd.read_csv('Input/Chabrier/logP_HG23_corr.dat', sep='\s+', header=None)
+        data = pd.read_csv(self.path_to_file+"Input/Chabrier/logP_HG23_corr.dat", sep='\s+', header=None)
         self.logP_Vmix = np.asarray(data[0])
 
-        data = pd.read_csv('Input/Chabrier/logT_HG23_corr.dat', sep='\s+', header=None)
+        data = pd.read_csv(self.path_to_file+"Input/Chabrier/logT_HG23_corr.dat", sep='\s+', header=None)
         self.logT_Vmix = np.asarray(data[0])
 
 
@@ -530,7 +533,6 @@ class atm_models_interp:
         self.z_ode = self.total_radius - Rbulk_inm/Rjup
 
 
-
 """
 # Test
 myatmmodel = atm_models_interp()
@@ -542,6 +544,7 @@ print(myatmmodel.Psurf)
 myatmmodel.calc_thickness(1.,1e-3)
 print(myatmmodel.total_radius)
 print(myatmmodel.z_ode)
+
 myatmmodel = atm_models_interp()
 myatmmodel.calc_PTprofile(670.,10**2.8,0.03,110.)
 

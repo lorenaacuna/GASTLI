@@ -29,7 +29,7 @@ CONTAINS
   !
   ! Function that chooses which EOS to use in the program, among the following ones:
   !      EOS #1: BM3 (Third order Birch-Murnaghan)
-  !      EOS #2: MGD (Mie-Grüneisen-Debye)
+  !      EOS #2: MGD (Mie-Gruneisen-Debye)
   !      EOS #3: Vinet + Debye thermal correction
   !      EOS #4: HSvdw (Hard Sphere Vaan der Waals)
   !	 EOS #5: GE (Gibbs Energy)  
@@ -62,7 +62,7 @@ CONTAINS
     ! Variables of Debye thermal correction
     INTEGER                              :: l         ! Integration index
 
-    DOUBLE PRECISION                     :: gam1,   & ! Grüneisen parameter
+    DOUBLE PRECISION                     :: gam1,   & ! Gruneisen parameter
                                             T_D       ! Debye temperature
     
     DOUBLE PRECISION, DIMENSION(n_int)   :: y,      & ! Variable of integration
@@ -285,7 +285,7 @@ CONTAINS
     ELSE IF (wEOS==2) THEN
        x = rho1 / rho_0(k)
        
-       ! Part 1: Mie-Grüneisen formula
+       ! Part 1: Mie-Gruneisen formula
        EOS = 3.d0*K_0(k)/2.d0 * (x**(7.d0/3.d0)-x**(5.d0/3.d0)) &
             * (1.d0-3.d0/4.d0*(4.d0-Kp_0(k))*(x**(2.d0/3.d0)-1.d0))
        

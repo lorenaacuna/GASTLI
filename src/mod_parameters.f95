@@ -26,9 +26,9 @@ MODULE parameters
                                                intrf_oold   = 0,    & ! Position of the interfaces at step -2
                                                intrf_ooold  = 0,    & ! Position of the interfaces at step -2
                                                intrf_oooold = 0,    & ! Position of the interfaces at step -4
-            				       intrf_old5   = 0,    & ! Position of the interfaces at step -5
-					       intrf_old6   = 0,    & ! Position of the interfaces at step -6
-					       intrf_old7   = 0       ! Position of the interfaces at step -7
+                                               intrf_old5   = 0,    & ! Position of the interfaces at step -5
+					                                intrf_old6   = 0,    & ! Position of the interfaces at step -6
+					                                intrf_old7   = 0       ! Position of the interfaces at step -7
 
   INTEGER,           DIMENSION(n_pts)       :: layer        = 0       ! Layer
 
@@ -54,7 +54,7 @@ MODULE parameters
                                                rho_mmax     = 0.d0, & ! Overall maximal density [kg.m-3]
                                                rho_max      = 0.d0, & ! Maximal density [kg.m-3]
                                                rho_max_old  = 0.d0, & ! Previous maximal density [kg.m-3]
- 					       rho_surf     = 0.d0, &
+ 					                                rho_surf     = 0.d0, &
                                                rho_surf_HHe = 0.d0, &
                                                rho_surf_w   = 0.d0, &
                                                rho_surf_oliv = 0.d0, &
@@ -73,9 +73,9 @@ MODULE parameters
                                                P            = 0.d0, & ! Pressure [Pa]
                                                T            = 0.d0, & ! Temperature [K]
                                                rho          = 0.d0, & ! Density [kg.m-3]
-					       rho_old      = 0.d0, & ! Density of previous iteration [kg.m-3]
-					       rho_oold     = 0.d0, &
-                                               gam          = 0.d0    ! Grüneisen parameter
+					                                rho_old      = 0.d0, & ! Density of previous iteration [kg.m-3]
+					                                rho_oold     = 0.d0, &
+                                               gam          = 0.d0    ! Gruneisen parameter
   
   DOUBLE PRECISION, DIMENSION(n_pts) :: rho_oliv_core       = 0.d0, & 
                                         rho_oliv_env        = 0.d0, & 
@@ -146,7 +146,7 @@ MODULE parameters
                                                    T_0,                 & ! Reference temperature [K]
                                                    K_0,                 & ! Reference bulk modulus [Pa]
                                                    Kp_0,                & ! Pressure derivative of bulk modulus
-                                                   gam_0,               & ! Reference Grüneisen parameter
+                                                   gam_0,               & ! Reference Gruneisen parameter
                                                    q,                   & ! Adiabatic power exponant
                                                    a_T,                 & ! 1st alpha parameter [K-1]
                                                    b_T,                 & ! 2nd alpha parameter [K-2]

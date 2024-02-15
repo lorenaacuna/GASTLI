@@ -24,12 +24,14 @@ CONTAINS
   !
   ! Initializes all input parameters by reading the values in specific files.
   !
-  SUBROUTINE read_layer_parameters(n_lay,n_mat_max, ilayer,use_lay,iEOS,EOS_th,del_T,n_mat,x,&
+  SUBROUTINE read_layer_parameters(path_to_file,n_lay,n_mat_max, ilayer,use_lay,iEOS,EOS_th,del_T,n_mat,x,&
              cf_Mmol,cf_Z_eff, cf_rho_0,cf_T_0,cf_K_0,cf_Kp_0,cf_gam_0,cf_q,cf_a_T,cf_b_T,cf_c_T,cf_a_P,cf_T_D0)
 
     !------
 
     INTEGER, INTENT(IN)  :: n_lay, n_mat_max
+    
+    CHARACTER(len=*), INTENT(IN) :: path_to_file
 
     CHARACTER(LEN=40)                      :: name        ! Name of the "layer*.in" files
 
@@ -102,7 +104,7 @@ CONTAINS
        WRITE(name,'(A11,I1.1,A3)') 'Input/layer', k, '.in'
        unit = 30 + k
 
-       OPEN(unit, FILE=name, STATUS='old', ACTION='read')
+       OPEN(unit, FILE=TRIM(ADJUSTL(path_to_file))//name, STATUS='old', ACTION='read')
 
        ! WRITE(6,*) name
 
@@ -178,9 +180,12 @@ CONTAINS
   !
   ! Reads the value of some constants in a specific file.
   !
-  SUBROUTINE read_constants(Ttp,Ptp)
+  SUBROUTINE read_constants(path_to_file,Ttp,Ptp)
 
     !------
+
+    CHARACTER(len=*), INTENT(IN) :: path_to_file
+
 
     ! Thermodynamical constants (read)
 
@@ -195,7 +200,8 @@ CONTAINS
 
     ! FILE "constants.in"
     ! -------------------
-    OPEN(29, FILE='Input/constants.in', STATUS='old', ACTION='read')
+    
+    OPEN(29, FILE=TRIM(ADJUSTL(path_to_file))//'Input/constants.in', STATUS='old', ACTION='read')
 
     ! Skip header to section "Water triple points"
     DO h=1, 10
@@ -226,12 +232,15 @@ CONTAINS
   !
   ! This reads SESAME's EOS for rock
   !
-  SUBROUTINE read_EOS_sesame(logT_sesame,logP_sesame,logrho_sesame,logS_sesame, &
+  SUBROUTINE read_EOS_sesame(path_to_file, logT_sesame,logP_sesame,logrho_sesame,logS_sesame, &
                                                          dlrho_dlT_p_sesame,    &
                                                          dlS_dlT_p_sesame,      &
                                                          dlrho_dlP_t_sesame )
 
     !------
+
+    CHARACTER(len=*), INTENT(IN) :: path_to_file
+
 
     ! SESAME EOS for rock (dry sand)
 
@@ -247,12 +256,13 @@ CONTAINS
 
     DOUBLE PRECISION, DIMENSION(7,64*41) :: table_sesame
     
-    OPEN(UNIT = 158,file="Input/SESAME/logPcgs_sesame.dat", status='OLD', action = 'READ') 
+
+    OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/SESAME/logPcgs_sesame.dat", status='OLD', action = 'READ') 
     READ(158,*) logP_sesame
     CLOSE(UNIT = 158)
 
 
-    OPEN(UNIT = 160,file="Input/SESAME/sesame_sand_eos.dat", status='OLD', action = 'READ') 
+    OPEN(UNIT = 160,file=TRIM(ADJUSTL(path_to_file))//"Input/SESAME/sesame_sand_eos.dat", status='OLD', action = 'READ') 
     READ(160,*) table_sesame
     CLOSE(UNIT = 160)
 
@@ -288,9 +298,12 @@ CONTAINS
   !
   ! This reads Mazevet EOS for water (file only for density)
   !
-  SUBROUTINE read_mazevet_water(P_maz_water,T_maz_water,rho_maz_water)  
+  SUBROUTINE read_mazevet_water(path_to_file,P_maz_water,T_maz_water,rho_maz_water)  
 
     !------
+
+    CHARACTER(len=*), INTENT(IN) :: path_to_file
+
 
     DOUBLE PRECISION, DIMENSION(441), INTENT(OUT) :: P_maz_water
 
@@ -311,7 +324,8 @@ CONTAINS
   Nt = 121
   Np = 441
 
-  OPEN(UNIT = 158,file="Input/Mazevet_water/EOS_water_mazevet.dat", status='OLD', action = 'READ') 
+ 
+  OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/Mazevet_water/EOS_water_mazevet.dat", status='OLD', action = 'READ') 
 
   READ(158,*) table_mazevet_water
 
@@ -349,12 +363,15 @@ CONTAINS
   !
   ! This reads Chabrier's EOS
   !
-  SUBROUTINE read_EOS_ch(logT_input,logP_input,logrho_input, &
+  SUBROUTINE read_EOS_ch(path_to_file, logT_input,logP_input,logrho_input, &
                          logrho_ch, logU_ch, logP_ch,        &
                          logS_ch, dlrho_dlT_P,               &
                          dlrho_dlP_T, dlS_dlT_P, grad_ad, grad_ad_PT)
 
     !------
+
+    CHARACTER(len=*), INTENT(IN) :: path_to_file
+
 
     DOUBLE PRECISION, DIMENSION(121*441), INTENT(OUT) ::  logrho_ch, grad_ad_PT
 
@@ -413,7 +430,8 @@ CONTAINS
 
   unit = 65 
 
-  OPEN(unit, FILE='Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1', STATUS='old', ACTION='read')
+
+  OPEN(unit, FILE=TRIM(ADJUSTL(path_to_file))//'Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1', STATUS='old', ACTION='read')
 
   c = 1
 
@@ -449,7 +467,7 @@ CONTAINS
 
   unit = 65 
 
-  OPEN(unit, FILE='Input/Chabrier/TABLEEOS_2021_Trho_Y0275_v1', STATUS='old', ACTION='read')
+  OPEN(unit, FILE=TRIM(ADJUSTL(path_to_file))//'Input/Chabrier/TABLEEOS_2021_Trho_Y0275_v1', STATUS='old', ACTION='read')
 
   c = 1
 
@@ -514,9 +532,12 @@ CONTAINS
   !
   ! This reads HG23 corrections for EOS of H and He
   !
-  SUBROUTINE read_HG23_corr(logP_HG,logT_HG,Vmix_HG,Smix_HG)
+  SUBROUTINE read_HG23_corr(path_to_file,logP_HG,logT_HG,Vmix_HG,Smix_HG)
 
     !------
+
+    CHARACTER(len=*), INTENT(IN) :: path_to_file
+
 
     ! HG23 EOS correction for H/He mixture
 
@@ -531,15 +552,16 @@ CONTAINS
 
     !------
 
-  OPEN(UNIT = 158,file="Input/Chabrier/logP_HG23_corr.dat", status='OLD', action = 'READ') 
+ 
+  OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/Chabrier/logP_HG23_corr.dat", status='OLD', action = 'READ') 
   READ(158,*) logP_HG 
   CLOSE(UNIT = 158)
 
-  OPEN(UNIT = 158,file="Input/Chabrier/logT_HG23_corr.dat", status='OLD', action = 'READ') 
+  OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/Chabrier/logT_HG23_corr.dat", status='OLD', action = 'READ') 
   READ(158,*) logT_HG 
   CLOSE(UNIT = 158)
 
-  OPEN(UNIT = 158,file="Input/Chabrier/HG23_Vmix_Smix.csv", status='OLD', action = 'READ') 
+  OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/Chabrier/HG23_Vmix_Smix.csv", status='OLD', action = 'READ') 
 
   ! Skip header
   READ(158,*)

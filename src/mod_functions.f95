@@ -41,7 +41,7 @@ pure function integrate(x, y) result(r)
     !! approximation. Note that the mesh spacing of x does not have to be uniform.
     Double precision, intent(in)  :: x(:)         !! Variable x
     Double precision, intent(in)  :: y(size(x))   !! Function y(x)
-    Double precision              :: r            !! Integral ∫y(x)·dx
+    Double precision              :: r            !! Integral int(y(x) times dx)
 
     ! Integrate using the trapezoidal rule
     associate(n => size(x))
@@ -1177,7 +1177,7 @@ pure function integrate(x, y) result(r)
           P_water = -1.d0
        END IF
        
-    ! V - Liquid (Wagner & Pruß 2002)
+    ! V - Liquid (Wagner & Pruss 2002)
     ELSE IF (h==4) THEN
        IF (T1>=Ttp(3).AND.T1<=Ttp(4)) THEN
           Theta = T1 / Ttp(3)
@@ -1187,7 +1187,7 @@ pure function integrate(x, y) result(r)
           P_water = -1.d0
        END IF
        
-    ! VI - Liquid (Wagner & Pruß 2002)
+    ! VI - Liquid (Wagner & Pruss 2002)
     ELSE IF (h==5) THEN
        IF (T1>=Ttp(4).AND.T1<=Ttp(5)) THEN
           Theta = T1 / Ttp(4)
@@ -1207,7 +1207,7 @@ pure function integrate(x, y) result(r)
           P_water = -1.d0
        END IF
        
-    ! Liquid - Vapor (Wagner & Pruß 2002)
+    ! Liquid - Vapor (Wagner & Pruss 2002)
     ELSE IF (h==7) THEN
        IF (T1>=Ttp(1).AND.T1<=Ttp(6)) THEN
           Theta = T1 / Ttp(6)

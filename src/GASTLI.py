@@ -1,12 +1,11 @@
 
-import constants as cte
-import dimensions as dim
-import fort_input as fi
-import GASTLI_interior as interior
+import gastli.constants as cte
+import gastli.dimensions as dim
+from gastli.fortinput import fort_input as fi
+from gastli.gastli_interior import gastli_interior as interior
 
 import numpy as np
 import time
-
 
 
 class int_planet:
@@ -28,13 +27,13 @@ class int_planet:
             Upper limit in pressure.
         corVin (Optional):
             Type of correction on the thermodynamical parameters of Vinet EOS.
-            (=0: no correction / =1: range [1:1.5] / =2: range [1:5] / =3: 
+            (=0: no correction / =1: range [1:1.5] / =2: range [1:5] / =3:
              range [1:10])
     """
 
-    def __init__(self, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
-                     pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11,5e11,5e11,5e11,\
-                     5e11,5e11,5e11,5e11,5e11,5e11], corEOS=1):
+    def __init__(self, path_to_file, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
+                 pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11, 5e11, 5e11, 5e11, \
+                                                     5e11, 5e11, 5e11, 5e11, 5e11, 5e11], corEOS=1):
         """
         Args:
         :param j_max:
@@ -47,6 +46,7 @@ class int_planet:
         """
 
         # Arguments of __init__
+        self.path_to_file = path_to_file
         self.j_max = j_max
         self.cnt_conv_max = cnt_conv_max
         self.conv_prec = conv_prec
@@ -54,8 +54,8 @@ class int_planet:
         self.chk_EOS = chk_EOS
         self.EOS_lim_P = EOS_lim_P
         self.corEOS = corEOS
-    
-        # Dimensions 
+
+        # Dimensions
         self.n_lay = dim.dimensions.n_lay
         self.n_EOS = dim.dimensions.n_eos
         self.n_pts = dim.dimensions.n_pts
@@ -63,37 +63,36 @@ class int_planet:
         self.n_mat_max = dim.dimensions.n_mat_max
 
         # Load constant file
-        self.Ttp,self.Ptp = fi.read_constants()
+        self.Ttp,self.Ptp = fi.read_constants(self.path_to_file,)
 
         # Load layer files
         self.ilayer,self.use_lay,self.iEOS,self.EOS_th,self.del_T,self.n_mat,\
         self.x,self.cf_Mmol,self.cf_Z_eff,self.cf_rho_0,self.cf_T_0,\
         self.cf_K_0,self.cf_Kp_0,self.cf_gam_0,self.cf_q,self.cf_a_T,\
         self.cf_b_T,self.cf_c_T,self.cf_a_P,\
-        self.cf_T_d0 = fi.read_layer_parameters(self.n_lay,self.n_mat_max)
-
+        self.cf_T_d0 = fi.read_layer_parameters(self.path_to_file,self.n_lay,self.n_mat_max)
 
         # Load EOS data
 
         # Rock EOS from SESAME data base
         self.logT_sesame,self.logP_sesame,self.logrho_sesame,self.logS_sesame,\
         self.dlrho_dlT_p_sesame,self.dlS_dlT_p_sesame,\
-        self.dlrho_dlP_t_sesame = fi.read_eos_sesame()
+        self.dlrho_dlP_t_sesame = fi.read_eos_sesame(self.path_to_file)
 
         # Water EOS from Mazevet+19 (only the density, for optimization)
         self.P_maz_water,self.T_maz_water,\
-        self.rho_maz_water = fi.read_mazevet_water()
+        self.rho_maz_water = fi.read_mazevet_water(self.path_to_file)
 
         # H/He EOS from Chabrier+23
         self.logT_input,self.logP_input,self.logrho_input,\
         self.logrho_ch,self.logU_ch,self.logP_ch,self.logS_ch,\
         self.dlrho_dlT_P,self.dlrho_dlP_T,self.dlS_dlT_P,self.grad_ad,\
-        self.grad_ad_PT = fi.read_eos_ch()
+        self.grad_ad_PT = fi.read_eos_ch(self.path_to_file)
 
 
         # H/He EOS correction from Howard & Guillot 2023
         self.logP_HG,self.logT_HG,\
-        self.Vmix_HG, self.Smix_HG = fi.read_hg23_corr()
+        self.Vmix_HG, self.Smix_HG = fi.read_hg23_corr(self.path_to_file)
 
 
         # Initialise parameters
@@ -128,7 +127,6 @@ class int_planet:
         #############################
         #############################
 
-
     def setup_parameters(self, f_alloy=cte.constants.f_alloy_e, \
                          MgD=cte.constants.mgd_e, \
                          MgSi=cte.constants.mgsi_e):
@@ -155,7 +153,6 @@ class int_planet:
 
         self.x = xout
 
-
     def calc_radius(self, M_P, x_core, x_H2O, T_surf, P_surf, Zenv):
         '''
         # Function that calculates radius and interior structure
@@ -164,7 +161,7 @@ class int_planet:
         :param x_core: Core mass fraction
         :param x_H2O: Envelope mass fraction. Defined as 1-x_core in this case
         :param T_surf: Outer surface (boundary) temperature in K
-        :param P_surf: Outer surface (boundary) pressure in K
+        :param P_surf: Outer surface (boundary) pressure in Pa
         Returns:
         self.x_H2Oc: Re-computed envelope mass fraction (for checking)
         self.x_corec: Re-computed core mass fraction (for checking)
@@ -196,7 +193,7 @@ class int_planet:
         # Output parameters
         m_pout, x_coreout, x_h2oout, r_pout, fesiout, rhoout, rout, interfaceout, gout,\
         tout, pout, rhoarrout, cvout, Sout,\
-        OtoHout, metalout = interior.gastli_interior(self.j_max,\
+        OtoHout, metalout = interior.gastli_interior_subroutine(self.j_max,\
         # Input: run variables & material data
         self.cnt_conv_max,self.conv_prec,self.pow_law,self.chk_EOS, \
         self.EOS_lim_P, self.corEOS, self.Ttp, self.Ptp, self.f_alloy,self.MgD, \
@@ -240,3 +237,19 @@ class int_planet:
         self.entropy = Sout
         self.r = rout
 
+
+# Test
+"""
+interior_test = int_planet(path_to_file="/Users/acuna/Desktop/gastli_input_data/")
+print(interior_test.n_lay)
+print(interior_test.Ttp)
+print(interior_test.ilayer)
+
+interior_test.setup_parameters()
+print(interior_test.x)
+start = time.time()
+interior_test.calc_radius(318.,0.10,1-0.10,1300.,1e3*1e5,0.04)
+print(interior_test.R_P)
+end = time.time()
+print('Calculation time [s] = ', end-start)
+"""

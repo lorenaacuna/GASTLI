@@ -1,7 +1,7 @@
 
 
 # Import coupling module
-import Coupling as cpl
+from gastli.Coupling import coupling
 # Other Python modules
 import numpy as np
 import math
@@ -22,15 +22,16 @@ class thermal_evolution:
 
     """
 
-    def __init__(self,pow_law_formass=None):
+    def __init__(self,path_to_file,pow_law_formass=None):
 
+        self.path_to_file = path_to_file
         self.pow_law_formass = pow_law_formass
 
         # Create coupling class
         if self.pow_law_formass == None:
-            self.my_coupling = cpl.coupling()
+            self.my_coupling = coupling(path_to_file=self.path_to_file)
         else:
-            self.my_coupling = cpl.coupling(pow_law_formass = self.pow_law_formass)
+            self.my_coupling = coupling(path_to_file=self.path_to_file, pow_law_formass = self.pow_law_formass)
 
 
 

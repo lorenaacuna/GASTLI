@@ -1,14 +1,12 @@
 
-import GASTLI
-import constants as cte
-import atm_models_interp
+from gastli.GASTLI import int_planet
+from gastli.atm_models_interp import atm_models_interp
 
 import numpy as np
 import time
 import math
 import sys
 
-#
 class coupling:
     """ Class defining objects to run a normal interior-atmosphere coupling model
         (no thermal evolution)
@@ -18,30 +16,30 @@ class coupling:
          Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox.)
     """
 
-    def __init__(self,pow_law_formass=None):
+    def __init__(self,path_to_file,pow_law_formass=None):
         '''
         - Initialises interior and atm. models
         - Other constants
         '''
 
         self.pow_law_formass = pow_law_formass
+        self.path_to_file = path_to_file
 
         # Initialise interior model
         if self.pow_law_formass == None:
-            self.myplanet = GASTLI.int_planet()
+            self.myplanet = int_planet(path_to_file=self.path_to_file)
         else:
-            self.myplanet = GASTLI.int_planet(pow_law = self.pow_law_formass)
+            self.myplanet = int_planet(path_to_file=self.path_to_file,pow_law = self.pow_law_formass)
 
 
         self.myplanet.setup_parameters()
 
         # Initialise atm models
-        self.myatmmodel = atm_models_interp.atm_models_interp()
+        self.myatmmodel = atm_models_interp(path_to_file=self.path_to_file)
 
         # Important constants
         #self.M_P = 318.             # M in M_earth
         self.Mearth = 5.972e24       # In m
-
 
 
     def main(self,M_P,x_core,Zenv,Teq,Tint,Tguess=2000.,tolerance=1e-3):
@@ -220,5 +218,10 @@ class coupling:
         print('Output:')
         print('Rtotal [Rjup] = ', self.Rtot)
         """
-
-
+"""
+# Tests
+my_coupling = coupling()
+#(M_P,x_core,Zenv,Teq,Tint,Tguess=2000.,tolerance=1e-3)
+my_coupling.main(318., 0.05, 0.04, 900., 50.)
+print("Total planet radius [R_jup] = ",my_coupling.Rtot)
+"""

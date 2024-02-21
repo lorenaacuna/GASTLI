@@ -5,7 +5,7 @@ from gastli.fortinput import fort_input as fi
 from gastli.gastli_interior import gastli_interior as interior
 
 import numpy as np
-import time
+#import time
 
 
 class int_planet:
@@ -186,7 +186,14 @@ class int_planet:
         self.T_surf = T_surf
         self.P_surf = P_surf
         self.Zenv = Zenv
-
+        """
+        print("Input M = ", self.M_P)
+        print("Input x_core = ", self.x_core)
+        print("Input x_h2o = ", self.x_H2O)
+        print("Input T_surf = ", self.T_surf)
+        print("Input P_surf = ", self.P_surf)
+        print("Input Zenv = ", self.Zenv)
+        """
         print("")
         print("Running interior structure model")
 

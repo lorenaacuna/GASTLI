@@ -42,7 +42,8 @@ class coupling:
         self.Mearth = 5.972e24       # In m
 
 
-    def main(self,M_P,x_core,Zenv,Teq,Tint,Tguess=2000.,tolerance=1e-3):
+    def main(self,M_P,x_core,Teq,Tint,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
+             tolerance=1e-3,limit_level=10.):
         """
         Function that runs coupled interior-atmosphere model
         Args:
@@ -76,6 +77,11 @@ class coupling:
         self.M_P = M_P
         self.x_core = x_core
         self.Zenv = Zenv
+        self.log_FeH = log_FeH
+        self.CO_pl = CO
+        self.FeH_flag = FeH_flag
+        self.Zenv = Zenv
+
 
         x_H2O = 1.-self.x_core           # Envelope mass fraction = 1.0 - CMF
         P_surf = 1e3 * 1e5               # Surface P in Pa
@@ -83,14 +89,14 @@ class coupling:
         # Initial guess
         self.T_surf = Tguess             # Surface T in K
 
-        # Input for heat model
+        # Temperatures
         self.Teq = Teq
         self.Tint = Tint
 
 
         # Difference between Rguess and Rinterior
         diff = 1.0
-        Rguess = 0.
+
 
 
         Tsurf_arr = np.zeros(20)
@@ -99,24 +105,35 @@ class coupling:
         counter = 0
 
         # Convergence loop starts here
-        while diff > tolerance:
+        # Run for at least two iterations to avoid "false accurate" runs
+        while diff > tolerance or counter<2:
+            #print(diff)
 
             if counter == len(Tsurf_arr):
                 print('Error in Coupling.py: The number of interior-atmosphere iterations is greater than 20.')
                 print('The current relative difference between radii is',diff)
                 print('Increase the tolerance.')
+                """
+                print("Rbulk array [R_E] = ", R_arr)
+                print("Tsurf array [K] = ", Tsurf_arr)
+                print("# iterations = ", counter)
+                """
                 sys.exit(1)
 
             Tsurf_arr[counter] = self.T_surf
             R_arr[counter] = Rguess
-            """
-            print("Input M = ",self.M_P)
-            print("Input x_core = ",self.x_core)
-            print("Input x_h2o = ",x_H2O)
-            print("Input T_surf = ",self.T_surf)
-            print("Input P_surf = ",P_surf)
-            print("Input Zenv = ",self.Zenv)
-            """
+
+
+            # Calculate Zenv for interior
+            # if FeH_flag = True, then Zenv for interior module is calculated from easychem tables with log(Fe/H)
+            # if FeH_flag is False, then Zenv for interior is the one provided by user
+            if FeH_flag == True:
+                self.g_surf_planet = 100 * 9.8 * self.M_P / Rguess ** 2  # In cm/s2
+                self.myatmmodel.calc_interior_mass_fraction(self.Tint, self.g_surf_planet, self.Teq, self.CO_pl,\
+                                                            self.log_FeH)
+                self.Zenv = self.myatmmodel.MMF_surf
+
+
 
 
             self.myplanet.calc_radius(self.M_P,self.x_core,x_H2O,self.T_surf,P_surf,self.Zenv)
@@ -139,10 +156,17 @@ class coupling:
             '''
 
 
-            # Atm model
+            # Update surface gravity
             self.g_surf_planet = 100 * 9.8 * self.M_P/self.myplanet.R_P**2   # In cm/s2
 
-            self.myatmmodel.calc_PTprofile(self.Tint,self.g_surf_planet,self.Zenv,self.Teq)
+
+            # Atm model
+            if FeH_flag == True:
+                self.myatmmodel.calc_PTprofile(self.Tint,self.g_surf_planet,self.Teq)
+            else:
+                self.myatmmodel.calc_PTprofile(self.Tint, self.g_surf_planet, self.Teq, self.Zenv, FeH_flag=False,\
+                                               CO_def=self.CO_pl)
+
             """
             print('Atm. models from prt')
             print('Input:')
@@ -169,17 +193,15 @@ class coupling:
         Tsurf_arr[counter] = self.T_surf
         R_arr[counter] = Rguess
         """
-        print("Rbulk [R_E] = ", R_arr)
-        print("Tsurf [K] = ", Tsurf_arr)
+        print("Rbulk array [R_E] = ", R_arr)
+        print("Tsurf array [K] = ", Tsurf_arr)
         print("# iterations = ", counter)
         """
-
         # Final radius
         Rjup = 7.149e7    # Jupiter radius in m
         Rearth = 6.371e6  # Earth radius in m
 
         self.Rbulk_Rjup = R_arr[counter]*Rearth/Rjup
-
 
         Pbase = P_surf                                  # In Pa
         Rbulk = self.Rbulk_Rjup*Rjup                    # In m
@@ -188,7 +210,8 @@ class coupling:
         self.Matm_earthunits = Matm/self.Mearth
         self.Mtot = self.M_P + self.Matm_earthunits
 
-        self.myatmmodel.calc_thickness(self.Rbulk_Rjup,self.Matm_earthunits)
+
+        self.myatmmodel.calc_thickness(self.Rbulk_Rjup,self.Matm_earthunits,limit_level=limit_level)
 
 
         self.Rtot = self.myatmmodel.total_radius
@@ -218,10 +241,3 @@ class coupling:
         print('Output:')
         print('Rtotal [Rjup] = ', self.Rtot)
         """
-"""
-# Tests
-my_coupling = coupling()
-#(M_P,x_core,Zenv,Teq,Tint,Tguess=2000.,tolerance=1e-3)
-my_coupling.main(318., 0.05, 0.04, 900., 50.)
-print("Total planet radius [R_jup] = ",my_coupling.Rtot)
-"""

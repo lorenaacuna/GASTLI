@@ -1054,6 +1054,9 @@ pure function integrate(x, y) result(r)
 
     IF (min > max) THEN
        WRITE(6,*) '/!\ ERROR in function "mass_btw": lower radius must be smaller than upper radius.'
+       WRITE(6,*) min
+       WRITE(6,*) max
+       WRITE(6,*) lay
        STOP
     END IF
 

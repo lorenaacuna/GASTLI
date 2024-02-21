@@ -1425,7 +1425,7 @@ CONTAINS
        ! If layer k is the core
        IF (ilayer(k)==1) THEN
           intrf(k+1) = intrf(k)
-
+           
           DO WHILE (mass_btw(intrf(k),intrf(k+1),k) < M_P*x_core)
              intrf(k+1) = intrf(k+1) + 1
 
@@ -1442,7 +1442,16 @@ CONTAINS
           intrf(k+1) = intrf(k)
   
           !M_lay = M_P*x_H2O 
-          M_lay = M_P - mass_btw(1,intrf(k),0)
+
+          !WRITE(6,*) 'M_lay before calculation'
+          !WRITE(6,*) M_lay
+          !WRITE(6,*) 'M_lay 1st calculation'
+
+
+          !M_lay = M_P - mass_btw(1,intrf(k),0)
+          !WRITE(6,*) M_lay
+
+
           IF (x_H2O.eq.0.d0.or.M_lay.le.0.d0) CYCLE
   
           
@@ -1465,9 +1474,33 @@ CONTAINS
              rho(k,1) = arr(1)
              intrf(k+1) = min(intrf(k+1)+1,n_pts)
           END DO
+
+
   
           M_lay = M_P - mass_btw(1,intrf(k),0) ! Update of the mass of the supercrit layer with new intrf 
-  
+          
+          
+          !WRITE(6,*) 'M_lay 2nd calculation'
+          !WRITE(6,*) mass_btw(1,intrf(k),0)
+          !WRITE(6,*) intrf(k)
+          !WRITE(6,*) intrf
+          !WRITE(6,*) M_lay
+
+          !WRITE(6,*) mass_btw(1,intrf(k),1)
+          !WRITE(6,*) r(1:2)
+          
+
+         IF (isnan(M_lay)) THEN
+             WRITE(6,*) 'Error in interior structure model (Fortran): Mass of core layer is NaN'
+             WRITE(6,*) 'This is likely due to a spatial resolution of the radius grid that is'
+             WRITE(6,*) 'too small to resolve the size of the core'
+             WRITE(6,*) 'Increase the resolution of the grid by setting a lower value for the'
+             WRITE(6,*) 'input parameter pow_law_formass'             
+             STOP 
+         END IF
+
+
+
          lll = 0
          i_o = -1
          i_oo = -2
@@ -1477,6 +1510,14 @@ CONTAINS
             i_oo = i_o
             i_o = intrf(k+1)
             lll = lll+1
+           
+            !WRITE(6,*) 'interfaces'
+            !WRITE(6,*) intrf
+            !WRITE(6,*) mass_btw(intrf(k),intrf(k+1),k)
+            !WRITE(6,*) M_lay
+
+            
+
             IF (mass_btw(intrf(k),intrf(k+1),k) < M_lay) THEN ! Move profile outwards until mass of supercritical
                arr(:) = rho(k,:)                              ! layer is filled
                !$OMP PARALLEL DO
@@ -1495,6 +1536,7 @@ CONTAINS
                !$OMP END PARALLEL DO
                rho(k,n_pts) = arr(n_pts)
                intrf(k+1) = max(intrf(k+1)-1,1)
+               !intrf(k+1) = max(intrf(k+1)-1,intrf(k))
             END IF
             
             IF (intrf(k+1).eq.i_oo.or.intrf(k+1).eq.i_o) EXIT  ! This detects the bouncing between two i positions 
@@ -1601,6 +1643,8 @@ CONTAINS
 
     !$OMP PARALLEL DO
     DO k=1, n_lay
+       !WRITE(6,*) 'mass_layers'
+       !WRITE(6,*) intrf
        M(k) = mass_btw(intrf(k),intrf(k+1),k)
     END DO
     !$OMP END PARALLEL DO

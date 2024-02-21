@@ -1,14 +1,14 @@
 
 
 # Import coupling module
-from gastli.Coupling import coupling
+import gastli.Coupling as cpl
+
 # Other Python modules
 import numpy as np
 import math
 from scipy import integrate
 from scipy import interpolate
 from scipy.integrate import odeint
-
 
 
 
@@ -19,6 +19,8 @@ class thermal_evolution:
     Args:
     :param pow_law_formass (Optional): power exponent for planet radius estimation in the interior model.
            Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox.)
+           In some cases, it is necessary to decrease it to have a higher spatial resolution in the radius grid
+           These cases tend to be low core mass fraction compositions (i.e CMF = 0.01)
 
     """
 
@@ -26,13 +28,13 @@ class thermal_evolution:
 
         self.path_to_file = path_to_file
         self.pow_law_formass = pow_law_formass
-
+        """
         # Create coupling class
         if self.pow_law_formass == None:
-            self.my_coupling = coupling(path_to_file=self.path_to_file)
+            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file)
         else:
-            self.my_coupling = coupling(path_to_file=self.path_to_file, pow_law_formass = self.pow_law_formass)
-
+            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass = self.pow_law_formass)
+        """
 
 
         # Constants for thermal evolution
@@ -48,8 +50,8 @@ class thermal_evolution:
 
 
 
-    def main(self,M_P,x_core,Zenv,Teq,Tint_array,Tguess=2000.,tolerance=1e-3,\
-             t_Gyr=np.linspace(2.1e-6, 10., 100),S0=12.):
+    def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,tolerance=1e-3,\
+             limit_level=10.):
         """
         Function that runs compute a series of interior structure models and solves the entropy differential equation
         to calculate the thermal evolution
@@ -88,11 +90,11 @@ class thermal_evolution:
 
         self.M_P = M_P
         self.x_core = x_core
-        self.Zenv = Zenv
         self.Teq = Teq
         self.Tint_array = Tint_array
-        self.t_Gyr = t_Gyr
-        self.S0 = S0
+        self.Zenv = Zenv
+        self.logFeH = log_FeH
+        self.CO = CO
 
 
         n_therm = len(self.Tint_array)
@@ -107,9 +109,36 @@ class thermal_evolution:
         self.f_S = np.zeros(n_therm)
 
 
+
         for i in range(0,n_therm):
+
+            print("Model # ", i+1, " in total time sequence of ", n_therm)
+            print("Internal temperature [K] = ", self.Tint_array[i])
+            print("")
+
+            # Putting it here adds 1-2 secs more per each Tint computation, but it is safer
+            # Create coupling class
+            if self.pow_law_formass == None:
+                self.my_coupling = cpl.coupling(path_to_file=self.path_to_file)
+            else:
+                self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass)
+
+            if np.isscalar(tolerance):
+                tolerance_for_this_run = tolerance
+            else:
+                tolerance_for_this_run = tolerance[i]
+
             # Call to interior model
-            self.my_coupling.main(self.M_P, self.x_core, self.Zenv, self.Teq, self.Tint_array[i], Tguess, tolerance)
+            if FeH_flag==True:
+                self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
+                                      log_FeH=self.logFeH, Tguess=Tguess, tolerance=tolerance_for_this_run,\
+                                      limit_level=limit_level)
+            else:
+                self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
+                                      FeH_flag=False, Zenv=self.Zenv, Tguess=Tguess, tolerance=tolerance_for_this_run,\
+                                      limit_level=limit_level)
+
+
 
             # Entropy
             S = self.my_coupling.myplanet.entropy
@@ -153,6 +182,17 @@ class thermal_evolution:
             self.f_S[i] = (-1) * (self.M_P*self.M_earth)/self.L_TE[i] * integrate.trapezoid(temp, x=m)
 
 
+
+    def solve_thermal_evol_eq(self,t_Gyr=np.linspace(2.1e-6, 15., 100), S0=12.):
+        """
+        Add docstrings here
+        :param S0:
+        :return:
+        """
+
+        self.t_Gyr = t_Gyr
+        self.S0 = S0
+
         # dS/dt
         inv_f_S = 1 / self.f_S
         dSdt_func_interp = interpolate.interp1d(self.s_mean_TE, inv_f_S, bounds_error=False, fill_value="extrapolate")
@@ -174,11 +214,20 @@ class thermal_evolution:
         y0 = self.S0 * self.kb / self.m_h
 
         # ODE solver
-        self.S_solution = odeint(dSdt_func, y0, t)
+        odeint_sol = odeint(dSdt_func, y0, t)
+        self.S_solution = odeint_sol[:,0]
+        # print("S_solution shape = ",self.S_solution.shape)
+        # print("t_Gyr shape = ", self.t_Gyr.shape)
 
         Tint_func = interpolate.interp1d(self.s_mean_TE, self.Tint_array, bounds_error=False, fill_value="extrapolate")
         self.Tint_solution = Tint_func(self.S_solution)
 
+        Rtot_func = interpolate.interp1d(self.s_mean_TE, self.Rtot_TE, bounds_error=False, fill_value="extrapolate")
+        self.Rtot_solution = Rtot_func(self.S_solution)
+
+        # age points at Tint
+        age_func = interpolate.interp1d(self.S_solution, self.t_Gyr, bounds_error=False, fill_value="extrapolate")
+        self.age_points = age_func(self.s_mean_TE)
 
 
 

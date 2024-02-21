@@ -596,6 +596,7 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 
   !WRITE(6,*) 'flag1'
 
+  !WRITE(6,*) intrf
   ! Current planet mass and radius
   M_Pc = mass_btw(1,intrf(n_lay),0)
   R_Pc = r(intrf(n_lay))
@@ -630,6 +631,9 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
      j = j+1
      
      ! Interfaces
+     !WRITE(6,*) 'main'
+     !WRITE(6,*) intrf
+     !WRITE(6,*) j
      CALL interfaces          
      CALL layering
 
@@ -680,7 +684,7 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 
  ! WRITE(6,*) 'flag2'
 
-
+     !WRITE(6,*) intrf
      ! Current planet mass and radius
      M_Pc = mass_btw(1,intrf(n_lay),0)
      R_Pc = r(intrf(n_lay))

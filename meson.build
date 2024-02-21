@@ -5,8 +5,8 @@ project('gastli', 'c',
   license: 'BSD-3',
   meson_version: '>=0.64.0',
     default_options: [
-    #'buildtype=debugoptimized',
-    'buildtype=release',
+    'buildtype=debugoptimized',
+    #'buildtype=release',
     # TODO: the below -Wno flags are all needed to silence warnings in
     # f2py-generated code. This should be fixed in f2py itself.
     'c_args=-Wno-unused-function -Wno-conversion -Wno-misleading-indentation -Wno-incompatible-pointer-types',
@@ -15,11 +15,26 @@ project('gastli', 'c',
     'warning_level=3']
 )
 
+
 # Adding at project level causes many spurious -lgfortran flags.
 add_languages('fortran', native: false)
 
 fc = meson.get_compiler('fortran')
 cc = meson.get_compiler('c')
+
+# Optimisation flag for fortran
+if fc.has_argument('-Ofast')
+  add_project_arguments(['-Ofast', '-fno-finite-math-only'], language: 'fortran')
+else
+  add_project_arguments(['-O3'], language: 'fortran')
+endif
+
+# OPENMP flag for fortran
+#if fc.has_argument('-fopenmp')
+#  add_project_arguments(['-fopenmp'], language: 'fortran')
+#endif
+
+
 
 #https://mesonbuild.com/Python-module.html
 py_mod = import('python')
@@ -71,10 +86,12 @@ dimensions_source = custom_target('dimensionsmodule.c',
   command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'dimensions', '--lower']
   )
 
+
 py3.extension_module('dimensions',
   ['src/mod_dimensions.f95', dimensions_source],
   include_directories: inc_dirs,
   dependencies : [py3_dep, fortranobject_dep],
+  
   subdir: 'gastli',   # if you want to install this part as a submodule
   install : true
 )

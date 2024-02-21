@@ -31,9 +31,26 @@ endif
 
 # OPENMP flag for fortran
 #if fc.has_argument('-fopenmp')
-#  add_project_arguments(['-fopenmp'], language: 'fortran')
+#  add_global_arguments(['-fopenmp'], language: 'fortran')
+#  add_global_link_arguments(['-fopenmp'], language: 'fortran')
 #endif
 
+
+if fc.get_id() == 'nvidia_hpc'
+  add_global_arguments('-mp', language : 'fortran')
+  add_global_link_arguments('-mp', language : 'fortran')
+elif fc.get_id() == 'nagfor'
+  add_global_arguments('-openmp', language : 'fortran')
+  add_global_link_arguments('-openmp', language : 'fortran')
+elif fc.get_id() == 'gcc'
+  add_global_arguments('-fopenmp', language : 'fortran')
+  add_global_link_arguments('-fopenmp', language : 'fortran')
+elif fc.get_id() == 'intel' or fc.get_id() == 'intel-llvm'
+  add_global_arguments('-qopenmp', language : 'fortran')
+  add_global_link_arguments('-qopenmp', language : 'fortran')
+elif fc.get_id() == 'intel-cl' or fc.get_id() == 'intel-llvm-cl'
+  add_global_arguments('/Qopenmp', language : 'fortran')
+endif
 
 
 #https://mesonbuild.com/Python-module.html
@@ -142,6 +159,8 @@ gastli_interior_source = custom_target('gastli_interiormodule.c',
   command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'gastli_interior', '--lower']
   )
 
+omp = dependency('openmp')
+
 py3.extension_module('gastli_interior',
   ['src/mod_funcmazevet.f95',
    'src/mod_mazevet.f95',
@@ -152,7 +171,8 @@ py3.extension_module('gastli_interior',
    'src/mod_modEOS.f95',
    'src/mod_subroutines.f95', 'src/GASTLI_interior.f95', gastli_interior_source],
   include_directories: inc_dirs,
-  dependencies : [py3_dep, fortranobject_dep],
+  dependencies : [py3_dep, fortranobject_dep, omp],
+  link_args : ['-fopenmp','-lgomp'],
   subdir: 'gastli',   # if you want to install this part as a submodule
   install : true
 )

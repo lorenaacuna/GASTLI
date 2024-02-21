@@ -1,7 +1,7 @@
 # GASTLI
 GAS gianT modeL for Interiors
 
-Download zip file for the input data [here](https://www.dropbox.com/scl/fi/euhdgfhyotxtw0jqe4ydi/gastli_input_data.zip?rlkey=vw7epxyly844xfkf9yws4fai5&dl=0))
+Download zip file for the input data [here](https://www.dropbox.com/scl/fi/euhdgfhyotxtw0jqe4ydi/gastli_input_data.zip?rlkey=vw7epxyly844xfkf9yws4fai5&dl=0)
 
 Create an environment for GASTLI: 
 ```

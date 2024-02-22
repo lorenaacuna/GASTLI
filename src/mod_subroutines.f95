@@ -11,7 +11,7 @@ MODULE subroutines
   USE parameters
   USE functions
   USE modEOS
-  !USE OMP_LIB
+  USE OMP_LIB
 
   IMPLICIT NONE
 
@@ -248,6 +248,7 @@ CONTAINS
        
        !$OMP PARALLEL 
        !WRITE(6,*) 'Max number of threads = ', OMP_GET_MAX_THREADS()
+       !WRITE(6,*) 'Thread number =', OMP_GET_THREAD_NUM()
        DO i=n_pts, 1, -1
           !P(k,i) = P(k+1,intrf(k+1)) + integral(i,intrf(k+1),arr,r)
           P(k,i) = P(k+1,intrf(k+1)) + integrate(r(i:intrf(k+1)),arr(i:intrf(k+1)))

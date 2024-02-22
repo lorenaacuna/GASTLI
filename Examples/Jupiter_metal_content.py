@@ -27,7 +27,7 @@ M_P = Mjup
 Tintpl = 150.
 Teqpl = 105.
 
-# Core mass fractionco
+# Core mass fraction
 CMF = 0.01
 
 

@@ -37,16 +37,17 @@ my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, FeH_flag=False, Zenv=Zenv, tolera
 
 
 # Recommended: save sequence of interior models in case thermal evol eq. solver stops
-data = np.zeros((len(my_therm_obj.f_S),6))
+data = np.zeros((len(my_therm_obj.f_S),7))
 data[:,0] = my_therm_obj.f_S
 data[:,1] = my_therm_obj.s_mean_TE
-data[:,2] = my_therm_obj.Tint_array
-data[:,3] = my_therm_obj.Rtot_TE
-data[:,4] = my_therm_obj.Rbulk_TE
-data[:,5] = my_therm_obj.Tsurf_TE
+data[:,2] = my_therm_obj.s_top_TE
+data[:,3] = my_therm_obj.Tint_array
+data[:,4] = my_therm_obj.Rtot_TE
+data[:,5] = my_therm_obj.Rbulk_TE
+data[:,6] = my_therm_obj.Tsurf_TE
 
-fmt = '%1.4e','%1.4e','%1.4e','%1.4e','%1.4e','%1.4e'
-np.savetxt('thermal_sequence_Jupiter.dat', data,header='f_S s_mean_TE Tint Rtot Rbulk Tsurf',comments='',fmt=fmt)
+fmt = '%1.4e','%1.4e','%1.4e','%1.4e','%1.4e','%1.4e','%1.4e'
+np.savetxt('thermal_sequence_Jupiter.dat', data,header='f_S s_mean_TE s_top_TE Tint Rtot Rbulk Tsurf',comments='',fmt=fmt)
 
 
 

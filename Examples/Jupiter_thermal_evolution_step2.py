@@ -20,10 +20,11 @@ my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
 data = pd.read_csv('thermal_sequence_Jupiter.dat', sep='\s+',header=None,skiprows=1)
 my_therm_obj.f_S = data[0]
 my_therm_obj.s_mean_TE = data[1]
-my_therm_obj.Tint_array = data[2]
-my_therm_obj.Rtot_TE = data[3]
-my_therm_obj.Rbulk_TE = data[4]
-my_therm_obj.Tsurf_TE = data[5]
+my_therm_obj.s_top_TE = data[2]
+my_therm_obj.Tint_array = data[3]
+my_therm_obj.Rtot_TE = data[4]
+my_therm_obj.Rbulk_TE = data[5]
+my_therm_obj.Tsurf_TE = data[6]
 
 my_therm_obj.solve_thermal_evol_eq()
 
@@ -36,8 +37,7 @@ fig = plt.figure(figsize=(12, 12))
 ax = fig.add_subplot(2, 2, 1)
 
 plt.plot(my_therm_obj.t_Gyr, my_therm_obj.S_solution/1e6, '-', color='black', linewidth=4.)
-plt.plot(my_therm_obj.age_points, my_therm_obj.s_mean_TE/1e6, 'o', color='grey', markeredgecolor='k')
-
+plt.plot(my_therm_obj.age_points, my_therm_obj.s_top_TE/1e6, 'o', color='grey', markeredgecolor='k')
 plt.xlim(0.,15.)
 
 

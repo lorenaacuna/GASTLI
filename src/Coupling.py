@@ -8,15 +8,17 @@ import math
 import sys
 
 class coupling:
-    """ Class defining objects to run a normal interior-atmosphere coupling model
-        (no thermal evolution)
-
-    Args:
-        pow_law_formass: power exponent for planet radius estimation in the interior model.
-         Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox.)
-    """
-
     def __init__(self,path_to_file,pow_law_formass=None):
+        """
+        Description:
+             Class defining objects to run one interior-atmosphere coupled model
+        Args:
+            path_to_file: path to input data directory
+            pow_law_formass: power exponent to estimate the initial guess of the planet radius in the interior model.
+            Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox). Decrease if
+            core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
+        """
+
         '''
         - Initialises interior and atm. models
         - Other constants
@@ -45,33 +47,50 @@ class coupling:
     def main(self,M_P,x_core,Teq,Tint,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
              tolerance=1e-3,limit_level=10.):
         """
-        Function that runs coupled interior-atmosphere model
+        Description:
+            Function that runs coupled interior-atmosphere model
         Args:
-        :param M_P: Planet mass in Earth masses
-        :param x_core: Core mass fraction
-        :param Zenv: Metal mass fraction in envelope
-        :param Teq: Equilibrium temperature in K (at zero Bond albedo)
-        :param Tint: Internal temperature in K
-        :param Tguess (optional): Initial guess for the surface temperature in K. Default is 2000 K.
-        :param tolerance (optional): relative difference in radius between interior-atm. steps. Default is 0.001
-        :return:
-        ## From interior model (only) ##
-        self.myplanet.R_P: Planet bulk (from center to Psurf) radius in Earth radii
-        self.myplanet.rho_p: Planet bulk density in g/cm3
-        self.myplanet.OtoH: O:H ratio in envelope
-        self.myplanet.metal: Envelope metallicity
-        ## From int.-atm. coupling ##
-        self.T_surf: Surface temperature (1000 bar) in K
-        self.Rbulk_Rjup: Planet bulk radius in Jupiter radii
-        self.Matm_earthunits: Atmospheric mass in Earth masses
-        self.Mtot: Total mass (bulk + atm.) in Earth masses
-        self.Rtot: Converged total planet radius in Jupiter radii
-        ## From atmospheric model (only) ##
-        self.r_atm_profile: Atm. radius profile in m
-        self.g_atm_profile: Atm. gravity profile in m/s2
-        self.P_atm_profile: Atm. pressure profile in Pa
-        self.T_atm_profile: Atm. temperature profile in K
-        self.rho_atm_profile: Atm. density profile in kg/m3
+            M_P: Planet mass in Earth masses
+            x_core: Core mass fraction
+            Teq: Equilibrium temperature in K (at zero Bond albedo)
+            Tint: Internal temperature in K
+            CO (optional): C-to-O ratio. Default value is 0.55 (solar)
+            FeH_flag (optional): equals True if the amount of metals is specified as log10(metallicity) in x solar
+            units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
+            fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
+            In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
+            (appendix A1) to interpolate the PT profiles from atmospheric grid
+            Zenv (optional): atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
+            log_FeH: log10(metallicity) in x solar units (for FeH_flag = True).
+            Default value is zero (solar composition)
+            Tguess (optional): Initial guess for the surface temperature in K. Default is 2000 K.
+            Rguess (optional): Initial guess for planet radius in Earth radii. Default is 11.2 Earth radii (Jupiter's
+            radius). Changing it may speed up calculations when FeH_flag = True.
+            tolerance (optional): maximum relative difference in radius between interior-atm. steps. Default is 0.001
+            limit_level (optional): pressure level (bar) at which the density is set constant to prevent overflow
+            of ODE solver due to very small values of density. Default is 10 bar
+        Return:
+            ## Output parameters of coupling class only ##
+            Rtot: Converged total planet radius in Jupiter radii
+            Mtot: Total mass (bulk interior + atm.) in Earth masses
+            T_surf: Final surface temperature (1000 bar) in K
+            CMF_conv: Re-computed core mass fraction. It takes into account the mass of the atmosphere.
+            Rbulk_Rjup: Planet bulk radius in Jupiter radii
+            Matm_earthunits: Atmospheric mass in Earth masses
+
+            ## Output parameters of atmosphere class ##
+            To access the output parameters of the atmosphere class, such as the atmospheric thickness or profiles,
+            add "myatmmodel." to the name of the parameter.
+            Example: to get the pressure and temperature atm. profiles, get the attributes from the coupling class
+            named "myatmmodel.P_ode" and "myatmmodel.T_ode".
+            To see the list of parameters from the atmosphere class, see the docstring of function "calc_thickness"
+
+            ## Output parameters of interior class ##
+            To access the output parameters of the interior class, such as the interior profiles,
+            add "myplanet." to the name of the parameter.
+            Example: to get the gravity and radius interior profiles, get the attributes from the coupling class
+            named "myplanet.g" and "myplanet.r".
+            To see the list of parameters from the interior class, see the docstring of function "calc_radius"
         """
 
         self.M_P = M_P
@@ -209,19 +228,20 @@ class coupling:
         Matm = Pbase*4*math.pi*Rbulk**2/g_surf          # In kg
         self.Matm_earthunits = Matm/self.Mearth
         self.Mtot = self.M_P + self.Matm_earthunits
+        self.CMF_conv = (M_P*x_core)/self.Mtot
 
 
         self.myatmmodel.calc_thickness(self.Rbulk_Rjup,self.Matm_earthunits,limit_level=limit_level)
 
 
         self.Rtot = self.myatmmodel.total_radius
-
+        """
         self.r_atm_profile = self.myatmmodel.r
         self.g_atm_profile = self.myatmmodel.g_ode
         self.P_atm_profile = self.myatmmodel.P_ode
         self.T_atm_profile = self.myatmmodel.T_ode
         self.rho_atm_profile = self.myatmmodel.rho_ode
-
+        """
 
 
         """
@@ -241,3 +261,4 @@ class coupling:
         print('Output:')
         print('Rtotal [Rjup] = ', self.Rtot)
         """
+

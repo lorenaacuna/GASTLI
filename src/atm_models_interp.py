@@ -161,28 +161,36 @@ def O_to_H_molecular(Z):
 
 
 class atm_models_interp:
-    """ Class defining objects for carrying out interpolation of atmospheric models
+    def __init__(self,path_to_file,name_grid="gastli_default_atm_grid.hdf5"):
+        """
+        Description:
+            Class defining object to carry out interpolation of atmospheric models
 
-    Args:
-        path_grid (optional): path to atmospheric model grid. It must be in hdf5 format,
-        and must have the following dimensions:
-        "FeH": log10(Fe/H) in x solar units
-        "logg": log10 of surface gravity in cm/s2
-        "Teq": Equilibrium temperature in K
-        "Tint": Internal temperature in K
-        "pressure": Atmospheric pressure in bar
-        The 5-dimensional dataset must be named "PT_profiles" in the hdf5 file
-        The data must be defined on a rectilinear grid, in other words, a regular grid structure
-        If some models are missing, fill these with np.nan. The atm_models_interp class will raise a warning
-        and a recommended value for a np.nan model
-    """
+        Args:
+            path_to_file: path to input data directory
+            name_grid (optional): name of grid with atmospheric models. The name of the default grid is
+            "gastli_default_atm_grid.hdf5"
 
-    def __init__(self,path_to_file):
+            The atmospheric grid must have the following dimensions:
+            "C/O": C/O ratio
+            "FeH": log10(Fe/H) in x solar units
+            "logg": log10 of surface gravity in cm/s2
+            "Teq": Equilibrium temperature in K
+            "Tint": Internal temperature in K
+            "pressure": Atmospheric pressure in bar
+
+            There should be two 6-dimensional datasets in the hdf5 file: one named "PT_profiles" and the
+            other "metal mass fractions".
+            The data must be defined on a rectilinear grid, in other words, a regular grid structure
+            If some models are missing, fill these with np.nan. The atm_models_interp class will raise a warning
+            and a recommended value for a np.nan model
+        """
+
         '''
+        Description:
         - Initialises parameters
         - Loads in data from atmospheric models and water and H/He EOS
         '''
-
         # Planet parameters
         self.T_int_pl = 0.0         # K
         self.g_surf_pl = 0.0        # cgs
@@ -195,7 +203,7 @@ class atm_models_interp:
         # Load atmosphere data
         self.path_to_file = path_to_file
 
-        file_atm = h5py.File(self.path_to_file+"Input/Atmospheric data/gastli_default_atm_grid.hdf5", 'r')
+        file_atm = h5py.File(self.path_to_file+"Input/Atmospheric data/"+name_grid, 'r')
 
         self.data_set_atm = file_atm['PT_profiles'][()]
         self.data_set_metal_mass_fractions = file_atm['metal_mass_fractions'][()]
@@ -282,16 +290,21 @@ class atm_models_interp:
 
     def calc_interior_mass_fraction(self,Tint,g_surf,Teq,CO,log_FeH):
         '''
-        Dscription
+        Description:
+            Function that calculates the metal mass fraction for a given log10(metallicity) [x solar].
+            It uses data from easychem.
+
         Args:
-        :param Tint: Internal temperature in K
-        :param g_surf: Surface gravity in cm/s2
-        :param Teq: Equilibrium temperature in K (at Bond albedo zero)
-        :param CO: atm. C-to-O ratio
-        :param log_FeH: log10(metallicity), where the atm metallicity is in x solar units
+            Tint: Internal temperature in K
+            g_surf: Surface gravity in cm/s2
+            Teq: Equilibrium temperature in K (at Bond albedo zero)
+            CO: atm. C-to-O ratio
+            log_FeH: log10(metallicity), where the atm. metallicity is in x solar units
+
         Return:
-        self.MMF_profile: metal mass fraction profile for atm. thickness calculation
-        self.MMF_surf: metal mass fraction in the surface (1000 bars) for interior model input
+            Pprofile: pressure profile in bar
+            MMF_profile: metal mass fraction profile for atm. thickness calculation
+            MMF_surf: metal mass fraction in the surface (1000 bars) for interior model input
         '''
 
         self.T_int_pl = Tint
@@ -367,17 +380,25 @@ class atm_models_interp:
 
     def calc_PTprofile(self,Tint,g_surf,Teq,Zenv=0.03,FeH_flag=True,CO_def=0.55):
         '''
-        Calculation of pressure-temperature atmospheric profile by interpolating the grid of data of atmospheric models
+        Description:
+            Calculation of pressure-temperature atmospheric profile by interpolating the grid of data of
+            atmospheric models
         Args:
-        :param Tint: Internal temperature in K
-        :param g_surf: Surface gravity in cm/s2
-        :param Teq: Equilibrium temperature in K (at Bond albedo zero)
-        :param Zatm: Atmosphere metal mass fraction
+            Tint: Internal temperature in K
+            g_surf: Surface gravity in cm/s2
+            Teq: Equilibrium temperature in K (at Bond albedo zero)
+            CO_def (optional): C-to-O ratio. Default value is 0.55 (solar)
+            FeH_flag (optional): equals True if the amount of metals is specified as log10(metallicity) in x solar
+            units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
+            fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
+            In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
+            (appendix A1) to interpolate the PT profiles from atmospheric grid
+            Zenv (optional): atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
         Return:
-        self.Pprofile: atm. pressure profile in bar
-        self.Tprofile: atm. temperature profile in K
-        self.Tsurf: Temperature at bottom of atmosphere in K
-        self.Psurf: Pressure at bottom of atmosphere in bar. Normally set to 1000 bars
+            Pprofile: atm. pressure profile in bar
+            Tprofile: atm. temperature profile in K
+            Tsurf: Temperature at bottom of atmosphere in K
+            Psurf: Pressure at bottom of atmosphere in bar. Normally set to 1000 bars
         '''
 
         self.T_int_pl = Tint
@@ -491,18 +512,21 @@ class atm_models_interp:
 
     def calc_thickness(self,Rbulk,Matm_earthunits,limit_level=10.):
         '''
-        Calculates thickness of atmosphere
+        Description:
+            Calculates thickness of atmosphere
         Args:
-        :param Rbulk: Planet bulk radius (centre to Psurf) in Jupiter radii
-        :param Matm_earthunits: Atmospheric mass in Earth units
-        :return:
-        self.r: Radius atm. profile in m
-        self.P_ode: Pressure atm. profile in Pa
-        self.g_ode: Gravity atm. profile in m/s2
-        self.rho_ode: Density atm. profile in kg/m3
-        self.T_ode: Temperature atm. profile in K
-        self.total_radius: Total planet radius in Jupiter radii
-        self.z_ode: Atmospheric thickness in Jupiter radii
+            Rbulk: Planet bulk radius (centre to Psurf) in Jupiter radii
+            Matm_earthunits: Atmospheric mass in Earth units
+            limit_level (optional): pressure level (bar) at which the density is set constant to prevent overflow
+            of ODE solver due to very small values of density. Default is 10 bar
+        Returns:
+            r: Radius atm. profile in m
+            P_ode: Pressure atm. profile in Pa
+            g_ode: Gravity atm. profile in m/s2
+            rho_ode: Density atm. profile in kg/m3
+            T_ode: Temperature atm. profile in K
+            total_radius: Total planet radius in Jupiter radii
+            z_ode: Atmospheric thickness in Jupiter radii
         '''
 
         self.Rbulk_pl = Rbulk
@@ -608,7 +632,6 @@ class atm_models_interp:
             press units: in Pa
             mass units: in kg
             radius units: in m
-
             :return: dydt = [dP/dr,dr/dm]
             '''
             press_ft, radius_ft = y

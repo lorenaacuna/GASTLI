@@ -13,18 +13,17 @@ from scipy.integrate import odeint
 
 
 class thermal_evolution:
-    """ Class defining objects to calculate the thermal evolution for a constant mass, composition and equilibrium
-    temperature
-
-    Args:
-    :param pow_law_formass (Optional): power exponent for planet radius estimation in the interior model.
-           Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox.)
-           In some cases, it is necessary to decrease it to have a higher spatial resolution in the radius grid
-           These cases tend to be low core mass fraction compositions (i.e CMF = 0.01)
-
-    """
-
     def __init__(self,path_to_file,pow_law_formass=None):
+        """
+        Description:
+            Class defining objects to calculate the thermal evolution for a constant mass, composition and equilibrium
+            temperature
+        Args:
+            path_to_file: path to input data directory
+            pow_law_formass: power exponent to estimate the initial guess of the planet radius in the interior model.
+            Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox). Decrease if
+            core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
+        """
 
         self.path_to_file = path_to_file
         self.pow_law_formass = pow_law_formass
@@ -53,39 +52,49 @@ class thermal_evolution:
     def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,tolerance=1e-3,\
              limit_level=10.):
         """
-        Function that runs compute a series of interior structure models and solves the entropy differential equation
-        to calculate the thermal evolution
+        Description:
+            Function that runs a series of interior structure models at different internal temperatures and gets
+            the entropies. Necessary to run before solving the luminosity differential equation (thermal evolution).
         Args:
-        :param M_P: Planet mass in Earth masses
-        :param x_core: Core mass fraction
-        :param Zenv: Metal mass fraction in envelope
-        :param Teq: Equilibrium temperature in K (at zero Bond albedo)
-        :param Tint_array: Array containing the internal temperatures at which the entropy (and age) are to be computed
-        :param Tguess (optional): Initial guess for the surface temperature in K. Default is 2000 K.
-        :param tolerance (optional): relative difference in radius between interior-atm. steps. Default is 0.001
-        :param t_Gyr (optional): time array in Gyr used to solve the entropy differential equation.
-               Default has 100 points between 2100 yrs and 10 Gyr.
-        :param S0 (optional): Initial condition for the entropy, S(t=0) in k_b*m_h units. Default is 12.
-
-        :return:
-        self.Tint_solution: array containing the internal temperature in K corresponding to the ages in t_Gyr
-        self.S_solution: array containing the entropy in J/kg/K corresponding to the ages in t_Gyr
-        self.s_top_TE: array containing the entropy at 1000 bar of the interior models calculated as part of
-                       the thermal evolution sequence. Units: J/kg/K.
-        self.s_mean_TE: array containing the mean envelope entropy of the interior models calculated as part of
-                       the thermal evolution sequence. Units: J/kg/K.
-        self.Mtot_TE: array containing the total mass of the interior models calculated as part of
-                       the thermal evolution sequence. Units: Earth masses.
-        self.Rtot_TE: array containing the total radius of the interior models calculated as part of
-                       the thermal evolution sequence. Units: Jupiter radii.
-        self.Rbulk_TE: array containing the bulk radius of the interior models calculated as part of
-                       the thermal evolution sequence. Units: Jupiter radii.
-        self.Tsurf_TE: array containing the temperature at 1000 bar of the interior models calculated as part of
-                       the thermal evolution sequence. Units: K.
-        self.L_TE: array containing the luminosity of the interior models calculated as part of
-                       the thermal evolution sequence. Units: J/s.
-        self.f_S: array containing the entropy derivative dS/dt of the interior models calculated as part of
-                       the thermal evolution sequence. In SI units (J/kg/K per s).
+            M_P: Planet mass in Earth masses
+            x_core: Core mass fraction
+            Teq: Equilibrium temperature in K (at zero Bond albedo)
+            Tint_array: Array containing the internal temperatures at which the entropy are to be computed.
+            At least two elements are needed. The more models you include in the sequence, the more accurate the
+            thermal evolution will be. We recommend at least 5 points per thermal sequence, between the highest
+            possible Tint and 50 K.
+            CO (optional): C-to-O ratio. Default value is 0.55 (solar)
+            FeH_flag (optional): equals True if the amount of metals is specified as log10(metallicity) in x solar
+            units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
+            fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
+            In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
+            (appendix A1) to interpolate the PT profiles from atmospheric grid
+            Zenv (optional): atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
+            log_FeH: log10(metallicity) in x solar units (for FeH_flag = True).
+            Default value is zero (solar composition)
+            Tguess (optional): Initial guess for the surface temperature in K. Default is 2000 K.
+            tolerance (optional): relative difference in radius between interior-atm. steps. Default is 0.001.
+            If a scalar is provided, it will be that same value across the thermal sequence. If an array, it must be
+            the same size as Tint_array, and its elements will be used in the coupled model one by one.
+            limit_level (optional): pressure level (bar) at which the density is set constant to prevent overflow
+            of ODE solver due to very small values of density. Default is 10 bar
+        Return:
+            s_top_TE: array containing the entropy at 1000 bar of the interior models calculated as part of
+            the thermal evolution sequence. Units: J/kg/K.
+            s_mean_TE: array containing the mean envelope entropy of the interior models calculated as part of
+            the thermal evolution sequence. Units: J/kg/K.
+            Mtot_TE: array containing the total mass of the interior models calculated as part of
+            the thermal evolution sequence. Units: Earth masses.
+            Rtot_TE: array containing the total radius of the interior models calculated as part of
+            the thermal evolution sequence. Units: Jupiter radii.
+            Rbulk_TE: array containing the bulk radius of the interior models calculated as part of
+            the thermal evolution sequence. Units: Jupiter radii.
+            Tsurf_TE: array containing the temperature at 1000 bar of the interior models calculated as part of
+            the thermal evolution sequence. Units: K.
+            L_TE: array containing the luminosity of the interior models calculated as part of
+            the thermal evolution sequence. Units: J/s.
+            f_S: array containing the entropy derivative dS/dt of the interior models calculated as part of
+            the thermal evolution sequence. In SI units (J/kg/K per s).
         """
 
         self.M_P = M_P
@@ -185,9 +194,18 @@ class thermal_evolution:
 
     def solve_thermal_evol_eq(self,t_Gyr=np.linspace(2.1e-6, 15., 100), S0=12.):
         """
-        Add docstrings here
-        :param S0:
-        :return:
+        Description:
+            This function solves the luminosity differential equation to calculate the age corresponding to the
+            thermal evolution sequence calculated previously with the "main" function
+        Args:
+            t_Gyr (optional): time array in Gyr used to solve the entropy differential equation.
+            Default has 100 points between 2100 yrs and 10 Gyr.
+            S0 (optional): Initial condition for the entropy, S(t=0) in k_b*m_h units. Default is 12.
+        Return:
+            Tint_solution: array containing the internal temperature in K corresponding to the ages in t_Gyr
+            S_solution: array containing the entropy in J/kg/K corresponding to the ages in t_Gyr
+            Rtot_solution: array containing the total radius in Jupiter radii corresponding to the ages in t_Gyr
+            age_points: array containing the age in Gyr corresponding to the entropies in s_top_TE
         """
 
         self.t_Gyr = t_Gyr
@@ -195,7 +213,8 @@ class thermal_evolution:
 
         # dS/dt
         inv_f_S = 1 / self.f_S
-        dSdt_func_interp = interpolate.interp1d(self.s_mean_TE, inv_f_S, bounds_error=False, fill_value="extrapolate")
+        #dSdt_func_interp = interpolate.interp1d(self.s_mean_TE, inv_f_S, bounds_error=False, fill_value="extrapolate")
+        dSdt_func_interp = interpolate.interp1d(self.s_top_TE, inv_f_S, bounds_error=False, fill_value="extrapolate")
 
         def dSdt_func(y, t):
             '''
@@ -219,15 +238,19 @@ class thermal_evolution:
         # print("S_solution shape = ",self.S_solution.shape)
         # print("t_Gyr shape = ", self.t_Gyr.shape)
 
-        Tint_func = interpolate.interp1d(self.s_mean_TE, self.Tint_array, bounds_error=False, fill_value="extrapolate")
+        #Tint_func = interpolate.interp1d(self.s_mean_TE, self.Tint_array, bounds_error=False, fill_value="extrapolate")
+        Tint_func = interpolate.interp1d(self.s_top_TE, self.Tint_array, bounds_error=False, fill_value="extrapolate")
         self.Tint_solution = Tint_func(self.S_solution)
 
-        Rtot_func = interpolate.interp1d(self.s_mean_TE, self.Rtot_TE, bounds_error=False, fill_value="extrapolate")
+        #Rtot_func = interpolate.interp1d(self.s_mean_TE, self.Rtot_TE, bounds_error=False, fill_value="extrapolate")
+        Rtot_func = interpolate.interp1d(self.s_top_TE, self.Rtot_TE, bounds_error=False, fill_value="extrapolate")
         self.Rtot_solution = Rtot_func(self.S_solution)
 
         # age points at Tint
         age_func = interpolate.interp1d(self.S_solution, self.t_Gyr, bounds_error=False, fill_value="extrapolate")
-        self.age_points = age_func(self.s_mean_TE)
+        #self.age_points = age_func(self.s_mean_TE)
+        self.age_points = age_func(self.s_top_TE)
+
 
 
 

@@ -144,7 +144,7 @@ plt.close(fig)
 fig = plt.figure(figsize=(24, 6))
 ax = fig.add_subplot(1, 4, 1)
 
-plt.plot(my_coupling.T_atm_profile,my_coupling.P_atm_profile/1e5, '-', color='black')
+plt.plot(my_coupling.myatmmodel.T_ode,my_coupling.myatmmodel.P_ode/1e5, '-', color='black')
 
 plt.ylabel(r'Pressure [bar]', fontsize=16)
 plt.xlabel(r'Temperature [K]', fontsize=16)
@@ -157,7 +157,7 @@ plt.ylim(1e3,2e-2)
 
 ax = fig.add_subplot(1, 4, 2)
 
-plt.plot(my_coupling.rho_atm_profile,my_coupling.P_atm_profile/1e5, '-', color='blue')
+plt.plot(my_coupling.myatmmodel.rho_ode,my_coupling.myatmmodel.P_ode/1e5, '-', color='blue')
 
 plt.ylabel(r'Pressure [bar]', fontsize=16)
 plt.xlabel(r'Density [kg/m$^{3}$]', fontsize=16)
@@ -169,7 +169,7 @@ plt.ylim(1e3,2e-2)
 
 ax = fig.add_subplot(1, 4, 3)
 
-plt.plot(my_coupling.g_atm_profile,my_coupling.P_atm_profile/1e5, '-', color='orange')
+plt.plot(my_coupling.myatmmodel.g_ode,my_coupling.myatmmodel.P_ode/1e5, '-', color='orange')
 
 plt.ylabel(r'Pressure [bar]', fontsize=16)
 plt.xlabel('Gravity acceleration [m/s$^{2}$]', fontsize=16)
@@ -184,7 +184,7 @@ ax = fig.add_subplot(1, 4, 4)
 
 # Rjup = 7.149e7    # Jupiter radius in m
 
-plt.plot(my_coupling.r_atm_profile/7.149e7,my_coupling.P_atm_profile/1e5, '-', color='red')
+plt.plot(my_coupling.myatmmodel.r/7.149e7,my_coupling.myatmmodel.P_ode/1e5, '-', color='red')
 
 plt.ylabel(r'Pressure [bar]', fontsize=16)
 plt.xlabel('Radius [$R_{Jup}$]', fontsize=16)

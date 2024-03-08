@@ -352,9 +352,9 @@ class atm_models_interp:
             FeH_node = maxloc(self.FeH_atm, self.log_FeH)
             CO_node = maxloc(self.CO_atm, self.CO)
 
-            index_Teq = np.array([Teq_node,Teq_node+1])
-            index_logg = np.array([logg_node,logg_node+1])
-            index_FeH = np.array([FeH_node,FeH_node+1])
+            index_Teq = np.array([Teq_node-1,Teq_node])
+            index_logg = np.array([logg_node-1,logg_node])
+            index_FeH = np.array([FeH_node-1,FeH_node])
             index_CO = np.array([0, 1])
 
             maxTint_list = []
@@ -474,9 +474,9 @@ class atm_models_interp:
             FeH_node = maxloc(self.FeH_atm, self.log_FeH)
             CO_node = maxloc(self.CO_atm, self.CO)
 
-            index_Teq = np.array([Teq_node,Teq_node+1])
-            index_logg = np.array([logg_node,logg_node+1])
-            index_FeH = np.array([FeH_node,FeH_node+1])
+            index_Teq = np.array([Teq_node-1,Teq_node])
+            index_logg = np.array([logg_node-1,logg_node])
+            index_FeH = np.array([FeH_node-1,FeH_node])
             index_CO = np.array([0, 1])
 
             maxTint_list = []

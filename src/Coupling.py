@@ -8,7 +8,7 @@ import math
 import sys
 
 class coupling:
-    def __init__(self,path_to_file,pow_law_formass=None):
+    def __init__(self,path_to_file,pow_law_formass=0.32):
         """
         Description:
              Class defining objects to run one interior-atmosphere coupled model
@@ -28,11 +28,13 @@ class coupling:
         self.path_to_file = path_to_file
 
         # Initialise interior model
+        """
         if self.pow_law_formass == None:
             self.myplanet = int_planet(path_to_file=self.path_to_file)
         else:
             self.myplanet = int_planet(path_to_file=self.path_to_file,pow_law = self.pow_law_formass)
-
+        """
+        self.myplanet = int_planet(path_to_file=self.path_to_file, pow_law=self.pow_law_formass)
 
         self.myplanet.setup_parameters()
 
@@ -114,13 +116,10 @@ class coupling:
 
 
         # Difference between Rguess and Rinterior
+        n_iterations = 20
         diff = 1.0
-
-
-
-        Tsurf_arr = np.zeros(20)
-        R_arr = np.zeros(20)
-
+        Tsurf_arr = np.zeros(n_iterations+1)
+        R_arr = np.zeros(n_iterations+1)
         counter = 0
 
         # Convergence loop starts here
@@ -128,20 +127,45 @@ class coupling:
         while diff > tolerance or counter<2:
             #print(diff)
 
-            if counter == len(Tsurf_arr):
-                print('Error in Coupling.py: The number of interior-atmosphere iterations is greater than 20.')
+            if counter == n_iterations:
+                print('Warning in Coupling.py: The number of interior-atmosphere iterations is greater than ',\
+                      n_iterations)
                 print('The current relative difference between radii is',diff)
-                print('Increase the tolerance.')
+                #print('Increase the tolerance.')
+                # For debugging
                 """
                 print("Rbulk array [R_E] = ", R_arr)
                 print("Tsurf array [K] = ", Tsurf_arr)
                 print("# iterations = ", counter)
                 """
-                sys.exit(1)
+                # Re-initialise everything again
+                ## Interior class
+                self.pow_law_formass = self.pow_law_formass - 0.005
+                print('Readjusting mass power law to ', self.pow_law_formass)
+                #print(self.path_to_file)
+                #print(self.pow_law_formass)
+                self.myplanet = int_planet(path_to_file=self.path_to_file, pow_law=self.pow_law_formass)
+                self.myplanet.setup_parameters()
+
+                ## Arrays
+                diff = 1.0
+                Tsurf_arr = np.zeros(n_iterations+1)
+                R_arr = np.zeros(n_iterations+1)
+                counter = 0
+
+                continue
+                #sys.exit(1)
+
+            #print("Tsurf_arr = ", Tsurf_arr)
+            #print("counter = ", counter)
 
             Tsurf_arr[counter] = self.T_surf
             R_arr[counter] = Rguess
 
+            #print("Tsurf = ",Tsurf_arr)
+            #print("Rarr  = ", R_arr)
+            #print('diff =', diff)
+            #print("tolerance = ",tolerance)
 
             # Calculate Zenv for interior
             # if FeH_flag = True, then Zenv for interior module is calculated from easychem tables with log(Fe/H)
@@ -151,7 +175,6 @@ class coupling:
                 self.myatmmodel.calc_interior_mass_fraction(self.Tint, self.g_surf_planet, self.Teq, self.CO_pl,\
                                                             self.log_FeH)
                 self.Zenv = self.myatmmodel.MMF_surf
-
 
 
 
@@ -208,6 +231,9 @@ class coupling:
         print("")
         print("Convergence reached in surface temperature and bulk radius")
         print("")
+
+        #print("Tsurf_arr = ", Tsurf_arr)
+        #print("counter = ", counter)
 
         Tsurf_arr[counter] = self.T_surf
         R_arr[counter] = Rguess

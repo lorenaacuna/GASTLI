@@ -13,7 +13,7 @@ from scipy.integrate import odeint
 
 
 class thermal_evolution:
-    def __init__(self,path_to_file,pow_law_formass=None):
+    def __init__(self,path_to_file,pow_law_formass=0.32):
         """
         Description:
             Class defining objects to calculate the thermal evolution for a constant mass, composition and equilibrium
@@ -49,8 +49,8 @@ class thermal_evolution:
 
 
 
-    def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,tolerance=1e-3,\
-             limit_level=10.):
+    def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
+             tolerance=1e-3, limit_level=10.):
         """
         Description:
             Function that runs a series of interior structure models at different internal temperatures and gets
@@ -117,6 +117,10 @@ class thermal_evolution:
         self.L_TE = np.zeros(n_therm)
         self.f_S = np.zeros(n_therm)
 
+        # more
+        self.Zenv_TE = np.zeros(n_therm)
+
+
 
 
         for i in range(0,n_therm):
@@ -127,11 +131,13 @@ class thermal_evolution:
 
             # Putting it here adds 1-2 secs more per each Tint computation, but it is safer
             # Create coupling class
+            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass)
+            """
             if self.pow_law_formass == None:
                 self.my_coupling = cpl.coupling(path_to_file=self.path_to_file)
             else:
                 self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass)
-
+            """
             if np.isscalar(tolerance):
                 tolerance_for_this_run = tolerance
             else:
@@ -140,13 +146,12 @@ class thermal_evolution:
             # Call to interior model
             if FeH_flag==True:
                 self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
-                                      log_FeH=self.logFeH, Tguess=Tguess, tolerance=tolerance_for_this_run,\
-                                      limit_level=limit_level)
+                                      log_FeH=self.logFeH, Tguess=Tguess, Rguess=Rguess,\
+                                      tolerance=tolerance_for_this_run, limit_level=limit_level)
             else:
                 self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
-                                      FeH_flag=False, Zenv=self.Zenv, Tguess=Tguess, tolerance=tolerance_for_this_run,\
-                                      limit_level=limit_level)
-
+                                      FeH_flag=False, Zenv=self.Zenv, Rguess=Rguess,\
+                                      Tguess=Tguess, tolerance=tolerance_for_this_run, limit_level=limit_level)
 
 
             # Entropy
@@ -160,6 +165,9 @@ class thermal_evolution:
             self.Rtot_TE[i] = self.my_coupling.Rtot
             self.Rbulk_TE[i] = self.my_coupling.Rbulk_Rjup
             self.Tsurf_TE[i] = self.my_coupling.T_surf
+
+            self.Zenv_TE[i] = self.my_coupling.myatmmodel.Zenv_pl
+
             """
             print(self.Mtot_TE)
             print(self.Rtot_TE)

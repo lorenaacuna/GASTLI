@@ -12,24 +12,28 @@ class int_planet:
     def __init__(self, path_to_file, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
                  pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11, 5e11, 5e11, 5e11, \
                                                      5e11, 5e11, 5e11, 5e11, 5e11, 5e11], corEOS=1):
-        """
-        Description:
-            Class defining objects for carrying out interior structure calculations
-            for a given set of mass, composition and surface conditions
+        r"""Class defining objects for carrying out interior structure calculations
+        for a given set of mass, composition and surface conditions
 
         Args:
-            path_to_file: path to input data directory
-            j_max (Optional): Maximum number of iterations - must be < 1000.
-            cnt_conv_max (Optional): Maximum number of detected oscillations.
-            conv_prec (Optional): Precision of the convergence condition.
-            pow_law (Optional): Power exponent for planet radius estimation. Default is 0.32. Increase if planet
-            is very massive
-            ## DO NOT CHANGE THE FOLLOWING PARAMETERS ##
-            chk_EOS (Optional): Index to check the validity range of the used EOS.
-            EOS_lim_P (Optional, array): Upper limit in pressure.
-            corEOS (Optional): Type of correction on the thermodynamical parameters of Vinet EOS.
-            (=0: no correction / =1: range [1:1.5] / =2: range [1:5] / =3:
-            range [1:10])
+            path_to_file:
+                path to input data directory
+            j_max (Optional):
+                Maximum number of iterations - must be < 100.
+            cnt_conv_max (Optional):
+                Maximum number of detected oscillations.
+            conv_prec (Optional):
+                Precision of the convergence condition.
+            pow_law (Optional):
+                Power exponent for planet radius estimation. Default is 0.32. Increase if planet is very massive
+            chk_EOS (Optional):
+                Index to check the validity range of the used EOS. Do not change
+            EOS_lim_P (Optional, array):
+                Upper limit in pressure. Do not change
+            corEOS (Optional):
+                Type of correction on the thermodynamical parameters of Vinet EOS.
+                (=0: no correction / =1: range [1:1.5] / =2: range [1:5] / =3:
+                range [1:10]). Do not change
         """
 
 
@@ -51,7 +55,7 @@ class int_planet:
         self.n_mat_max = dim.dimensions.n_mat_max
 
         # Load constant file
-        self.Ttp,self.Ptp = fi.read_constants(self.path_to_file,)
+        self.Ttp,self.Ptp = fi.read_constants(self.path_to_file)
 
         # Load layer files
         self.ilayer,self.use_lay,self.iEOS,self.EOS_th,self.del_T,self.n_mat,\
@@ -101,6 +105,8 @@ class int_planet:
         self.FeSi = 0.0
         self.rho_p = 0.0
         self.intrf = np.array(np.zeros(self.n_lay + 1))
+        self.intrf_hist = np.zeros((self.n_lay + 1,100))
+        self.iter_num = np.zeros(100)
         self.g = np.array(np.zeros(self.n_pts))
         self.T = np.array(np.zeros(self.n_pts))
         self.P = np.array(np.zeros(self.n_pts))
@@ -118,16 +124,20 @@ class int_planet:
     def setup_parameters(self, f_alloy=cte.constants.f_alloy_e, \
                          MgD=cte.constants.mgd_e, \
                          MgSi=cte.constants.mgsi_e):
-        """
-        Description:
-            Set up parameters for chemistry of mantle and core
+        r"""Set up parameters for chemistry of mantle and core
+            Do not change any of the parameters below
+
         Args:
-            ## DO NOT CHANGE THE FOLLOWING PARAMETERS ##
-            f_alloy (Optional): if no Fe in core, not applicable
-            MgD (Optional): if not Vinet Eq. for mantle, not applicable
-            MgSi (Optional): if not Vinet Eq. for mantle, not applicable
+            f_alloy (Optional):
+                if no Fe in core, not applicable
+            MgD (Optional):
+                if not Vinet Eq. for mantle, not applicable
+            MgSi (Optional):
+                if not Vinet Eq. for mantle, not applicable
+
         Returns:
-            x: matrix with material properties
+            x:
+                matrix with material properties
         """
 
         self.f_alloy = f_alloy
@@ -144,32 +154,53 @@ class int_planet:
         self.x = xout
 
     def calc_radius(self, M_P, x_core, x_H2O, T_surf, P_surf, Zenv):
-        '''
-        Description:
-            Function that calculates planet radius and interior structure
+        r'''Function that calculates planet radius and interior structure
+
         Args:
-            M_P: Planet mass in Earth masses
-            x_core: Core mass fraction
-            x_H2O: Envelope mass fraction. Defined as 1-x_core in this case
-            T_surf: Outer surface (boundary) temperature in K
-            P_surf: Outer surface (boundary) pressure in Pa
+            M_P:
+            Planet mass in Earth masses
+            x_core:
+            Core mass fraction
+            x_H2O:
+            Envelope mass fraction. Defined as 1-x_core in this case
+            T_surf:
+            Outer surface (boundary) temperature in K
+            P_surf:
+            Outer surface (boundary) pressure in Pa
+
         Returns:
-            x_H2Oc: Re-computed envelope mass fraction (for checking)
-            x_corec: Re-computed core mass fraction (for checking)
-            M_Pc: Re-computed interior mass in Earth masses (for checking)
-            R_P: Planet radius in Earth radii
-            FeSi: Fe-to-Si ratio (not applicable if no Fe core)
-            rho_p: Planet density in g/cm3
-            OtoH: Envelope O:H ratio
-            metal: Envelope metallicity ([Fe/H] in x solar units)
-            intrf: Array with indexes of interfaces between layers
-            g: Gravity acceleration profile array, g(r), in cm/s2
-            T: Temperature profile array, T(r), in K
-            P: Pressure profile array, P(r), in Pa
-            rho: Density profile array, rho(r), in kg/m3
-            cv: Specific heat capacity at constant volume profile array, Cv(r), in J/kg/K
-            entropy: Entropy profile array, S(r), in J/kg/K
-            r: Radius profile array, r, in m
+            x_H2Oc:
+                Re-computed envelope mass fraction (for checking)
+            x_corec:
+                Re-computed core mass fraction (for checking)
+            M_Pc:
+                Re-computed interior mass in Earth masses (for checking)
+            R_P:
+                Planet radius in Earth radii
+            FeSi:
+                Fe-to-Si ratio (not applicable if no Fe core)
+            rho_p:
+                Planet density in g/cm3
+            OtoH:
+                Envelope O:H ratio
+            metal:
+                Envelope metallicity ([Fe/H] in x solar units)
+            intrf:
+                Array with indexes of interfaces between layers
+            g:
+                Gravity acceleration profile array, g(r), in cm/s2
+            T:
+                Temperature profile array, T(r), in K
+            P:
+                Pressure profile array, P(r), in Pa
+            rho:
+                Density profile array, rho(r), in kg/m3
+            cv:
+                Specific heat capacity at constant volume profile array, Cv(r), in J/kg/K
+            entropy:
+                Entropy profile array, S(r), in J/kg/K
+            r:
+                Radius profile array, r, in m
         '''
         self.M_P = M_P
         self.x_core = x_core
@@ -189,8 +220,8 @@ class int_planet:
         print("Running interior structure model")
 
         # Output parameters
-        m_pout, x_coreout, x_h2oout, r_pout, fesiout, rhoout, rout, interfaceout, gout,\
-        tout, pout, rhoarrout, cvout, Sout,\
+        m_pout, x_coreout, x_h2oout, r_pout, fesiout, rhoout, rout, interfaceout, intrf_hist, iter_num,\
+        gout, tout, pout, rhoarrout, cvout, Sout,\
         OtoHout, metalout = interior.gastli_interior_subroutine(self.j_max,\
         # Input: run variables & material data
         self.cnt_conv_max,self.conv_prec,self.pow_law,self.chk_EOS, \
@@ -227,6 +258,8 @@ class int_planet:
         self.OtoH = OtoHout
         self.metal = metalout
         self.intrf = interfaceout
+        self.intrf_hist = intrf_hist
+        self.iter_num = iter_num
         self.g = gout
         self.T = tout
         self.P = pout

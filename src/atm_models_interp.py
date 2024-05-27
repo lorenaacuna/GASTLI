@@ -9,22 +9,27 @@ import h5py
 from scipy.interpolate import RegularGridInterpolator
 import sys
 import os
+import gastli.Guillot10 as Guillot10
+import gastli.radius_hse as rh
+import gastli.constants as cte
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 # Auxiliary functions
 # Functions for interpolation of tables
 
 def maxloc(array_in,value_in):
-    '''
-    This function locates the index of the element x <= value_in in an array
+    r'''This function locates the index of the element x <= value_in in an array
     i.e
     index_final = maxloc(array_in,value_in)
     is equivalent to Fortran's
     index_final = MAXLOC(array_in, DIM = 1, MASK=(array_in <= value_in))
+
     Args:
-        array_in: array with values
-        value_in: value whose index we want to locate
+        array_in:
+            array with values
+        value_in:
+            value whose index we want to locate
     '''
     array_minus = abs(array_in-value_in)
     array_index_prov = np.argmin(array_minus)
@@ -36,16 +41,25 @@ def maxloc(array_in,value_in):
 
 
 def interp2d_opt(x_in,y_in,x_array,y_array,z_array):
-    '''
-    2d interpolation
-    :param x_in: Value to evaluate in x-axis
-    :param y_in: Value to evaluate in y-axis
-    :param x_array: Array of x-axis grid. This one is the one that always changes i.e [a,b,c,...,a,b,c...]
-                    Dimension is Nx.
-    :param y_array: Array of y-axis grid. This one is the constant one i.e [d,d,d,...,e,e,e...]
-                    Dimension is Ny
-    :param z_array: Array with the parameter to interpolate. Dimension is Nx*Ny
-    :return: final interpolated value, z(x_in,y_in)
+    r'''2d interpolation
+
+    Args:
+        x_in:
+            Value to evaluate in x-axis
+        y_in:
+            Value to evaluate in y-axis
+        x_array:
+            Array of x-axis grid. This one is the one that always changes i.e [a,b,c,...,a,b,c...]
+            Dimension is Nx.
+        y_array:
+            Array of y-axis grid. This one is the constant one i.e [d,d,d,...,e,e,e...]
+            Dimension is Ny
+        z_array:
+            Array with the parameter to interpolate. Dimension is Nx*Ny
+
+    Returns:
+        z(x_in,y_in):
+            final interpolated value
     '''
 
     Nx = len(x_array)
@@ -74,10 +88,15 @@ def interp2d_opt(x_in,y_in,x_array,y_array,z_array):
 
 
 def vapor_pressure(Tin):
-    '''
-    This function calculates the saturation curve for water (Wagner & Pruss 2002)
-    :param Tin: Temperature in K
-    :return: Saturation pressure at Tin in MPa
+    r'''This function calculates the saturation curve for water (Wagner & Pruss 2002)
+
+    Args:
+        Tin:
+            Temperature in K
+
+    Returns:
+        Pout:
+            Saturation pressure at Tin in MPa
     '''
     Tc = 647.096   # K
     pc = 22.064    # MPa
@@ -107,10 +126,15 @@ def vapor_pressure(Tin):
     return pout
 
 def vapor_density(Tin):
-    '''
-    This function calculates the density of water vapour in the saturation limit (Wagner & Pruss 2002)
-    :param Tin: Temperature in K
-    :return: Density in kg/m3
+    r'''This function calculates the density of water vapour in the saturation limit (Wagner & Pruss 2002)
+
+    Args:
+        Tin:
+            Temperature in K
+
+    Returns:
+        rhoout:
+            Density in kg/m3
     '''
 
     Tc = 647.096   # K
@@ -147,10 +171,16 @@ mu_H = 1.
 mu_H2O = 18.
 
 def O_to_H_molecular(Z):
-    '''
-    This function converts metal mass fraction into metallicity (or O:H ratio). See Fortney et al. 2013
-    :param Z: metal mass fraction in atmosphere
-    :return: O:H ratio (metallicity [Fe/H])
+    r'''This function converts metal mass fraction into metallicity (or O:H ratio). See Fortney et al. 2013
+
+    Args:
+        Z:
+            metal mass fraction in atmosphere
+
+    Returns:
+        OtoH:
+            O:H ratio (metallicity [Fe/H])
+
     '''
     X = (1-Z)/1.379
     mu_X = 2*mu_H
@@ -162,28 +192,26 @@ def O_to_H_molecular(Z):
 
 class atm_models_interp:
     def __init__(self,path_to_file,name_grid="gastli_default_atm_grid.hdf5"):
-        """
-        Description:
-            Class defining object to carry out interpolation of atmospheric models
+        r"""Class defining object to carry out interpolation of atmospheric models
 
         Args:
-            path_to_file: path to input data directory
-            name_grid (optional): name of grid with atmospheric models. The name of the default grid is
-            "gastli_default_atm_grid.hdf5"
-
-            The atmospheric grid must have the following dimensions:
-            "C/O": C/O ratio
-            "FeH": log10(Fe/H) in x solar units
-            "logg": log10 of surface gravity in cm/s2
-            "Teq": Equilibrium temperature in K
-            "Tint": Internal temperature in K
-            "pressure": Atmospheric pressure in bar
-
-            There should be two 6-dimensional datasets in the hdf5 file: one named "PT_profiles" and the
-            other "metal mass fractions".
-            The data must be defined on a rectilinear grid, in other words, a regular grid structure
-            If some models are missing, fill these with np.nan. The atm_models_interp class will raise a warning
-            and a recommended value for a np.nan model
+            path_to_file:
+                path to input data directory
+            name_grid (optional):
+                name of grid with atmospheric models. The name of the default grid is
+                "gastli_default_atm_grid.hdf5"
+                The atmospheric grid must have the following dimensions:
+                "C/O": C/O ratio
+                "FeH": log10(Fe/H) in x solar units
+                "logg": log10 of surface gravity in cm/s2
+                "Teq": Equilibrium temperature in K
+                "Tint": Internal temperature in K
+                "pressure": Atmospheric pressure in bar
+                There should be two 6-dimensional datasets in the hdf5 file: one named "PT_profiles" and the
+                other "metal mass fractions".
+                The data must be defined on a rectilinear grid, in other words, a regular grid structure
+                If some models are missing, fill these with np.nan. The atm_models_interp class will raise a warning
+                and a recommended value for a np.nan model
         """
 
         '''
@@ -213,17 +241,17 @@ class atm_models_interp:
         self.Teq_atm = file_atm['Teq'][()]
         self.Tint_atm = file_atm['Tint'][()]
         self.logg_atm = file_atm['logg'][()]
-        press_atm = file_atm['pressure'][()]
+        press_atm_file = file_atm['pressure'][()]
 
         # Create atm. data function: PT profile
         self.temperature_func = RegularGridInterpolator((self.CO_atm,self.FeH_atm,self.logg_atm,self.Teq_atm,self.Tint_atm,\
-                                                        press_atm), self.data_set_atm, bounds_error=False,\
+                                                        press_atm_file), self.data_set_atm, bounds_error=False,\
                                                         fill_value=None)
 
 
         # Create atm. data function: abundances
         self.metal_mass_fraction_func = RegularGridInterpolator((self.CO_atm,self.FeH_atm,self.logg_atm,self.Teq_atm,\
-                                                        self.Tint_atm, press_atm), \
+                                                        self.Tint_atm, press_atm_file), \
                                                         self.data_set_metal_mass_fractions, bounds_error=False,\
                                                         fill_value=None)
 
@@ -288,23 +316,31 @@ class atm_models_interp:
         #############################
         #############################
 
-    def calc_interior_mass_fraction(self,Tint,g_surf,Teq,CO,log_FeH):
-        '''
-        Description:
-            Function that calculates the metal mass fraction for a given log10(metallicity) [x solar].
+    def calc_interior_mass_fraction(self,Tint,g_surf,Teq,CO,log_FeH,P_surf=1e3):
+        r'''Function that calculates the metal mass fraction for a given log10(metallicity) [x solar].
             It uses data from easychem.
 
         Args:
-            Tint: Internal temperature in K
-            g_surf: Surface gravity in cm/s2
-            Teq: Equilibrium temperature in K (at Bond albedo zero)
-            CO: atm. C-to-O ratio
-            log_FeH: log10(metallicity), where the atm. metallicity is in x solar units
+            Tint:
+                Internal temperature in K
+            g_surf:
+                Surface gravity in cm/s2
+            Teq:
+                Equilibrium temperature in K (at Bond albedo zero)
+            CO:
+                atm. C-to-O ratio
+            log_FeH:
+                log10(metallicity), where the atm. metallicity is in x solar units
+            P_surf:
+                surface pressure in bar
 
-        Return:
-            Pprofile: pressure profile in bar
-            MMF_profile: metal mass fraction profile for atm. thickness calculation
-            MMF_surf: metal mass fraction in the surface (1000 bars) for interior model input
+        Returns:
+            Pprofile:
+                pressure profile in bar
+            MMF_profile:
+                metal mass fraction profile for atm. thickness calculation
+            MMF_surf:
+                metal mass fraction in the surface (1000 bars) for interior model input
         '''
 
         self.T_int_pl = Tint
@@ -312,12 +348,13 @@ class atm_models_interp:
         self.Teq_pl = Teq
         self.CO = CO
         self.log_FeH = log_FeH
+        self.P_surf = P_surf
 
         logg_pl = np.log10(self.g_surf_pl)
 
         # Interpolation
         # Order: FeH_atm, logg_atm, Teq_atm, Tint_atm, press_atm
-        self.press_atm = np.logspace(-5, 3, self.npoints)
+        self.press_atm = np.logspace(-5, np.log10(P_surf), self.npoints)
 
         pts = np.zeros((self.npoints, 6))
         pts[:, 0] = self.CO
@@ -352,9 +389,9 @@ class atm_models_interp:
             FeH_node = maxloc(self.FeH_atm, self.log_FeH)
             CO_node = maxloc(self.CO_atm, self.CO)
 
-            index_Teq = np.array([Teq_node-1,Teq_node])
-            index_logg = np.array([logg_node-1,logg_node])
-            index_FeH = np.array([FeH_node-1,FeH_node])
+            index_Teq = np.array([Teq_node,Teq_node])
+            index_logg = np.array([logg_node,logg_node])
+            index_FeH = np.array([FeH_node,FeH_node])
             index_CO = np.array([0, 1])
 
             maxTint_list = []
@@ -373,32 +410,43 @@ class atm_models_interp:
             Tint_limit = min(maxTint)
 
             print("No atmospheric models available for this case (np.nan in grid).")
-            print("Decrease the interior temperature below ", Tint_limit, "K")
+            print("Decrease the interior temperature or increase the surface pressure")
+            #print("Decrease the interior temperature below ", Tint_limit, "K")
             sys.exit(1)
 
 
 
-    def calc_PTprofile(self,Tint,g_surf,Teq,Zenv=0.03,FeH_flag=True,CO_def=0.55):
-        '''
-        Description:
-            Calculation of pressure-temperature atmospheric profile by interpolating the grid of data of
+    def calc_PTprofile(self,Tint,g_surf,Teq,Zenv=0.03,FeH_flag=True,CO_def=0.55,guillot=False,P_surf=1e3):
+        r'''Calculation of pressure-temperature atmospheric profile by interpolating the grid of data of
             atmospheric models
+
         Args:
-            Tint: Internal temperature in K
-            g_surf: Surface gravity in cm/s2
-            Teq: Equilibrium temperature in K (at Bond albedo zero)
-            CO_def (optional): C-to-O ratio. Default value is 0.55 (solar)
-            FeH_flag (optional): equals True if the amount of metals is specified as log10(metallicity) in x solar
-            units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
-            fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
-            In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
-            (appendix A1) to interpolate the PT profiles from atmospheric grid
-            Zenv (optional): atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
-        Return:
-            Pprofile: atm. pressure profile in bar
-            Tprofile: atm. temperature profile in K
-            Tsurf: Temperature at bottom of atmosphere in K
-            Psurf: Pressure at bottom of atmosphere in bar. Normally set to 1000 bars
+            Tint:
+                Internal temperature in K
+            g_surf:
+                Surface gravity in cm/s2
+            Teq:
+                Equilibrium temperature in K (at Bond albedo zero)
+            CO_def (optional):
+                C-to-O ratio. Default value is 0.55 (solar)
+            FeH_flag (optional):
+                equals True if the amount of metals is specified as log10(metallicity) in x solar
+                units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
+                fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
+                In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
+                (appendix A1) to interpolate the PT profiles from atmospheric grid
+            Zenv (optional):
+                atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
+
+        Returns:
+            Pprofile:
+                atm. pressure profile in bar
+            Tprofile:
+                atm. temperature profile in K
+            Tsurf:
+                Temperature at bottom of atmosphere in K
+            Psurf:
+                Pressure at bottom of atmosphere in bar. Normally set to 1000 bars
         '''
 
         self.T_int_pl = Tint
@@ -419,6 +467,7 @@ class atm_models_interp:
             self.CO = CO_def
             # set metal mass fraction profile
             self.MMF_profile = np.ones(self.npoints)*self.Zenv_pl
+            self.P_surf = P_surf
         else:
             """
             if FeH_flag == True, you are providing the log(Fe/H)
@@ -429,7 +478,7 @@ class atm_models_interp:
 
         # Interpolation
         # Order: CO_atm, FeH_atm, logg_atm, Teq_atm, Tint_atm, press_atm
-        self.press_atm = np.logspace(-5, 3, self.npoints)
+        self.press_atm = np.logspace(-5, np.log10(P_surf), self.npoints)
 
         pts = np.zeros((self.npoints, 6))
         pts[:, 0] = self.CO
@@ -463,77 +512,201 @@ class atm_models_interp:
         '''
         Class' final output from atmospheric models
         '''
-        self.Pprofile = self.press_atm
-        self.Tprofile = self.temperature_func(pts)
-        self.Tsurf = self.Tprofile[-1]
-        self.Psurf = self.Pprofile[-1]
 
-        if np.isnan(self.Tsurf):
-            Teq_node = maxloc(self.Teq_atm, self.Teq_pl)
-            logg_node = maxloc(self.logg_atm, logg_pl)
-            FeH_node = maxloc(self.FeH_atm, self.log_FeH)
-            CO_node = maxloc(self.CO_atm, self.CO)
+        if guillot==True:
+            kappa_IR = 0.01
+            gamma = 0.4
 
-            index_Teq = np.array([Teq_node-1,Teq_node])
-            index_logg = np.array([logg_node-1,logg_node])
-            index_FeH = np.array([FeH_node-1,FeH_node])
-            index_CO = np.array([0, 1])
+            gravity = 1e1 ** logg_pl
 
-            maxTint_list = []
+            Guillot10_model = Guillot10.guillot_global(self.press_atm, kappa_IR, gamma, gravity,\
+                                                        self.T_int_pl, self.Teq_pl)
 
-            #self.temperature_func = RegularGridInterpolator(
-            #    (self.CO_atm, self.FeH_atm, self.logg_atm, self.Teq_atm, self.Tint_atm, \
-            #     press_atm)
+            self.Pprofile = self.press_atm
+            self.Tprofile = Guillot10_model
+            self.Tsurf = self.Tprofile[-1]
+            self.Psurf = self.Pprofile[-1]
 
+        else:
+            self.Pprofile = self.press_atm
+            self.Tprofile = self.temperature_func(pts)
+            self.Tsurf = self.Tprofile[-1]
+            self.Psurf = self.Pprofile[-1]
 
-            for i_Teq in index_Teq:
-                for i_logg in index_logg:
-                    for i_FeH in index_FeH:
-                        for i_CO in index_CO:
-                            """
-                            print("i_CO =",i_CO)
-                            print("i_FeH =", i_FeH)
-                            print("i_logg =", i_logg)
-                            print("i_Teq =", i_Teq)
-                            """
-                            Tsurf_fornans = self.data_set_atm[i_CO, i_FeH, i_logg, i_Teq, :, -1]
-                            mask = ~np.isnan(Tsurf_fornans)
-                            Tint_masked = self.Tint_atm[mask]
-                            maxTint_list.append(max(Tint_masked))
+            if np.isnan(self.Tsurf):
+                Teq_node = maxloc(self.Teq_atm, self.Teq_pl)
+                logg_node = maxloc(self.logg_atm, logg_pl)
+                FeH_node = maxloc(self.FeH_atm, self.log_FeH)
+                CO_node = maxloc(self.CO_atm, self.CO)
 
-            maxTint = np.array(maxTint_list)
-            Tint_limit = min(maxTint)
+                index_Teq = np.array([Teq_node,Teq_node])
+                index_logg = np.array([logg_node,logg_node])
+                index_FeH = np.array([FeH_node,FeH_node])
+                index_CO = np.array([0, 1])
 
-            print("No atmospheric models available for this case (np.nan in grid).")
-            print("Decrease the interior temperature below ", Tint_limit, "K")
-            sys.exit(1)
+                maxTint_list = []
+
+                #self.temperature_func = RegularGridInterpolator(
+                #    (self.CO_atm, self.FeH_atm, self.logg_atm, self.Teq_atm, self.Tint_atm, \
+                #     press_atm)
 
 
+                for i_Teq in index_Teq:
+                    for i_logg in index_logg:
+                        for i_FeH in index_FeH:
+                            for i_CO in index_CO:
+                                """
+                                print("i_CO =",i_CO)
+                                print("i_FeH =", i_FeH)
+                                print("i_logg =", i_logg)
+                                print("i_Teq =", i_Teq)
+                                """
+                                Tsurf_fornans = self.data_set_atm[i_CO, i_FeH, i_logg, i_Teq, :, -1]
+                                mask = ~np.isnan(Tsurf_fornans)
+                                Tint_masked = self.Tint_atm[mask]
+                                maxTint_list.append(max(Tint_masked))
 
-    def calc_thickness(self,Rbulk,Matm_earthunits,limit_level=10.):
-        '''
-        Description:
-            Calculates thickness of atmosphere
+                maxTint = np.array(maxTint_list)
+                Tint_limit = min(maxTint)
+
+                print("No atmospheric models available for this case (np.nan in grid).")
+                print("Decrease the interior temperature or decrease the surface pressure")
+                #print("Decrease the interior temperature below ", Tint_limit, "K")
+                sys.exit(1)
+
+
+
+    def calc_thickness(self,Rbulk,Matm_earthunits):
+        r'''Calculates thickness of atmosphere
+
         Args:
-            Rbulk: Planet bulk radius (centre to Psurf) in Jupiter radii
-            Matm_earthunits: Atmospheric mass in Earth units
-            limit_level (optional): pressure level (bar) at which the density is set constant to prevent overflow
-            of ODE solver due to very small values of density. Default is 10 bar
+            Rbulk:
+                Planet bulk radius (centre to Psurf) in Jupiter radii
+            Matm_earthunits:
+                Atmospheric mass in Earth units
+
         Returns:
-            r: Radius atm. profile in m
-            P_ode: Pressure atm. profile in Pa
-            g_ode: Gravity atm. profile in m/s2
-            rho_ode: Density atm. profile in kg/m3
-            T_ode: Temperature atm. profile in K
-            total_radius: Total planet radius in Jupiter radii
-            z_ode: Atmospheric thickness in Jupiter radii
+            r:
+                Radius atm. profile in m
+            P_ode:
+                Pressure atm. profile in Pa
+            g_ode:
+                Gravity atm. profile in m/s2
+            rho_ode:
+                Density atm. profile in kg/m3
+            T_ode:
+                Temperature atm. profile in K
+            total_radius:
+                Total planet radius in Jupiter radii
+            z_ode:
+                Atmospheric thickness in Jupiter radii
         '''
+
+        Rjup = 7.149e7                         # Jupiter radius in m
+        Mjup = 1.899e27                        # Jupiter mass in kg
+        Rearth = 6.371e6                       # Earth radius in m
+        Mearth = 5.972e24                      # Earth mass in kg
+        G = 6.674e-11                          # Grav. cte in m3/kg/s2 (SI)
 
         self.Rbulk_pl = Rbulk
+        g0 = self.g_surf_pl                    # cm/s2
+        Rbulk_inm = self.Rbulk_pl*Rjup         # In m
 
-        Y_astk = 0.275
+        Mbulk =  ( ((g0/100)/9.8) * (Rbulk_inm/Rearth)**2 )  # In Mearth units
+
+        Z = self.MMF_surf
+        mu = Z * 18. + (1 - Z) * 2.33
+
+
+
+        MMWs_amu = mu * np.ones_like(self.Tprofile)
+        pressures_cgs = self.Pprofile * 1e5 * 10.
+        reference_pressure_cgs = 1000. * 1e5 * 10.
+        reference_radius_cm = self.Rbulk_pl * 11.2 * cte.constants.r_e * 100.
+        """
+        print(self.Tprofile)
+        print(MMWs_amu)
+        print(g0)
+        print(reference_pressure_cgs)
+        print(reference_radius_cm)
+        print(pressures_cgs)
+        """
+        radius_planet = rh.calc_radius_hydrostatic_equilibrium(self.Tprofile,
+                                                               MMWs_amu,
+                                                               g0,
+                                                               reference_pressure_cgs,
+                                                               reference_radius_cm,
+                                                               pressures_cgs,
+                                                               variable_gravity=True)
+
+        self.r = radius_planet/100
+        self.P_ode = self.Pprofile * 1e5
+        self.g_ode = G * (Mbulk * Mearth) / self.r ** 2
+        self.T_ode = self.Tprofile
+
+        func_radius = interpolate.interp1d(self.Pprofile, self.r)
+        self.total_radius = func_radius(20 * 1e-3)/Rjup
+        # modified for Solar System planets
+        #self.total_radius = func_radius(1.) / Rjup
+        self.z_ode = self.total_radius - Rbulk_inm/Rjup
+
+
+        #
+        # Calculation of density profile
+        #
+
         Y_til = 0.245
+        Y_astk = 0.275
 
+        density_profile = np.zeros(self.npoints)
+        density_water = np.zeros(self.npoints)
+        density_hhe = np.zeros(self.npoints)
+
+        for i in range(0, self.npoints):
+            P_forprof = self.Pprofile[i] * 1e5  # Pa
+            T_forprof = self.Tprofile[i]        # K
+
+            # rho from aqua
+            # here: if P>Psat -> dens = dens_sat(T)
+
+            if T_forprof < 647.096:
+                if P_forprof >= 1e6 * vapor_pressure(T_forprof):
+                    rho_aqua_forprof = vapor_density(T_forprof)
+                else:
+                    rho_aqua_forprof = interp2d_opt(T_forprof, P_forprof, self.temp_aqua, self.press_aqua,
+                                                    self.rho_aqua)
+            else:
+                rho_aqua_forprof = interp2d_opt(T_forprof, P_forprof, self.temp_aqua, self.press_aqua, \
+                                                self.rho_aqua)  # kg/m3
+
+            density_water[i] = rho_aqua_forprof
+
+            # rho from H/He EOS
+            logP_forprof = math.log(P_forprof / 1e9, 10)
+            logT_forprof = math.log(T_forprof, 10)
+            logrho_cgs = interp2d_opt(logP_forprof, logT_forprof, self.logPinput, self.logTinput, self.logrho)
+            rho_cd21 = (10 ** logrho_cgs)
+
+            # HG23 Correction
+            Vmix_value = interp2d_opt(logT_forprof, logP_forprof, self.logT_Vmix, self.logP_Vmix + 10.0, self.V_mix)
+            inv_rho_corr = (1 / rho_cd21) + Vmix_value * (Y_astk * (1 - Y_astk) - Y_til * (1 - Y_til))  # In g/cm3
+            rho_corr = 1 / inv_rho_corr
+            rho_si = rho_corr * 1e3  # In kg/m3
+            density_hhe[i] = rho_si
+
+            # Note that H/He is enclosing the condensates from easychem
+            # but we consider the contribution of condensates negligible
+            # The thickness may increase slightly due to a lower density
+            # compared to the condensate case
+            inv_rho = self.MMF_profile[i] / rho_aqua_forprof + (1 - self.MMF_profile[i]) / rho_si
+
+            density_profile[i] = 1 / inv_rho
+
+        self.rho_ode = density_profile
+
+        """
+        Y_til = 0.245
+        Y_astk = 0.275
         #
         # Calculation of density profile
         #
@@ -547,7 +720,7 @@ class atm_models_interp:
 
             # rho from aqua
             # here: if P>Psat -> dens = dens_sat(T)
-            #"""
+            
             if T_forprof<647.096:
                 if P_forprof >= 1e6*vapor_pressure(T_forprof):
                     rho_aqua_forprof = vapor_density(T_forprof)
@@ -715,7 +888,7 @@ class atm_models_interp:
 
         self.total_radius = func_radius(20*1e-3*1e5)/Rjup
         self.z_ode = self.total_radius - Rbulk_inm/Rjup
-
+        """
 
 
         ####

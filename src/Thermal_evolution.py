@@ -2,6 +2,7 @@
 
 # Import coupling module
 import gastli.Coupling as cpl
+from gastli.atm_models_interp import maxloc
 
 # Other Python modules
 import numpy as np
@@ -14,26 +15,20 @@ from scipy.integrate import odeint
 
 class thermal_evolution:
     def __init__(self,path_to_file,pow_law_formass=0.32):
-        """
-        Description:
-            Class defining objects to calculate the thermal evolution for a constant mass, composition and equilibrium
+        r"""Class defining objects to calculate the thermal evolution for a constant mass, composition and equilibrium
             temperature
+
         Args:
-            path_to_file: path to input data directory
-            pow_law_formass: power exponent to estimate the initial guess of the planet radius in the interior model.
-            Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox). Decrease if
-            core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
+            path_to_file:
+                path to input data directory
+            pow_law_formass:
+                power exponent to estimate the initial guess of the planet radius in the interior model.
+                Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox). Decrease if
+                core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
         """
 
         self.path_to_file = path_to_file
         self.pow_law_formass = pow_law_formass
-        """
-        # Create coupling class
-        if self.pow_law_formass == None:
-            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file)
-        else:
-            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass = self.pow_law_formass)
-        """
 
 
         # Constants for thermal evolution
@@ -50,51 +45,75 @@ class thermal_evolution:
 
 
     def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
-             tolerance=1e-3, limit_level=10.):
-        """
-        Description:
-            Function that runs a series of interior structure models at different internal temperatures and gets
+             tolerance=1e-3,P_surf=1e3,name_grid=None,j_max=30):
+        r"""Function that runs a series of interior structure models at different internal temperatures and gets
             the entropies. Necessary to run before solving the luminosity differential equation (thermal evolution).
+
         Args:
-            M_P: Planet mass in Earth masses
-            x_core: Core mass fraction
-            Teq: Equilibrium temperature in K (at zero Bond albedo)
-            Tint_array: Array containing the internal temperatures at which the entropy are to be computed.
-            At least two elements are needed. The more models you include in the sequence, the more accurate the
-            thermal evolution will be. We recommend at least 5 points per thermal sequence, between the highest
-            possible Tint and 50 K.
-            CO (optional): C-to-O ratio. Default value is 0.55 (solar)
-            FeH_flag (optional): equals True if the amount of metals is specified as log10(metallicity) in x solar
-            units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
-            fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
-            In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
-            (appendix A1) to interpolate the PT profiles from atmospheric grid
-            Zenv (optional): atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
-            log_FeH: log10(metallicity) in x solar units (for FeH_flag = True).
-            Default value is zero (solar composition)
-            Tguess (optional): Initial guess for the surface temperature in K. Default is 2000 K.
-            tolerance (optional): relative difference in radius between interior-atm. steps. Default is 0.001.
-            If a scalar is provided, it will be that same value across the thermal sequence. If an array, it must be
-            the same size as Tint_array, and its elements will be used in the coupled model one by one.
-            limit_level (optional): pressure level (bar) at which the density is set constant to prevent overflow
-            of ODE solver due to very small values of density. Default is 10 bar
+            M_P:
+                Planet mass in Earth masses
+            x_core:
+                Core mass fraction
+            Teq:
+                Equilibrium temperature in K (at zero Bond albedo)
+            Tint_array:
+                Array containing the internal temperatures at which the entropy are to be computed.
+                At least two elements are needed. The more models you include in the sequence, the more accurate the
+                thermal evolution will be. We recommend at least 5 points per thermal sequence, between the highest
+                possible Tint and 50 K.
+            CO (optional):
+                C-to-O ratio. Default value is 0.55 (solar)
+            FeH_flag (optional):
+                equals True if the amount of metals is specified as log10(metallicity) in x solar
+                units. If specified as metal mass fraction, set FeH_flag = False. In the former case, the metal mass
+                fraction profile is extracted from easychem data (calculated with calc_interior_mass_fraction).
+                In the latter, it is set constant to Zenv, and converted to log10(metallicity) with Fortney+13 relation
+                (appendix A1) to interpolate the PT profiles from atmospheric grid
+            Zenv (optional):
+                atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
+            log_FeH:
+                log10(metallicity) in x solar units (for FeH_flag = True).
+                Default value is zero (solar composition)
+            Tguess (optional):
+                Initial guess for the surface temperature in K. Default is 2000 K.
+            tolerance (optional):
+                relative difference in radius between interior-atm. steps. Default is 0.001.
+                If a scalar is provided, it will be that same value across the thermal sequence. If an array, it must be
+                the same size as Tint_array, and its elements will be used in the coupled model one by one.
+            P_surf (optional):
+                Boundary pressure between interior and atmosphere. Default is 1000 bars. For models with high Tint
+                you may need to decrease it to 9.5 bars (if using the default atm. grid)
+            name_grid (optional):
+                name of custom grid (if you do not want to use the default)
+            j_max (optional):
+                Maximum number of iterations - must be < 100.
+
+
         Return:
-            s_top_TE: array containing the entropy at 1000 bar of the interior models calculated as part of
-            the thermal evolution sequence. Units: J/kg/K.
-            s_mean_TE: array containing the mean envelope entropy of the interior models calculated as part of
-            the thermal evolution sequence. Units: J/kg/K.
-            Mtot_TE: array containing the total mass of the interior models calculated as part of
-            the thermal evolution sequence. Units: Earth masses.
-            Rtot_TE: array containing the total radius of the interior models calculated as part of
-            the thermal evolution sequence. Units: Jupiter radii.
-            Rbulk_TE: array containing the bulk radius of the interior models calculated as part of
-            the thermal evolution sequence. Units: Jupiter radii.
-            Tsurf_TE: array containing the temperature at 1000 bar of the interior models calculated as part of
-            the thermal evolution sequence. Units: K.
-            L_TE: array containing the luminosity of the interior models calculated as part of
-            the thermal evolution sequence. Units: J/s.
-            f_S: array containing the entropy derivative dS/dt of the interior models calculated as part of
-            the thermal evolution sequence. In SI units (J/kg/K per s).
+            s_top_TE:
+                array containing the entropy at 1000 bar of the interior models calculated as part of
+                the thermal evolution sequence. Units: J/kg/K.
+            s_mean_TE:
+                array containing the mean envelope entropy of the interior models calculated as part of
+                the thermal evolution sequence. Units: J/kg/K.
+            Mtot_TE:
+                array containing the total mass of the interior models calculated as part of
+                the thermal evolution sequence. Units: Earth masses.
+            Rtot_TE:
+                array containing the total radius of the interior models calculated as part of
+                the thermal evolution sequence. Units: Jupiter radii.
+            Rbulk_TE:
+                array containing the bulk radius of the interior models calculated as part of
+                the thermal evolution sequence. Units: Jupiter radii.
+            Tsurf_TE:
+                array containing the temperature at 1000 bar of the interior models calculated as part of
+                the thermal evolution sequence. Units: K.
+            L_TE:
+                array containing the luminosity of the interior models calculated as part of
+                the thermal evolution sequence. Units: J/s.
+            f_S:
+                array containing the entropy derivative dS/dt of the interior models calculated as part of
+                the thermal evolution sequence. In SI units (J/kg/K per s).
         """
 
         self.M_P = M_P
@@ -121,8 +140,6 @@ class thermal_evolution:
         self.Zenv_TE = np.zeros(n_therm)
 
 
-
-
         for i in range(0,n_therm):
 
             print("Model # ", i+1, " in total time sequence of ", n_therm)
@@ -131,33 +148,39 @@ class thermal_evolution:
 
             # Putting it here adds 1-2 secs more per each Tint computation, but it is safer
             # Create coupling class
-            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass)
-            """
-            if self.pow_law_formass == None:
-                self.my_coupling = cpl.coupling(path_to_file=self.path_to_file)
-            else:
-                self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass)
-            """
+            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass,\
+                                            name_grid=name_grid,j_max=j_max)
+
             if np.isscalar(tolerance):
                 tolerance_for_this_run = tolerance
             else:
                 tolerance_for_this_run = tolerance[i]
 
+            if np.isscalar(P_surf):
+                Psurf_for_this_run = P_surf
+            else:
+                Psurf_for_this_run = P_surf[i]
+
+
             # Call to interior model
             if FeH_flag==True:
                 self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
                                       log_FeH=self.logFeH, Tguess=Tguess, Rguess=Rguess,\
-                                      tolerance=tolerance_for_this_run, limit_level=limit_level)
+                                      tolerance=tolerance_for_this_run,P_surf=Psurf_for_this_run)
             else:
                 self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
                                       FeH_flag=False, Zenv=self.Zenv, Rguess=Rguess,\
-                                      Tguess=Tguess, tolerance=tolerance_for_this_run, limit_level=limit_level)
+                                      Tguess=Tguess, tolerance=tolerance_for_this_run,P_surf=Psurf_for_this_run)
 
 
             # Entropy
             S = self.my_coupling.myplanet.entropy
-            i_top = self.my_coupling.myplanet.intrf[2] - 1
+            #i_top = self.my_coupling.myplanet.intrf[2] - 1
             i_core_env_bound = self.my_coupling.myplanet.intrf[1] - 1
+            press = self.my_coupling.myplanet.P
+            i_top = maxloc(press, 1e3*1e5)
+            #index_find = np.where(press <= 1e3*1e5)
+            #i_top = index_find[0]
 
             self.s_top_TE[i] = S[i_top]
             self.s_mean_TE[i] = np.mean(S[i_core_env_bound:i_top])
@@ -201,19 +224,25 @@ class thermal_evolution:
 
 
     def solve_thermal_evol_eq(self,t_Gyr=np.linspace(2.1e-6, 15., 100), S0=12.):
-        """
-        Description:
-            This function solves the luminosity differential equation to calculate the age corresponding to the
+        r"""This function solves the luminosity differential equation to calculate the age corresponding to the
             thermal evolution sequence calculated previously with the "main" function
+
         Args:
-            t_Gyr (optional): time array in Gyr used to solve the entropy differential equation.
-            Default has 100 points between 2100 yrs and 10 Gyr.
-            S0 (optional): Initial condition for the entropy, S(t=0) in k_b*m_h units. Default is 12.
-        Return:
-            Tint_solution: array containing the internal temperature in K corresponding to the ages in t_Gyr
-            S_solution: array containing the entropy in J/kg/K corresponding to the ages in t_Gyr
-            Rtot_solution: array containing the total radius in Jupiter radii corresponding to the ages in t_Gyr
-            age_points: array containing the age in Gyr corresponding to the entropies in s_top_TE
+            t_Gyr (optional):
+                time array in Gyr used to solve the entropy differential equation.
+                Default has 100 points between 2100 yrs and 10 Gyr.
+            S0 (optional):
+                Initial condition for the entropy, S(t=0) in k_b*m_h units. Default is 12.
+
+        Returns:
+            Tint_solution:
+                array containing the internal temperature in K corresponding to the ages in t_Gyr
+            S_solution:
+                array containing the entropy in J/kg/K corresponding to the ages in t_Gyr
+            Rtot_solution:
+                array containing the total radius in Jupiter radii corresponding to the ages in t_Gyr
+            age_points:
+                array containing the age in Gyr corresponding to the entropies in s_top_TE
         """
 
         self.t_Gyr = t_Gyr

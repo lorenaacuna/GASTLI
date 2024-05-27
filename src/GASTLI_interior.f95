@@ -48,7 +48,8 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
            Smix_HGin,            & ! ... to here
            M_Pin,x_corein,x_H2Oin, T_surfin,P_surfin, &
            Zenvin,                                    & ! NEW MODEL PLANET INPUT: ENVELOPE METALLICITY
-           M_Pout,x_coreout,x_H2Oout,R_Pout,FeSiout,rhoout,rout,interfaceout,gout,Tout,Pout,rhoarrout, cvout, Sout, &
+           M_Pout,x_coreout,x_H2Oout,R_Pout,FeSiout,rhoout,rout,interfaceout,intrf_hist,iter_num, &
+           gout,Tout,Pout,rhoarrout, cvout, Sout, &
            OtoHout,metalout)                            ! NEW MODEL PLANET OUTPUT: [Fe/H] with respect to Sun value
 
 
@@ -173,6 +174,8 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 
 
     INTEGER, DIMENSION(n_lay+1), INTENT(OUT)     :: interfaceout               ! Position of the lower interface of layers
+    INTEGER, DIMENSION(n_lay+1,100), INTENT(OUT) :: intrf_hist                 ! interfaceout but for all iterations
+    INTEGER, DIMENSION(100), INTENT(OUT) :: iter_num
 
 
 
@@ -462,6 +465,17 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 
    !rho_0(3) = 0.d0
 
+  IF (isnan(rho_surf)) THEN
+             WRITE(6,*) 'Error in interior structure model (Fortran): surface density is NaN'
+             WRITE(6,*) 'This is likely due to the surface pressure being so low that it is '
+             WRITE(6,*) 'out of the EOSs validity range.'
+             WRITE(6,*) 'We recommend to increase the surface pressure to 1000 bar ideally,'
+             WRITE(6,*) 'or to 10 bar (minimum).'             
+             STOP 
+             !CYCLE
+   END IF
+
+
    ! CALCULATE MINIMUM DENSITY TO HELP CONVERGENCE
    rho_min_mat = min(rho_surf_HHe,rho_surf_oliv,rho_surf_w)
    !rho_min_mat = 240d0
@@ -704,6 +718,9 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 !     END DO
 !     WRITE(11,*) ''
         
+intrf_hist(:,j) = intrf
+iter_num(j) = j
+
      ! Test for loop exit
      test = (abs(g_max-g_max_old) < conv_prec*g_max) .AND. (abs(P_max-P_max_old) < conv_prec*P_max) .AND. &
           (abs(T_max-T_max_old) < conv_prec*T_max) .AND. (abs(rho_max-rho_max_old) < conv_prec*rho_max)

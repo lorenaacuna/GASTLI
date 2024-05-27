@@ -130,6 +130,7 @@ fort_input_source = custom_target('fortinputmodule.c',
   command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'fortinput', '--lower']
   )
 
+
 py3.extension_module('fortinput',
   ['src/fort_input.f95', fort_input_source],
   include_directories: inc_dirs,
@@ -137,6 +138,23 @@ py3.extension_module('fortinput',
   subdir: 'gastli',   # if you want to install this part as a submodule
   install : true
 )
+
+
+## fort_spec ##
+fort_spec_source = custom_target('fortspecmodule.c',
+  input : ['src/fort_spec_func.f90','src/fort_spec.f90'],
+  output : ['fortspecmodule.c', 'fortspec-f2pywrappers2.f90'],
+  command : [py3, '-m', 'numpy.f2py', '@INPUT@', '-m', 'fortspec', '--lower']
+  )
+
+py3.extension_module('fortspec',
+  ['src/fort_spec_func.f90','src/fort_spec.f90', fort_spec_source],
+  include_directories: inc_dirs,
+  dependencies : [py3_dep, fortranobject_dep],
+  subdir: 'gastli',   # if you want to install this part as a submodule
+  install : true
+)
+
 
 ## GASTLI_interior ##
 gastli_interior_source = custom_target('gastli_interiormodule.c',
@@ -183,9 +201,12 @@ py3.extension_module('gastli_interior',
 
 
 py3.install_sources(['src/GASTLI.py',
+                     'src/Guillot10.py',
+                     'src/radius_hse.py',
                      'src/atm_models_interp.py',
                      'src/Coupling.py',
-                     'src/Thermal_evolution.py'],
+                     'src/Thermal_evolution.py',
+                     'src/water_curves.py'],
   pure: false,
   subdir: 'gastli'
 )

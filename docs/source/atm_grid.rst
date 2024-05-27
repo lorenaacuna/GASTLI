@@ -1,0 +1,212 @@
+================
+Atmospheric grid
+================
+
+
+In this section, we indicate the applicability range of the default atmospheric grid, as well as the possible error messages associated to the atmospheric grid and what they mean. Finally, if the default grid does not cover the parameter space that you need (i.e higher equilibrium temperatures, higher metallicity in the envelope) or you want to change the assumptions on the atmosphere (i.e include clouds), we explain how you can use your custom atmospheric grid with GASTLI.
+
+
+Default grid
+============
+
+Applicability
+-------------
+
+The range of parameter values convered by the default grid of atmospheric models is indicated in the table below. The limiting log-metallicities correspond to an almost pure H/He envelope (0.01 x solar) to a 80% mass fraction in metals (250 x solar). The surface gravity of an interior-atmosphere model is not known a priori since it depends on the interior composition that is assumed. However, we can provide approximate estimates: for a log-surface gravity of 2.6 cgs, the mass is approximately 15-20 Earth masses, while a log-surface gravity of 4.18 cgs corresponds to planets between 5 and 6.5 Jupiter masses.  
+
+.. figure:: petitcode_grid.jpeg
+   :align: center
+
+   Table 1 in Acuña et al. Submitted, which shows the applicability of GASTLI's default atmospheric grid.
+
+The atmospheric grid is interpolated using Python's ``scipy.interpolate.RegularGridInterpolator``, with the flags ``bounds_error=False`` and ``fill_value=None``. This means that if a parameter is outside of the atmospheric grid domain, extrapolation is performed. In that case, GASTLI will not stop the calculation, but it will display a message such as this: 
+
+.. code-block:: language
+
+   Surface gravity is out of atmospheric grid limits. Extrapolating
+
+
+Troubleshooting
+---------------
+
+The default surface pressure in the atmospheric grid and the interior-atmosphere coupling is 1000 bar. However, such high pressure can be challenging for the convergence of some atmospheric models, especially at low surface gravities, high log-metallicities, and high internal temperatures. For these models, we fill the pressures between their maximum possible pressure (9.5 bar) and 1000 bar with ``np.nan``. This enables us to keep the atmospheric grid regular in 6 dimensions. Regular grids are faster to interpolate than irregular grids. If your interior-atmosphere model requires interpolating atmospheric models for which 9.5 bar is the maximum pressure, but you have the default surface pressure of 1000 bar, GASTLI will stop the computation and show the following message:
+
+.. code-block:: language
+
+   No atmospheric models available for this case (np.nan in grid).
+   Decrease the interior temperature or decrease the surface pressure
+
+Hence, we recommend to specify the surface pressure in the ``main()`` functions of the coupling or the thermal evolution classes. Example:
+
+.. code-block:: python
+
+   # Import coupling module
+   import gastli.Coupling as cpl
+   # Other Python modules
+   import numpy as np
+   # Create coupling class
+   my_coupling = cpl.coupling(path_to_file="/Users/acuna/Desktop/gastli_input_data/",\
+                           j_max=99, pow_law_formass=0.31)
+   # Input for interior
+   M_P = 50.
+   # Internal and equilibrium temperatures
+   Tintpl = 700.
+   Teqpl = 1000.
+   # Core mass fraction
+   CMF = 0.5
+   # Run model with P_surf at 9.5 bar
+   my_coupling.main(M_P, CMF, Teqpl, Tintpl, CO=0.55, log_FeH=2.4,Rguess=6.,P_surf=9.5)
+
+If you try to run this same model without specifying ``P_surf``, the default of 1000 bar will be assumed, and the error above will be shown. Here is an example:
+
+.. code-block:: python
+
+   # Import GASTLI thermal module
+   import gastli.Thermal_evolution as therm
+   import gastli.constants as cte
+   # Other Python modules
+   import numpy as np
+   import matplotlib.pyplot as plt
+   # Path to input files
+   # Dont forget the "/" at the end of the string
+   path_input = "/Users/acuna/Desktop/gastli_input_data/"
+   # Create thermal evolution class object
+   my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
+   # Input for interior
+   M_P = 100.     # Earth units
+   # Equilibrium temperatures
+   Teqpl = 700.
+   # Core mass fraction
+   CMF = 0.2
+   log_FeH = 1.
+   Tint_array = np.asarray([50., 100., 200., 300.])
+   # Run sequence of interior models at different internal temperatures (up to 300 K)
+   my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH)
+   f_S_cold = my_therm_obj.f_S
+   s_mean_TE_cold = my_therm_obj.s_mean_TE
+   s_top_TE_cold = my_therm_obj.s_top_TE
+   Tint_array_cold = my_therm_obj.Tint_array
+   Rtot_TE_cold = my_therm_obj.Rtot_TE
+   Rbulk_TE_cold = my_therm_obj.Rbulk_TE
+   Tsurf_TE_cold = my_therm_obj.Tsurf_TE
+   # Run sequence of interior models at different internal temperatures (from 400 K)
+   Tint_array = np.asarray([400., 500., 600., 700., 800.])
+   my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH, P_surf=9.5)
+   f_S_hot = my_therm_obj.f_S
+   s_mean_TE_hot = my_therm_obj.s_mean_TE
+   s_top_TE_hot = my_therm_obj.s_top_TE
+   Tint_array_hot = my_therm_obj.Tint_array
+   Rtot_TE_hot = my_therm_obj.Rtot_TE
+   Rbulk_TE_hot = my_therm_obj.Rbulk_TE
+   Tsurf_TE_hot = my_therm_obj.Tsurf_TE
+   # Concatenate
+   my_therm_obj.f_S = np.concatenate((f_S_cold,f_S_hot))
+   my_therm_obj.s_mean_TE = np.concatenate((s_mean_TE_cold,s_mean_TE_hot))
+   my_therm_obj.s_top_TE = np.concatenate((s_top_TE_cold,s_top_TE_hot))
+   my_therm_obj.Tint_array = np.concatenate((Tint_array_cold,Tint_array_hot))
+   my_therm_obj.Rtot_TE = np.concatenate((Rtot_TE_cold,Rtot_TE_hot))
+   my_therm_obj.Rbulk_TE = np.concatenate((Rbulk_TE_cold,Rbulk_TE_hot))
+   my_therm_obj.Tsurf_TE = np.concatenate((Tsurf_TE_cold,Tsurf_TE_hot))
+   # Solve luminosity equation
+   my_therm_obj.solve_thermal_evol_eq(t_Gyr=np.linspace(2.1e-6, 15., 10000))
+
+
+.. important::
+
+   If you are calculating a thermal sequence, our recommendation is to calculate the models at low internal temperature with     ``P_surf`` = 1000 bar (default), and the models at high internal temperature with ``P_surf=9.5`` bar. Do not calculate all    models at 9.5 bar! At low temperatures, the entropy’s slope becomes flat with time, and makes    it     difficult to integrate the luminosity equation. Concatenate the two arrays (high and low ``Tint_array``) with all the models to have a file with the entropy, internal temperature, etc, as shown in the tutorial.
+
+.. note::
+   There are 38 models out of 5000 models in the default grid that did not converge, even at a low surface pressure. In the    unlikely event of requiring one of these models in the grid, don't hesitate to contact Lorena Acuña (acuna@mpia.de).
+
+
+
+How to use a custom grid
+========================
+
+To use a different atmospheric grid from the default, you must place the grid file in the ``gastli_input_data/Input/Atmospheric data`` directory. Then the name of the grid file must be specified when a coupling class object is initialised, or when the thermal class object main function is called, with the ``name_grid`` parameter:
+
+.. code-block:: python
+
+   my_coupling = cpl.coupling(path_to_file="/Users/acuna/Desktop/gastli_input_data/",\
+                        name_grid="my_custom_grid.hdf5")
+
+or 
+
+.. code-block:: python
+
+   my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH, name_grid="my_custom_grid.hdf5")
+
+The file must be in hdf5 format. The file must have the following datasets:
+
+- ``PT_profiles`` and ``metal_mass_fractions``: these contain the pressure-temperature profiles and the metal mass fraction profiles, respectively. They have 6 dimensions (in order): C/O, :math:`log(Fe/H)`, :math:`log(g)` (in cgs units), :math:`T_{eq}`, :math:`T_{int}` (in K) and pressure (in bar).
+- The datasets that indicate the grids of the 6 dimensions: ``CO``, ``FeH``, ``Teq``, ``Tint``, ``logg``, ``pressure``.
+
+An example snippet to create a grid with such format: 
+
+.. code-block:: python
+
+   # Import modules
+   import numpy as np
+   import h5py
+   # Define arrays for grid
+   COs = ...
+   FeHs = ...
+   loggs = ...
+   Teqs = ...
+   Tints = ...
+   press_atm = ...
+   n_CO = len(COs)
+   n_FeH = len(FeHs)
+   n_logg = len(loggs)
+   n_Teq = len(Teqs)
+   n_Tint = len(Tints)
+   n_PT = len(press_atm)
+   # Create file
+   f = h5py.File("my_custom_grid.hdf5", "w")
+   # Create PT profile and metal mass fractions dataset
+   data_set_temp = f.create_dataset("PT_profiles", (n_CO,n_FeH,n_logg,n_Teq,n_Tint,n_PT), dtype='f')
+   data_set_mmf = f.create_dataset("metal_mass_fractions", (n_CO,n_FeH,n_logg,n_Teq,n_Tint,n_PT), dtype='f')
+   # Assign labels to the dimensions
+   f['PT_profiles'].dims[0].label = 'CO_ratio'
+   f['PT_profiles'].dims[1].label = 'logFeH_xsolar'
+   f['PT_profiles'].dims[2].label = 'loggsurf_cgs'
+   f['PT_profiles'].dims[3].label = 'Teq_K'
+   f['PT_profiles'].dims[4].label = 'Tint_K'
+   f['PT_profiles'].dims[5].label = 'Press_bar'
+   f['metal_mass_fractions'].dims[0].label = 'CO_ratio'
+   f['metal_mass_fractions'].dims[1].label = 'logFeH_xsolar'
+   f['metal_mass_fractions'].dims[2].label = 'loggsurf_cgs'
+   f['metal_mass_fractions'].dims[3].label = 'Teq_K'
+   f['metal_mass_fractions'].dims[4].label = 'Tint_K'
+   f['metal_mass_fractions'].dims[5].label = 'Press_bar'
+   # Create datasets for the grid arrays
+   f['CO'] = COs
+   f['FeH'] = FeHs
+   f['logg'] = loggs
+   f['Teq'] = Teqs
+   f['Tint'] = Tints
+   f['pressure'] = press_atm
+   # Associate arrays as dimensions of grid dataset
+   f['PT_profiles'].dims[0].attach_scale(f['CO'])
+   f['PT_profiles'].dims[1].attach_scale(f['FeH'])
+   f['PT_profiles'].dims[2].attach_scale(f['logg'])
+   f['PT_profiles'].dims[3].attach_scale(f['Teq'])
+   f['PT_profiles'].dims[4].attach_scale(f['Tint'])
+   f['PT_profiles'].dims[5].attach_scale(f['pressure'])
+   f['metal_mass_fractions'].dims[0].attach_scale(f['CO'])
+   f['metal_mass_fractions'].dims[1].attach_scale(f['FeH'])
+   f['metal_mass_fractions'].dims[2].attach_scale(f['logg'])
+   f['metal_mass_fractions'].dims[3].attach_scale(f['Teq'])
+   f['metal_mass_fractions'].dims[4].attach_scale(f['Tint'])
+   f['metal_mass_fractions'].dims[5].attach_scale(f['pressure'])
+   # Fill in empty grids with data
+   for i_CO, CO in enumerate(COs):
+       for i_FeH, FeH in enumerate(FeHs):
+           for i_logg, logg in enumerate(loggs):
+               for i_eq, Teq in enumerate(Teqs):
+                   for i_int, Tint in enumerate(Tints):
+                       ...
+                       data_set_temp[i_CO, i_FeH, i_logg, i_eq, i_int, :] = ...
+                       data_set_mmf[i_CO, i_FeH, i_logg, i_eq, i_int, :] = ...
+   f.close() 
+

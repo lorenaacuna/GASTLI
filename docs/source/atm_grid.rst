@@ -88,7 +88,7 @@ Here is an example:
    log_FeH = 1.
    Tint_array = np.asarray([50., 100., 200., 300., 400., 500., 600., 700., 800.])
    # Specify the surface pressure of each model in the thermal sequence
-   # Models with Tint=50 to 300 K have Psurf=1000 bar, while Tint=400-800 K have Psurf=9.5 bar
+   # Models with Tint=50 to 300 K have Psurf=1000 bar, while Tint=400 to 800 K have Psurf=9.5 bar
    P_surf_array = np.asarray([1e3, 1e3, 1e3, 1e3, 9.5, 9.5, 9.5, 9.5, 9.5])
    my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH,P_surf=P_surf_array)
    my_therm_obj.solve_thermal_evol_eq(t_Gyr=np.linspace(2.1e-6, 15., 10000))

@@ -8,7 +8,7 @@ To install GASTLI, you need to install:
 
 - Python 3.9+,
 - a fortran compiler, for example ``gfortran``,
-- download the zip file for the input data `here <https://www.dropbox.com/scl/fi/pvctvgps31oxs0agtyb5b/gastli_input_data.zip?rlkey=2svm3y9usqgqgp3ab6lv5vxsa&st=yyltghlr&dl=0>`_, and place it in a directory in your computer that is easy to find
+- download the zip file for the input data `here <https://www.dropbox.com/scl/fi/p2kawqp8gtzh5psn21tjc/gastli_input_data.zip?rlkey=fc0mfxvpck5mukkqhk1f8hkad&st=ggsa4zmk&dl=0>`_, and place it in a directory in your computer that is easy to find
 
 We recommend installing GASTLI via the pip install command
 

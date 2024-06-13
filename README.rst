@@ -14,14 +14,14 @@ GASTLI allows the computation of mass-radius curves, thermal evolution curves, a
 
 Documentation
 =============
-The code documentation, installation guide, and tutorial can be found at 
+The code documentation, installation guide, and tutorial can be found here: `https://gastli.readthedocs.io/en/latest/ <https://gastli.readthedocs.io/en/latest/>`_. 
 
 Attribution
 ===========
 If you use GASTLI in your work, please cite the following articles:
 
 - The base package for gas giants is described in Acuña et al. Submitted
-- Interior-atmosphere coupling algorithm: Acuña et al. (2021).
+- Interior-atmosphere coupling algorithm: `Acuña et al. (2021) <https://www.aanda.org/articles/aa/full_html/2021/03/aa39885-20/aa39885-20.html>`_.
 
 License
 =======

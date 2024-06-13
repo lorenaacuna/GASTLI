@@ -12,7 +12,7 @@ Mjup = 318.
 mass_array = Mjup * np.arange(0.05 ,1.6 ,0.05)
 n_mrel = len(mass_array)
 ## Internal temperature
-Tintpl = 99.     # K
+Tintpl = 107.     # K
 ## Equilibrium temperature
 Tstar = 5777.     # K
 Rstar = 0.00465   # AU
@@ -20,9 +20,9 @@ ad = 5.2          # AU
 Teq_4 = Tstar**4./4. * (Rstar /ad )**2.
 Teqpl = Teq_4**0.25
 # Core mass fraction
-CMF = 0.03
+CMF = 0.
 # Mass-radius curve output file
-file_out = open('Jupiter_MRrel_CMF3_logFeH_0.dat' ,'w')
+file_out = open('Jupiter_MRrel_CMF0_logFeH_0.dat' ,'w')
 file_out.write('  M_int[M_E]  M_tot[M_E]  x_core  ')
 file_out.write('T_surf[K]  R_bulk[R_J]  R_tot[R_J]  T_int[K]  Zenv  z_atm[R_J] ')
 file_out.write("\n")

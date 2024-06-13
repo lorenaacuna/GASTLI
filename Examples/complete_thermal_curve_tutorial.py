@@ -17,40 +17,10 @@ Teqpl = 700.
 # Core mass fraction
 CMF = 0.2
 log_FeH = 1.
-Tint_array = np.asarray([50., 100., 200., 300.])
-# Run sequence of interior models at different internal temperatures (up to 300 K)
-my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH)
+Tint_array = np.asarray([50., 100., 200., 300.,400., 500., 600., 700., 800.])
+P_surf_array = np.asarray([1e3, 1e3, 1e3, 1e3, 9.5, 9.5, 9.5, 9.5, 9.5])
 
-f_S_cold = my_therm_obj.f_S
-s_mean_TE_cold = my_therm_obj.s_mean_TE
-s_top_TE_cold = my_therm_obj.s_top_TE
-Tint_array_cold = my_therm_obj.Tint_array
-Rtot_TE_cold = my_therm_obj.Rtot_TE
-Rbulk_TE_cold = my_therm_obj.Rbulk_TE
-Tsurf_TE_cold = my_therm_obj.Tsurf_TE
-
-
-# Run sequence of interior models at different internal temperatures (from 400 K)
-Tint_array = np.asarray([400., 500., 600., 700., 800.])
-my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH, P_surf=9.5)
-
-f_S_hot = my_therm_obj.f_S
-s_mean_TE_hot = my_therm_obj.s_mean_TE
-s_top_TE_hot = my_therm_obj.s_top_TE
-Tint_array_hot = my_therm_obj.Tint_array
-Rtot_TE_hot = my_therm_obj.Rtot_TE
-Rbulk_TE_hot = my_therm_obj.Rbulk_TE
-Tsurf_TE_hot = my_therm_obj.Tsurf_TE
-
-
-# Concatenate
-my_therm_obj.f_S = np.concatenate((f_S_cold,f_S_hot))
-my_therm_obj.s_mean_TE = np.concatenate((s_mean_TE_cold,s_mean_TE_hot))
-my_therm_obj.s_top_TE = np.concatenate((s_top_TE_cold,s_top_TE_hot))
-my_therm_obj.Tint_array = np.concatenate((Tint_array_cold,Tint_array_hot))
-my_therm_obj.Rtot_TE = np.concatenate((Rtot_TE_cold,Rtot_TE_hot))
-my_therm_obj.Rbulk_TE = np.concatenate((Rbulk_TE_cold,Rbulk_TE_hot))
-my_therm_obj.Tsurf_TE = np.concatenate((Tsurf_TE_cold,Tsurf_TE_hot))
+my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH,P_surf=P_surf_array)
 
 my_therm_obj.solve_thermal_evol_eq(t_Gyr=np.linspace(2.1e-6, 15., 10000))
 

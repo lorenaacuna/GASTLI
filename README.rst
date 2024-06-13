@@ -2,6 +2,11 @@
 GASTLI
 ======
 
+.. image:: https://readthedocs.org/projects/gastli/badge/?version=latest
+    :target: https://gastli.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+
 **The GAS gianT modeL for Interiors (GASTLI): An open-source coupled interior-atmosphere model to unveil gas giant composition**
 
 Welcome to the repository of GASTLI, an open-source code for the calculation of interior structure models for gas giants.

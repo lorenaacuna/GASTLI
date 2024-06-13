@@ -33,14 +33,21 @@ Development
 GASTLI is based on the Marseille Super-Earth Interior Model (MSEI), which was adapted and optimized by Lorena Acuña, supported by Laura Kreidberg, Paul Mollière, Meng Zhai, Iva Momcheva and Morgan Fouenesneau (Max Planck Institute for Astronomy). MSEI's former developers include Olivier Mousis, Magali Deleuil, Artem Aguichine, and Bastien Brugger (Laboratoire d'Astrophysique de Marseille).
 
 
-Guide
-=====
+Contents
+==========
 
 .. toctree::
+   :maxdepth: 1
+   :caption: User Guide
 
    installation
-   tutorial
    atm_grid
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorials
+
+   tutorial
    retrieval
 
 

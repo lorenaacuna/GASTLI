@@ -7,10 +7,6 @@ interior structure models for gas giant exoplanets. GASTLI allows you to compute
 relations, thermal evolution curves and interior structure profiles for a wide variety of irradiations,
 masses and internal compositions
 
-.. note::
-
-   This documentation page is under active development, and the code has not been released yet.
-
 
 License and how to cite
 =======================

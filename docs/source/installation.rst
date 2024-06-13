@@ -26,7 +26,7 @@ Activate the environment:
 
     conda activate GASTLI_env
 
-Download the GASTLI github repository, and from the root directory, run: 
+Download the GASTLI github repository `here <https://github.com/lorenaacuna/GASTLI>`_, and from the root directory, run: 
 
 .. code-block:: bash
 

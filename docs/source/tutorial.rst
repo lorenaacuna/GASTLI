@@ -365,7 +365,7 @@ To generate a mass-radius curve, you need to call the coupling class several tim
    mass_array = Mjup * np.arange(0.05,1.6,0.05)
    n_mrel = len(mass_array)
    ## Internal temperature 
-   Tintpl = 99.     # K
+   Tintpl = 107.     # K
    ## Equilibrium temperature
    Tstar = 5777.     # K
    Rstar = 0.00465   # AU
@@ -373,9 +373,9 @@ To generate a mass-radius curve, you need to call the coupling class several tim
    Teq_4 = Tstar**4./4. * (Rstar/ad)**2.
    Teqpl = Teq_4**0.25
    # Core mass fraction
-   CMF = 0.03
+   CMF = 0.
    # Mass-radius curve output file
-   file_out = open('Jupiter_MRrel_CMF3_logFeH_0.dat','w')
+   file_out = open('Jupiter_MRrel_CMF0_logFeH_0.dat','w')
    file_out.write('  M_int[M_E]  M_tot[M_E]  x_core  ')
    file_out.write('T_surf[K]  R_bulk[R_J]  R_tot[R_J]  T_int[K]  Zenv  z_atm[R_J] ')
    file_out.write("\n")
@@ -417,9 +417,9 @@ We can then read the file and plot the mass-radius curve. In this file, the colu
    import numpy as np
    import pandas as pd
    # Read data from file
-   data = pd.read_csv('Jupiter_MRrel_CMF3_logFeH_0.dat', sep='\s+',header=0)
-   M_CMF3_logFeH0_Tint99 = data['M_tot[M_E]']
-   R_CMF3_logFeH0_Tint99 = data['R_tot[R_J]']
+   data = pd.read_csv('Jupiter_MRrel_CMF0_logFeH_0.dat', sep='\s+',header=0)
+   M_CMF0_logFeH0_Tint107 = data['M_tot[M_E]']
+   R_CMF0_logFeH0_Tint107 = data['R_tot[R_J]']
    # Mass-radius plot
    xmin = 0.04
    xmax = 1.50
@@ -430,8 +430,8 @@ We can then read the file and plot the mass-radius curve. In this file, the colu
    ax = fig.add_subplot(1, 1, 1)
    ax.tick_params(axis='both', which='major', labelsize=14)
    plt.title("GASTLI, solar envelope composition")
-   plt.plot(M_CMF3_logFeH0_Tint99/Mjup, R_CMF3_logFeH0_Tint99, color='black',linestyle='solid',\
-         linewidth=4, label=r'CMF = 0.03')
+   plt.plot(M_CMF0_logFeH0_Tint107/Mjup, R_CMF0_logFeH0_Tint107, color='black',linestyle='solid',\
+         linewidth=4, label=r'CMF = 0')
    # Jupiter ref
    plt.plot([1.], [1.], 'X', color='darkorange',label=r'Jupiter',markersize=14,\
          markeredgecolor='black')

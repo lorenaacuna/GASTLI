@@ -36,7 +36,7 @@ The default surface pressure in the atmospheric grid and the interior-atmosphere
    No atmospheric models available for this case (np.nan in grid).
    Decrease the interior temperature or decrease the surface pressure
 
-Hence, we recommend to specify the surface pressure in the ``main()`` functions of the coupling or the thermal evolution classes. Example:
+If you try to run this same model without specifying ``P_surf``, the default of 1000 bar will be assumed, and the error above will be shown. Hence, we recommend to decrease the surface pressure by specifying it in the ``main()`` function of the coupling class. Example:
 
 .. code-block:: python
 
@@ -57,7 +57,14 @@ Hence, we recommend to specify the surface pressure in the ``main()`` functions 
    # Run model with P_surf at 9.5 bar
    my_coupling.main(M_P, CMF, Teqpl, Tintpl, CO=0.55, log_FeH=2.4,Rguess=6.,P_surf=9.5)
 
-If you try to run this same model without specifying ``P_surf``, the default of 1000 bar will be assumed, and the error above will be shown. Here is an example:
+If you are running a thermal evolution class, you can specify at which surface pressures you want each of the model of the sequence to be calculated at. This is done by setting ``P_surf`` to an array of the same length as ``Tint_array`` in the ``main()`` function of the thermal evolution class.
+
+.. important::
+
+   If you are calculating a thermal sequence, our recommendation is to calculate the models at low internal temperature with     ``P_surf`` = 1000 bar (default), and the models at high internal temperature with ``P_surf=9.5`` bar. Do not calculate all models at 9.5 bar! At low temperatures, the entropy’s slope becomes flat with time, and makes it difficult to integrate the luminosity equation. Specify the surface pressure for each model as shown in the example below.
+
+
+Here is an example:
 
 .. code-block:: python
 
@@ -79,43 +86,14 @@ If you try to run this same model without specifying ``P_surf``, the default of 
    # Core mass fraction
    CMF = 0.2
    log_FeH = 1.
-   Tint_array = np.asarray([50., 100., 200., 300.])
-   # Run sequence of interior models at different internal temperatures (up to 300 K)
-   my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH)
-   f_S_cold = my_therm_obj.f_S
-   s_mean_TE_cold = my_therm_obj.s_mean_TE
-   s_top_TE_cold = my_therm_obj.s_top_TE
-   Tint_array_cold = my_therm_obj.Tint_array
-   Rtot_TE_cold = my_therm_obj.Rtot_TE
-   Rbulk_TE_cold = my_therm_obj.Rbulk_TE
-   Tsurf_TE_cold = my_therm_obj.Tsurf_TE
-   # Run sequence of interior models at different internal temperatures (from 400 K)
-   Tint_array = np.asarray([400., 500., 600., 700., 800.])
-   my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH, P_surf=9.5)
-   f_S_hot = my_therm_obj.f_S
-   s_mean_TE_hot = my_therm_obj.s_mean_TE
-   s_top_TE_hot = my_therm_obj.s_top_TE
-   Tint_array_hot = my_therm_obj.Tint_array
-   Rtot_TE_hot = my_therm_obj.Rtot_TE
-   Rbulk_TE_hot = my_therm_obj.Rbulk_TE
-   Tsurf_TE_hot = my_therm_obj.Tsurf_TE
-   # Concatenate
-   my_therm_obj.f_S = np.concatenate((f_S_cold,f_S_hot))
-   my_therm_obj.s_mean_TE = np.concatenate((s_mean_TE_cold,s_mean_TE_hot))
-   my_therm_obj.s_top_TE = np.concatenate((s_top_TE_cold,s_top_TE_hot))
-   my_therm_obj.Tint_array = np.concatenate((Tint_array_cold,Tint_array_hot))
-   my_therm_obj.Rtot_TE = np.concatenate((Rtot_TE_cold,Rtot_TE_hot))
-   my_therm_obj.Rbulk_TE = np.concatenate((Rbulk_TE_cold,Rbulk_TE_hot))
-   my_therm_obj.Tsurf_TE = np.concatenate((Tsurf_TE_cold,Tsurf_TE_hot))
-   # Solve luminosity equation
+   Tint_array = np.asarray([50., 100., 200., 300., 400., 500., 600., 700., 800.])
+   # Specify the surface pressure of each model in the thermal sequence
+   # Models with Tint=50 to 300 K have Psurf=1000 bar, while Tint=400-800 K have Psurf=9.5 bar
+   P_surf_array = np.asarray([1e3, 1e3, 1e3, 1e3, 9.5, 9.5, 9.5, 9.5, 9.5])
+   my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, log_FeH=log_FeH,P_surf=P_surf_array)
    my_therm_obj.solve_thermal_evol_eq(t_Gyr=np.linspace(2.1e-6, 15., 10000))
 
-
-.. important::
-
-   If you are calculating a thermal sequence, our recommendation is to calculate the models at low internal temperature with     ``P_surf`` = 1000 bar (default), and the models at high internal temperature with ``P_surf=9.5`` bar. Do not calculate all    models at 9.5 bar! At low temperatures, the entropy’s slope becomes flat with time, and makes    it     difficult to integrate the luminosity equation. Concatenate the two arrays (high and low ``Tint_array``) with all the models to have a file with the entropy, internal temperature, etc, as shown in the tutorial.
-
-
+   
 How to use a custom grid
 ========================
 

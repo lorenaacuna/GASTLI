@@ -5,7 +5,7 @@ GASTLI: The GAS gianT modeL for Interiors
 Welcome to the **GASTLI** documentation. GASTLI is a Python package for calculating 
 interior structure models for gas giant exoplanets. GASTLI allows you to compute mass-radius 
 relations, thermal evolution curves and interior structure profiles for a wide variety of irradiations,
-masses and internal compositions
+masses and internal compositions (check out our :doc:`atm_grid` section).
 
 
 License and how to cite

@@ -44,6 +44,4 @@ Guide
    retrieval
 
 
-Code documentation
-==================
 

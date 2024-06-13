@@ -1,6 +1,6 @@
-=========
-Retrieval
-=========
+===================
+Interior retrievals
+===================
 
 In this page we show a tutorial on how to obtain a grid of GASTLI models to run a retrieval on mass, radius, age, and atmospheric metallicity.
 

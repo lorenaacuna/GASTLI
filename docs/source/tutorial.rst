@@ -446,7 +446,7 @@ We can then read the file and plot the mass-radius curve. In this file, the colu
 .. figure:: Jupiter_MRrel.pdf
    :align: center
 
-   Mass-radius curve for a Jupiter analogue with core mass fraction 3% with GASTLI.
+   Mass-radius curve for a Jupiter analogue with a homogeneous, solar composition (CMF = 0, log(Fe/H) = 0).
 
 
 

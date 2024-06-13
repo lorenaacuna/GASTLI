@@ -23,7 +23,7 @@ You can start a simple interior-atmosphere object to generate one model by initi
    my_coupling = cpl.coupling(path_to_file=path_to_input)
 
 
-.. important:: Replace the variable ``path_to_input`` in the code above with the absolute path to the input data folder in your computer. Do not forget to slash symbols (``/``) at the beginning and the end of the string.
+.. important:: Replace the variable ``path_to_input`` in the code above with the absolute path to the input data folder in your computer. Do not forget the two slash symbols (``/``), one at the beginning and the other one at end of the string.
 
 Next, specify the input variables for the interior-atmosphere model:
 

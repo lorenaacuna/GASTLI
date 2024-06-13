@@ -115,10 +115,6 @@ If you try to run this same model without specifying ``P_surf``, the default of 
 
    If you are calculating a thermal sequence, our recommendation is to calculate the models at low internal temperature with     ``P_surf`` = 1000 bar (default), and the models at high internal temperature with ``P_surf=9.5`` bar. Do not calculate all    models at 9.5 bar! At low temperatures, the entropy’s slope becomes flat with time, and makes    it     difficult to integrate the luminosity equation. Concatenate the two arrays (high and low ``Tint_array``) with all the models to have a file with the entropy, internal temperature, etc, as shown in the tutorial.
 
-.. note::
-   There are 38 models out of 5000 models in the default grid that did not converge, even at a low surface pressure. In the    unlikely event of requiring one of these models in the grid, don't hesitate to contact Lorena Acuña (acuna@mpia.de).
-
-
 
 How to use a custom grid
 ========================

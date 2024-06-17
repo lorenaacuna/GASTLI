@@ -15,7 +15,7 @@ GASTLI is open source under a BSD 3-Clause License.
 
 The following papers document GASTLI:
 
-- The base package for gas giants is described in Acuña et al. Submitted
+- The base package for gas giants is described in `Acuña et al. (2024) <https://arxiv.org/abs/2406.10032>`_.
 - Interior-atmosphere coupling algorithm: `Acuña et al. (2021) <https://www.aanda.org/articles/aa/full_html/2021/03/aa39885-20/aa39885-20.html>`_.
 
 Please cite these two papers if you make use of GASTLI.

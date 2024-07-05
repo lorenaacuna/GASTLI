@@ -48,6 +48,6 @@ Contents
 
 Release Notes
 =============
-.. include::  ../../../CHANGELOG.rst
+.. include::  ../../CHANGELOG.rst
 
 

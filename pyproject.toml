@@ -15,5 +15,6 @@ dependencies = [
     "pandas >= 2.0.3",
     "scipy >= 1.11.1",
     "h5py >= 3.10.0",
-    "matplotlib >= 3.7.2"
+    "matplotlib >= 3.7.2",
+    "pytest >= 8.2.2"
 ]

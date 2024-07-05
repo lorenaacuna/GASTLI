@@ -30,7 +30,7 @@ GASTLI is based on the Marseille Super-Earth Interior Model (MSEI), which was ad
 
 
 Contents
-==========
+========
 
 .. toctree::
    :maxdepth: 1
@@ -46,5 +46,8 @@ Contents
    tutorial
    retrieval
 
+Release Notes
+=============
+.. include::  ../../../CHANGELOG.rst
 
 

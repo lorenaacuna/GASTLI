@@ -38,6 +38,7 @@ Contents
 
    installation
    atm_grid
+   test_suite
 
 .. toctree::
    :maxdepth: 1

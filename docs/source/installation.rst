@@ -230,7 +230,7 @@ After activating the environment, we will be ready to install GASTLI with pip:
 Installation from source
 ------------------------
 
-You can download the .zip file from the `GASTLI github repository <https://github.com/lorenaacuna/GASTLI>`_, or use git to clone the repository in your local computer as explained `here <https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>`. Then from the root directory, run in your terminal: 
+You can download the .zip file from the `GASTLI github repository <https://github.com/lorenaacuna/GASTLI>`_, or use git to clone the repository in your local computer as explained `here <https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>`_. Then from the root directory, run in your terminal: 
 
 .. code-block:: bash
 

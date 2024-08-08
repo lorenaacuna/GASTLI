@@ -26,7 +26,7 @@ affiliations:
    index: 1
  - name: Chinese Academy of Sciences South America Center for Astronomy (CASSACA), National Astronomical Observatories, Chinese Academy of  Sciences, Beijing 100101, PR China
    index: 2
-date: X July 2024
+date: 8 August 2024
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:

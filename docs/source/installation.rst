@@ -13,6 +13,11 @@ To install GASTLI, you need to:
 
 If you do not have the first two requirements, we offer an installation guide below.
 
+.. important::
+
+The latest stable version is 0.9.1, which corresponds to the main branch. Version 0.9.2 is the development branch. We recommend users to make sure that the install version 0.9.1 if they use pip ``pip install gastli==0.9.1``
+
+
 Fortran and Python installation
 -------------------------------
 
@@ -184,7 +189,6 @@ Next, we should install the following packages in ``miniconda3``:
    conda install ipython
    conda install numpy
    conda install jupyter
-   conda install -c conda-forge pymultinest
 
 Then, we install ``gfortran`` in iTerm_Rosetta:
 
@@ -224,13 +228,13 @@ After activating the environment, we will be ready to install GASTLI with pip:
 
 .. code-block:: bash
 
-    pip install gastli
+    pip install gastli==0.9.1
 
 
 Installation from source
 ------------------------
 
-You can download the .zip file from the `GASTLI github repository <https://github.com/lorenaacuna/GASTLI>`_, or use git to clone the repository in your local computer as explained `here <https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>`_. Then from the root directory, run in your terminal: 
+You can download the .zip file from the `GASTLI github repository <https://github.com/lorenaacuna/GASTLI>`_, or use git to clone the repository in your local computer as explained `here <https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>`_. Make sure it is the main branch (and not the development one). Then from the root directory, run in your terminal: 
 
 .. code-block:: bash
 

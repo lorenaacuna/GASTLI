@@ -9,7 +9,12 @@ requires = [
 [project]
 name = "gastli"
 version = "0.9.0"
-requires-python = ">= 3.10"
+description = "The GAS gianT modeL for Interiors"
+repository = "https://github.com/lorenaacuna/GASTLI"
+documentation = "https://gastli.readthedocs.io/en/latest/"
+authors = [
+    {name = "Lorena Acuna", email = "acuna@mpia.de"},
+]
 dependencies = [
     "numpy >= 1.25.0",
     "pandas >= 2.0.3",

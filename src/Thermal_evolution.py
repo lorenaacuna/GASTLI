@@ -27,7 +27,8 @@ class thermal_evolution:
                 core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
         """
 
-        self.path_to_file = path_to_file
+        #self.path_to_file = path_to_file
+        self.path_to_file = os.environ['GASTLI_input_data_path']
         self.pow_law_formass = pow_law_formass
 
 

@@ -3,6 +3,7 @@ import gastli.constants as cte
 import gastli.dimensions as dim
 from gastli.fortinput import fort_input as fi
 from gastli.gastli_interior import gastli_interior as interior
+import os
 
 import numpy as np
 #import time
@@ -38,7 +39,8 @@ class int_planet:
 
 
         # Arguments of __init__
-        self.path_to_file = path_to_file
+        #self.path_to_file = path_to_file
+        self.path_to_file = os.environ['GASTLI_input_data_path']
         self.j_max = j_max
         self.cnt_conv_max = cnt_conv_max
         self.conv_prec = conv_prec

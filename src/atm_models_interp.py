@@ -229,7 +229,8 @@ class atm_models_interp:
         self.npoints = 130
 
         # Load atmosphere data
-        self.path_to_file = path_to_file
+        #self.path_to_file = path_to_file
+        self.path_to_file = os.environ['GASTLI_input_data_path']
 
         file_atm = h5py.File(self.path_to_file+"Input/Atmospheric data/"+name_grid, 'r')
 

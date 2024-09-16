@@ -6,6 +6,7 @@ import numpy as np
 import time
 import math
 import sys
+import os
 
 class coupling:
     def __init__(self,path_to_file,name_grid=None,pow_law_formass=0.32,j_max=30):
@@ -26,7 +27,8 @@ class coupling:
         '''
 
         self.pow_law_formass = pow_law_formass
-        self.path_to_file = path_to_file
+        #self.path_to_file = path_to_file
+        self.path_to_file = os.environ['GASTLI_input_data_path']
         self.j_max = j_max
 
         # Initialise interior model

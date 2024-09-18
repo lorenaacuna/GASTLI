@@ -13,9 +13,10 @@ To install GASTLI, you need to:
 
 If you do not have the first two requirements, we offer an installation guide below.
 
+
 .. important::
 
-The latest stable version is 0.9.1, which corresponds to the main branch. Version 0.9.2 is the development branch. We recommend users to make sure that the install version 0.9.1 if they use pip ``pip install gastli==0.9.1``
+   The latest stable version is 0.9.1, which corresponds to the main branch. Version 0.9.2 is the development branch. We recommend users to make sure that the install version 0.9.1 if they use pip ``pip install gastli==0.9.1``
 
 
 Fortran and Python installation

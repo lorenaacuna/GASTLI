@@ -174,7 +174,7 @@ Following the Jupiter example above (case 1, when the log-metallicity is known),
    plt.close(fig)
 
 
-.. figure:: interior_structure_profiles.pdf
+.. figure:: interior_structure_profiles.png
    :align: center
 
    Interior structure profiles for a Jupiter analog with GASTLI.
@@ -205,7 +205,7 @@ Additionally, we can show with a circle diagram the size of the core with respec
    fig.savefig('core_and_envelope.pdf', bbox_inches='tight', format='pdf', dpi=1000)
    plt.close(fig)
 
-.. figure:: core_and_envelope.pdf
+.. figure:: core_and_envelope.png
    :align: center
 
    Size of core in comparison to planet size (interior only).
@@ -266,7 +266,7 @@ Following the example above, we can plot the atmospheric profiles as (the coupli
    fig.savefig('atmospheric_profiles.pdf', bbox_inches='tight', format='pdf', dpi=1000)
    plt.close(fig)
 
-.. figure:: atmospheric_profiles.pdf
+.. figure:: atmospheric_profiles.png
    :align: center
 
    Atmospheric profiles for Jupiter analogue with GASTLI's default atmospheric grid.
@@ -335,7 +335,7 @@ We can combine the pressure-temperature profile from the interior and the atmosp
    plt.close(fig)
 
 
-.. figure:: phase_diagram.pdf
+.. figure:: phase_diagram.png
    :align: center
 
    Pressure-temperature adiabats for a metal-rich planet at low (300 K) and high irradiation (1000 K).
@@ -443,7 +443,7 @@ We can then read the file and plot the mass-radius curve. In this file, the colu
    fig.savefig('Jupiter_MRrel.pdf',bbox_inches='tight',format='pdf', dpi=1000)
    plt.close(fig)
 
-.. figure:: Jupiter_MRrel.pdf
+.. figure:: Jupiter_MRrel.png
    :align: center
 
    Mass-radius curve for a Jupiter analogue with a homogeneous, solar composition (CMF = 0, log(Fe/H) = 0).
@@ -547,7 +547,7 @@ Then this file can be read, and its columns are used to solve the luminosity dif
    fig.savefig('thermal_evolution_HATP26b_20xsolar.pdf', bbox_inches='tight', format='pdf', dpi=1000)
    plt.close(fig)
 
-.. figure:: thermal_evolution_HATP26b_20xsolar.pdf
+.. figure:: thermal_evolution_HATP26b_20xsolar.png
    :align: center
 
    Radius evolution of HAT-P-26 b for CMF = 0.5 and 20 x solar envelope composition.
@@ -596,7 +596,7 @@ The output arrays ``thermal_evolution_class_object.Tint_solution`` and ``thermal
    plt.close(fig)
 
 
-.. figure:: thermal_evolution_all.pdf
+.. figure:: thermal_evolution_all.png
    :align: center
 
    Entropy, internal temperature, and luminosity of HAT-P-26 b for CMF = 0.5 and 20 x solar envelope composition.
@@ -699,7 +699,7 @@ We recommend increasing ``j_max``, to no more than ``j_max = 99``. Sometimes, ev
    fig.savefig('convergence_tutorial.pdf', bbox_inches='tight', format='pdf', dpi=1000)
    plt.close(fig)
 
-.. figure:: convergence_tutorial.pdf
+.. figure:: convergence_tutorial.png
    :align: center
 
    Convergence of the layers radii in each iteration in the interior model.

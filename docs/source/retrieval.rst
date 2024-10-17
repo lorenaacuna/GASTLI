@@ -340,7 +340,7 @@ A retrieval with this number of steps takes around 30 min. To check convergence,
    fig.savefig('Output/emcee_convergence.pdf',bbox_inches='tight',format='pdf', dpi=1000)
    plt.close(fig)
 
-.. figure:: emcee_convergence.pdf
+.. figure:: emcee_convergence.png
    :align: center
 
     Positions of each walker as a function of the number of steps in the chain.
@@ -452,7 +452,7 @@ Finally, we can generate a corner plot with the samples with the module ``corner
    figure.savefig('corner_plot.pdf',bbox_inches='tight',format='pdf', dpi=1000)
 
 
-.. figure:: corner_plot.pdf
+.. figure:: corner_plot.png
    :align: center
 
     Corner plot of our retrieval with GASTLI

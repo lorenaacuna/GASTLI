@@ -214,6 +214,7 @@ Additionally, we can show with a circle diagram the size of the core with respec
    plt.close(fig)
 
 .. figure:: core_and_envelope.png
+   :width: 400
    :align: center
 
    Size of core in comparison to planet size (interior only).
@@ -344,6 +345,7 @@ We can combine the pressure-temperature profile from the interior and the atmosp
 
 
 .. figure:: phase_diagram.png
+   :width: 400
    :align: center
 
    Pressure-temperature adiabats for a metal-rich planet at low (300 K) and high irradiation (1000 K).
@@ -452,6 +454,7 @@ We can then read the file and plot the mass-radius curve. In this file, the colu
    plt.close(fig)
 
 .. figure:: Jupiter_MRrel.png
+   :width: 400
    :align: center
 
    Mass-radius curve for a Jupiter analogue with a homogeneous, solar composition (CMF = 0, log(Fe/H) = 0).
@@ -556,6 +559,7 @@ Then this file can be read, and its columns are used to solve the luminosity dif
    plt.close(fig)
 
 .. figure:: thermal_evolution_HATP26b_20xsolar.png
+   :width: 400
    :align: center
 
    Radius evolution of HAT-P-26 b for CMF = 0.5 and 20 x solar envelope composition.
@@ -708,6 +712,7 @@ We recommend increasing ``j_max``, to no more than ``j_max = 99``. Sometimes, ev
    plt.close(fig)
 
 .. figure:: convergence_tutorial.png
+   :width: 400
    :align: center
 
    Convergence of the layers radii in each iteration in the interior model.

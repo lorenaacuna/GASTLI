@@ -3,7 +3,18 @@ Quickstart
 ==========
 
 Welcome to GASTLI's quickstart tutorial. In this tutorial we explain how to compute interior structure and atmospheric models
-and plot the results. These include the internal and atmospheric profiles, a pressure-temperature diagram, mass-radius relations, and thermal evolution curves. In the last section of this tutorial, we also discuss how to check and ease convergence.
+and plot the results. These include the internal and atmospheric profiles, a pressure-temperature diagram, mass-radius relations, and thermal evolution curves. In the last section of this tutorial, we also discuss how to check and ease convergence. Here's an overview of this page:
+
+*  :ref:`Creating an interior-atmosphere object<Creating an interior-atmosphere object>`
+
+  - Interior structure profiles
+  - Atmospheric profiles
+  - Mass-radius diagram
+
+* Generating a thermal evolution curve
+
+* Convergence
+
 
 
 Creating an interior-atmosphere object
@@ -110,7 +121,7 @@ With its respective output summary:
 
 
 
-How to plot interior structure profiles
+Interior structure profiles
 ---------------------------------------
 
 To plot the interior structure profiles, we can obtain the arrays from the interior-atmosphere coupling class as:
@@ -212,7 +223,7 @@ Additionally, we can show with a circle diagram the size of the core with respec
 
 
 
-How to plot atmospheric profiles
+Atmospheric profiles
 --------------------------------
 
 Similar to the interior structure profiles, the atmospheric profiles can be obtained as: 
@@ -345,7 +356,7 @@ We can combine the pressure-temperature profile from the interior and the atmosp
 
 
 
-How to plot a mass-radius diagram
+Mass-radius diagram
 ---------------------------------
 
 To generate a mass-radius curve, you need to call the coupling class several times, and modify the mass in each call. A ``for`` loop can do this: 

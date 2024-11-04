@@ -8,7 +8,7 @@ import math
 import sys
 
 class coupling:
-        r"""Class defining objects to run one interior-atmosphere coupled model. 
+        """Class defining objects to run one interior-atmosphere coupled model. 
             When this class is defined, it automatically initialises interior and atmosphere models and
             defines required constants.
 
@@ -20,7 +20,6 @@ class coupling:
                 Default is 0.32. Increase if planet is very massive (greater than 5 Jupiter masses aprox). Decrease if
                 core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
         """
-
     
     def __init__(self,path_to_file,name_grid=None,pow_law_formass=0.32,j_max=30):
         self.pow_law_formass = pow_law_formass

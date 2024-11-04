@@ -39,7 +39,7 @@ Contents
    installation
    atm_grid
    test_suite
-   .. include:: ../../CONTRIBUTING.md
+   contributing
 
 .. toctree::
    :maxdepth: 1

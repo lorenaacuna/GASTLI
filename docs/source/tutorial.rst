@@ -5,8 +5,7 @@ Quickstart
 Welcome to GASTLI's quickstart tutorial. In this tutorial we explain how to compute interior structure and atmospheric models
 and plot the results. These include the internal and atmospheric profiles, a pressure-temperature diagram, mass-radius relations, and thermal evolution curves. In the last section of this tutorial, we also discuss how to check and ease convergence. Here's an overview of this page:
 
-*  :ref:`Creating an interior-atmosphere object<Creating an interior-atmosphere object>`
-
+*  :ref:`intatmobject`
   - Interior structure profiles
   - Atmospheric profiles
   - Mass-radius diagram
@@ -16,6 +15,7 @@ and plot the results. These include the internal and atmospheric profiles, a pre
 * Convergence
 
 
+.. _intatmobject:
 
 Creating an interior-atmosphere object
 ======================================

@@ -37,16 +37,12 @@ Contents
    :caption: User Guide
 
    installation
-   atm_grid
    test_suite
    contributing
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Tutorials
-
    tutorial
+   atm_grid
    retrieval
+
 
 Release Notes
 =============

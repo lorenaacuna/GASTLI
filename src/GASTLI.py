@@ -9,10 +9,7 @@ import numpy as np
 
 
 class int_planet:
-    def __init__(self, path_to_file, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
-                 pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11, 5e11, 5e11, 5e11, \
-                                                     5e11, 5e11, 5e11, 5e11, 5e11, 5e11], corEOS=1):
-        r"""Class defining objects for carrying out interior structure calculations
+    """Class defining objects for carrying out interior structure calculations
         for a given set of mass, composition and surface conditions
 
         Args:
@@ -34,7 +31,11 @@ class int_planet:
                 Type of correction on the thermodynamical parameters of Vinet EOS.
                 (=0: no correction / =1: range [1:1.5] / =2: range [1:5] / =3:
                 range [1:10]). Do not change
-        """
+    """
+
+    def __init__(self, path_to_file, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
+                 pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11, 5e11, 5e11, 5e11, \
+                                                     5e11, 5e11, 5e11, 5e11, 5e11, 5e11], corEOS=1):
 
 
         # Arguments of __init__

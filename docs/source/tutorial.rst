@@ -182,6 +182,7 @@ Following the Jupiter example above (case 1, when the log-metallicity is known),
 
 
 .. figure:: interior_structure_profiles.png
+   :width: 400
    :align: center
 
    Interior structure profiles for a Jupiter analog with GASTLI.

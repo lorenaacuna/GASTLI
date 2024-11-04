@@ -8,7 +8,7 @@ import math
 import sys
 
 class coupling:
-        """Class defining objects to run one interior-atmosphere coupled model. 
+        r"""Class defining objects to run one interior-atmosphere coupled model. 
             When this class is defined, it automatically initialises interior and atmosphere models and
             defines required constants.
 

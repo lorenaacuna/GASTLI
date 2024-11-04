@@ -7,9 +7,8 @@ from gastli.gastli_interior import gastli_interior as interior
 import numpy as np
 #import time
 
-
 class int_planet:
-    """Class defining objects for carrying out interior structure calculations
+    r"""Class defining objects for carrying out interior structure calculations
         for a given set of mass, composition and surface conditions
 
         Args:

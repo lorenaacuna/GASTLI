@@ -134,7 +134,7 @@ Then, we install ``gfortran`` in iTerm_Rosetta:
 
    brew_i386 install gfortran
 
-Everything is ready now, so we should simply install GASTLI with pip
+Everything is ready now, so we should simply install GASTLI with pip. As explained in the :doc:`installation` section, this can be done by creating a conda/venv environment first (optional), activating it and running ``pip install gastli==0.9.1``.
 
 2) Installation with disk image
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

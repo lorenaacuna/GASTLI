@@ -128,14 +128,6 @@ Okay, now we are ready to go ahead and modify ``.bash_profile`` to handle two ve
 
 Now, when you open iTerm / iTerm_Rosetta, you will instantly know which ``conda`` version is being used.
 
-Next, we should install the following packages in ``miniconda3``:
-
-.. code-block:: bash
-
-   conda install ipython
-   conda install numpy
-   conda install jupyter
-
 Then, we install ``gfortran`` in iTerm_Rosetta:
 
 .. code-block:: bash

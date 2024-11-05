@@ -9,7 +9,7 @@ To install GASTLI, you need to:
 
 - have a Python 3.9+ installation,
 - have a fortran compiler, for example ``gfortran``,
-- download the zip file for the input data `here <https://www.dropbox.com/scl/fi/p2kawqp8gtzh5psn21tjc/gastli_input_data.zip?rlkey=fc0mfxvpck5mukkqhk1f8hkad&st=ggsa4zmk&dl=0>`_, and place it in a directory in your computer that is easy to find
+- **download the zip file for the input data `here <https://www.dropbox.com/scl/fi/p2kawqp8gtzh5psn21tjc/gastli_input_data.zip?rlkey=fc0mfxvpck5mukkqhk1f8hkad&st=ggsa4zmk&dl=0>`_,** and place it in a directory in your computer that is easy to find
 
 If you do not have either of the first two requirements, we offer an installation guide for different OS below:
 
@@ -21,18 +21,13 @@ If you do not have either of the first two requirements, we offer an installatio
 
 .. warning::
 
-   Mac OS with Apple Silicon processors (M1, M2 and M3) have ARM64 as the native architecture. These systems have shown problems when installing 
-   a Python package that compiles a fortran backend because Python's default fortran compiler uses Intel architecture. One way to recognise this is
-   to try installing GASTLI's with pip (or from source) anfd testing the installation as indicated below. If you get a message such as the following, 
-   you need to follow the instructions for Apple Silicon in the :doc:`macos_arm64_install` section:
+   Mac OS with Apple Silicon processors (M1, M2 and M3) have ARM64 as the native architecture. These systems have shown problems when installing a Python package that compiles a fortran backend because Python's default fortran compiler uses Intel architecture. One way to recognise this is to try installing GASTLI's with pip (or from source) anfd testing the installation as indicated below. Users that get a message such as the following need to follow the instructions for Apple Silicon in the :doc:`macos_arm64_install` section:
    
    .. code-block:: python
 
     Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
     ImportError: dlopen(/Users/acuna/anaconda3/envs/GASTLI_norosetta/lib/python3.10/site-packages/gastli/dimensions.cpython-310-darwin.so, 0x0002): symbol not found in flat namespace (_f2pyinitdimensions_)
-
-
 
 
 Installation of GASTLI's Python package

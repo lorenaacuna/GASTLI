@@ -1,7 +1,7 @@
 Fortran installation in Mac OS (Apple Silicon M1/M2/M3)
 -----------------------------------
 
-If you are reading this section, it is because the you have an Apple Silicon chip and encountered the following error when trying to access any variable, class or function of the package:
+If you are reading this section, it is because you have an Apple Silicon chip and encountered the following error when trying to access any variable, class or function of the package:
 
 .. code-block:: bash
 
@@ -11,7 +11,8 @@ If you are reading this section, it is because the you have an Apple Silicon chi
 
 There are two options to fix this error: 1) using an Intel emulation with Rosetta, or 2) using a disk image. We explain both options below.
 
-**1) Installation with Rosetta**
+1) Installation with Rosetta
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The installation of GASTLI on Apple machines with the M1/M2/M3 chip requires Intel emulation with Rosetta.
 
@@ -143,9 +144,10 @@ Then, we install ``gfortran`` in iTerm_Rosetta:
 
 Everything is ready now, so we should simply install GASTLI with pip
 
-**2) Installation with disk image**
+2) Installation with disk image
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- `François-Xavier Coudert’s github repository <https://github.com/fxcoudert/gfortran-for-macOS>`_ provides gfortran disk images (.dmg) that can be used to install gfortran through an installation wizard for the Apple Silicon (M1, M2, M3) chips. 
+`François-Xavier Coudert’s github repository <https://github.com/fxcoudert/gfortran-for-macOS>`_ provides gfortran disk images (.dmg) that can be used to install gfortran through an installation wizard for the Apple Silicon (M1, M2, M3) chips. 
 
 
 

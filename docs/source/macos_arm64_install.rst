@@ -108,7 +108,7 @@ Let's cut these few lines again and paste them into a separate file ``.init_cond
    conda config --add channels bioconda
    conda config --add channels conda-forge
 
-Okay, now we are ready to go ahead mofify ``.bash_profile`` to handle two versions of ``conda`` between M1 and Rosetta terminals. Add the following lines to your ``.bash_profile``:
+Okay, now we are ready to go ahead and modify ``.bash_profile`` to handle two versions of ``conda`` between M1/M2/M3 and Rosetta terminals. Add the following lines to your ``.bash_profile``:
 
 .. code-block:: bash
 

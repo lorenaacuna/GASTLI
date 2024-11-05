@@ -21,7 +21,7 @@ If you do not have either of the first two requirements, we offer an installatio
 
 .. warning::
 
-   Mac OS with Apple Silicon processors (M1, M2 and M3) have ARM64 as the native architecture. These systems have shown problems when installing a Python package that compiles a fortran backend because Python's default fortran compiler uses Intel architecture. One way to recognise this is to try installing GASTLI's with pip (or from source) anfd testing the installation as indicated below. Users that get a message such as the following need to follow the instructions for Apple Silicon in the :doc:`macos_arm64_install` section:
+   Mac OS with Apple Silicon processors (M1, M2 and M3) have ARM64 as the native architecture. These systems have shown problems when installing a Python package that compiles a fortran backend because Python's default fortran compiler uses Intel architecture. One way to recognise this is to try installing GASTLI with pip (or from source) and testing the installation as indicated below. Users that get a message such as the following need to follow the instructions for Apple Silicon in the :doc:`macos_arm64_install` section:
    
    .. code-block:: python
 

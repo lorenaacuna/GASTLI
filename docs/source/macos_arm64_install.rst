@@ -48,7 +48,7 @@ For completeness only, you might also install Homebrew in your M1/M2/M3 terminal
 
    alias brew="/opt/homebrew/bin/brew"
 
-Now we will install ``miniconda3`` in Rosetta, but before that, we will have to modify ``.bash_profile`` so we could handle the ``conda`` between M1/M2/M3 and Rosetta separately. Here I assume you already installed ``anaconda`` in your M1/M2/M3 terminal, so the following block should be in your ``.bash_profile``:
+Now we will install ``miniconda3`` in Rosetta, but before that, we will have to modify ``.bash_profile`` so we could handle the ``conda`` between M1/M2/M3 and Rosetta separately. Here I assume you already installed ``anaconda`` or ``miniconda`` in your M1/M2/M3 terminal, so the following block should be in your ``.bash_profile``:
 
 .. code-block:: bash
 
@@ -67,7 +67,7 @@ Now we will install ``miniconda3`` in Rosetta, but before that, we will have to 
   unset __conda_setup
   # <<< conda initialize <<<
 
-Note that the "xxxx" here should be your username. Let's cut these few lines and paste them into a separate file ``.init_conda_arm64.sh`` in the home directory. We will come back to handle this file later.
+Note that the "xxxx" here should be your username. Copy these few lines and paste them into a separate file ``.init_conda_arm64.sh`` in the home directory. Then remove these lines from the file ``.bash_profile``. We will come back to handle the ``.init_conda_arm64.sh`` file later.
 
 Now let's install ``miniconda3`` in Rosetta. First, type the following line in iTerm_Rosetta:
 
@@ -100,7 +100,7 @@ Once the installation succeed, you will see that the following several new lines
    unset __conda_setup
    # <<< conda initialize <<<
 
-Let's cut these few lines again and paste them into a separate file ``.init_conda_x86_64.sh`` in the home directory. In the same iTerm_Rosetta, type the following:
+Let's cut (i.e., copy and remove) these few lines again and paste them into a separate file ``.init_conda_x86_64.sh`` in the home directory. In the same iTerm_Rosetta, type the following:
 
 .. code-block:: bash
 
@@ -126,7 +126,21 @@ Okay, now we are ready to go ahead and modify ``.bash_profile`` to handle two ve
    fi
    # <<<<<<<< end <<<<<<<
 
-Now, when you open iTerm / iTerm_Rosetta, you will instantly know which ``conda`` version is being used.
+Now, when you open iTerm / iTerm_Rosetta, the terminal will display a message to let you know which  ``conda`` version is being used. If you open native iTerm, the terminal will show this:
+
+.. code-block:: bash
+
+   Last login: Sun Nov 24 12:57:39 on ttys001
+   Running on ARM64 using anaconda
+
+And when you open iTerm_Rosetta, the terminal will display the following:
+
+.. code-block:: bash
+
+   Last login: Mon Nov 25 10:04:04 on ttys000
+   Running on Rosetta using miniconda3
+
+
 
 Then, we install ``gfortran`` in iTerm_Rosetta:
 

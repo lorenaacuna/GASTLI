@@ -139,7 +139,12 @@ Everything is ready now, so we should simply install GASTLI with pip. As explain
 2) Installation with disk image
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`François-Xavier Coudert’s github repository <https://github.com/fxcoudert/gfortran-for-macOS>`_ provides gfortran disk images (.dmg) that can be used to install gfortran through an installation wizard for the Apple Silicon (M1, M2, M3) chips. 
+`François-Xavier Coudert’s github repository <https://github.com/fxcoudert/gfortran-for-macOS>`_ provides gfortran disk images (.dmg) that allow you to install gfortran via an installation wizard on the Apple Silicon (M1, M2, M3) chips. Follow the installation instructions provided in FX Coudert's repository.
+
+Ensure you download and install the version of gfortran compatible with your operating system (M1, M2 or M3) and architecture (ARM64). After installation, verify the default gfortran binary by running the command ``which gfortran`` in your terminal. This command should return the path to the ARM64 binary you just installed.
+
+If the returned path does not point to the installed ARM64 binary, you may need to update your system's PATH to prioritize the correct binary location.
+
 
 
 

@@ -20,7 +20,8 @@ The installation of GASTLI on Apple machines with the M1/M2/M3 chip requires Int
 
    softwareupdate --install-rosetta
 
-Now go to the Applications folder and find the iTerm icon. Make a copy of this application and name the new copy as something like "iTerm_Rosetta". Right click iTerm_Rosetta, choose "Get Info", and select the "Open using Rosetta" box. To test that you are indeed using the Intel emulator, type the following in your iTerm_Rosetta:
+
+You now need to use your terminal application with Rosetta. Depending on the Mac OS version, your terminal app may be ``iTerm`` or ``Terminal``. ``iTerm`` is found in the Applications folder, while ``Terminal`` may be under the Applications > Utilities directory. Make a copy of this application and name the new copy as "iTerm_Rosetta" or "Terminal_Rosetta". Right click on the renamed terminal app icon, choose "Get Info", and select the "Open using Rosetta" box. To test that you are indeed using the Intel emulator, type the following in your iTerm_Rosetta/Terminal_Rosetta:
 
 .. code-block:: bash
 

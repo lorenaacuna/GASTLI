@@ -5,6 +5,7 @@ from gastli.GASTLI import int_planet
 
 # Other Python modules
 import numpy as np
+import time
 
 # Change path accordingly
 path_to_input = "/Users/acuna/Desktop/gastli_input_data/"
@@ -21,7 +22,11 @@ x_core = 0.10
 T_surf = 1300.
 P_surf = 1e3*1e5
 Zenv = 0.04
+
+start = time.time()
 myplanet_test.calc_radius(M_P,x_core,1-x_core,T_surf,P_surf,Zenv)
+end = time.time()
+print('Calculation time [s] = ', end-start)
 
 expected_radius = 10.188813052994131
 

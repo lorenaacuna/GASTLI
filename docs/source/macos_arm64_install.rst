@@ -11,8 +11,8 @@ If you are reading this section, it is because you have an Apple Silicon chip an
 
 There are two options to fix this error: 1) using an Intel emulation with Rosetta, or 2) using a disk image. We explain both options below.
 
-1) Installation with Rosetta
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1) Installation with Rosetta (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The installation of GASTLI on Apple machines with the M1/M2/M3 chip requires Intel emulation with Rosetta.
 

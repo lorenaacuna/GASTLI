@@ -11,13 +11,10 @@ To install GASTLI, you need to:
 - have a fortran compiler, for example ``gfortran``,
 - **download the zip file for the input data** `here <https://www.dropbox.com/scl/fi/p2kawqp8gtzh5psn21tjc/gastli_input_data.zip?rlkey=fc0mfxvpck5mukkqhk1f8hkad&st=ggsa4zmk&dl=0>`_, and place it in a directory in your computer that is easy to find
 
-If you do not have either of the first two requirements, we offer an installation guide for different OS below:
+If you do not have Fortran installed, follow the Fortran installation instructions appropriate for your OS. We offer an installation guide for different OS below. Once Fortran is installed, you can then proceed with the GASTLI package installation. 
 
-.. toctree::
-   linux_install
-   macos_intel_install
-   macos_arm64_install
-
+Fortran installation 
+=====================
 
 .. warning::
 
@@ -28,6 +25,12 @@ If you do not have either of the first two requirements, we offer an installatio
     Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
     ImportError: dlopen(/Users/acuna/anaconda3/envs/GASTLI_norosetta/lib/python3.10/site-packages/gastli/dimensions.cpython-310-darwin.so, 0x0002): symbol not found in flat namespace (_f2pyinitdimensions_)
+
+
+.. toctree::
+   linux_install
+   macos_intel_install
+   macos_arm64_install
 
 
 Installation of GASTLI's Python package

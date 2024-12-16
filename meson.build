@@ -1,7 +1,7 @@
 
 
 project('gastli', 'c',
-  version : '0.9.0',
+  version : '0.9.3',
   license: 'BSD-3',
   meson_version: '>=0.64.0',
     default_options: [

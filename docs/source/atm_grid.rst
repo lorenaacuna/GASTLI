@@ -45,8 +45,7 @@ If you try to run this same model without specifying ``P_surf``, the default of 
    # Other Python modules
    import numpy as np
    # Create coupling class
-   my_coupling = cpl.coupling(path_to_file="/Users/acuna/Desktop/gastli_input_data/",\
-                           j_max=99, pow_law_formass=0.31)
+   my_coupling = cpl.coupling(j_max=99, pow_law_formass=0.31)
    # Input for interior
    M_P = 50.
    # Internal and equilibrium temperatures
@@ -74,11 +73,8 @@ Here is an example:
    # Other Python modules
    import numpy as np
    import matplotlib.pyplot as plt
-   # Path to input files
-   # Dont forget the "/" at the end of the string
-   path_input = "/Users/acuna/Desktop/gastli_input_data/"
    # Create thermal evolution class object
-   my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
+   my_therm_obj = therm.thermal_evolution()
    # Input for interior
    M_P = 100.     # Earth units
    # Equilibrium temperatures
@@ -101,8 +97,7 @@ To use a different atmospheric grid from the default, you must place the grid fi
 
 .. code-block:: python
 
-   my_coupling = cpl.coupling(path_to_file="/Users/acuna/Desktop/gastli_input_data/",\
-                        name_grid="my_custom_grid.hdf5")
+   my_coupling = cpl.coupling(name_grid="my_custom_grid.hdf5")
 
 or 
 

@@ -7,8 +7,7 @@ import gastli.Coupling as cpl
 import numpy as np
 
 # Create coupling class
-my_coupling = cpl.coupling(path_to_file="/Users/acuna/Desktop/gastli_input_data/",
-                           j_max=99,pow_law_formass=0.315)
+my_coupling = cpl.coupling(j_max=99,pow_law_formass=0.315)
 
 
 # Input for interior

@@ -7,12 +7,8 @@ import gastli.Thermal_evolution as therm
 import numpy as np
 
 
-# Path to input files
-# Dont forget the "/" at the end of the string
-path_input = "/Users/acuna/Desktop/gastli_input_data/"
-
 # Create thermal evolution class
-my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
+my_therm_obj = therm.thermal_evolution()
 
 my_therm_obj.f_S = np.array([-9.0748e+13,
 -4.5188e+13,

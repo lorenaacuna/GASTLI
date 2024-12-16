@@ -7,9 +7,7 @@ from gastli.GASTLI import int_planet
 import numpy as np
 import time
 
-# Change path accordingly
-path_to_input = "/Users/acuna/Desktop/gastli_input_data/"
-myplanet_test = int_planet(path_to_file=path_to_input)
+myplanet_test = int_planet()
 
 n_lay_expected = int(3)
 Ttp_expected = np.array([273.16,251.165,256.164,273.31,355.,647.096])

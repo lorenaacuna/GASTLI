@@ -7,10 +7,8 @@ from gastli.atm_models_interp import atm_models_interp
 import numpy as np
 import matplotlib.pyplot as plt
 
-path_input = "/Users/acuna/Desktop/gastli_input_data/"
-
 # Test initialization
-myatmmodel = atm_models_interp(path_to_file=path_input)
+myatmmodel = atm_models_interp()
 
 # OLD TESTS
 

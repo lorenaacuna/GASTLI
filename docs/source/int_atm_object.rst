@@ -348,9 +348,6 @@ To generate a mass-radius curve, you need to call the coupling class several tim
    import gastli.Coupling as cpl
    # Other Python modules
    import numpy as np
-   # Path to input files
-   # Dont forget the "/" at the beginning and end of the string
-   path_input = "/Users/acuna/Desktop/gastli_input_data/"
    # Input for interior
    ## 1 Mjup in Mearth units
    Mjup = 318.
@@ -379,7 +376,7 @@ To generate a mass-radius curve, you need to call the coupling class several tim
        print('Model = ', k+1, ' out of ', n_mrel)
        print('---------------')
        # Create coupling class (this also resets parameters)
-       my_coupling = cpl.coupling(path_to_file=path_input, pow_law_formass=0.31)
+       my_coupling = cpl.coupling(pow_law_formass=0.31)
        # Case 1, log(Fe/H) is known
        # You must have FeH_flag=True, which is the default value
        my_coupling.main(M_P_model, CMF, Teqpl, Tintpl, CO=0.55, log_FeH=0.)

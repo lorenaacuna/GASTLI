@@ -11,13 +11,9 @@ You can start a simple interior-atmosphere object to generate one model by initi
    import gastli.Coupling as cpl
    # Other Python modules
    import numpy as np
-   # Specify path to input data folder
-   path_to_input = "/Users/acuna/Desktop/gastli_input_data/"
    # Initialise coupling class
-   my_coupling = cpl.coupling(path_to_file=path_to_input)
+   my_coupling = cpl.coupling()
 
-
-.. important:: Replace the variable ``path_to_input`` in the code above with the absolute path to the input data folder in your computer. Do not forget the two slash symbols (``/``), one at the beginning and the other one at end of the string.
 
 Next, specify the input variables for the interior-atmosphere model:
 
@@ -283,8 +279,7 @@ We can combine the pressure-temperature profile from the interior and the atmosp
    from matplotlib import pyplot as plt
    import numpy as np
    # Cold planet model
-   path_to_input = "/Users/acuna/Desktop/gastli_input_data/"
-   my_coupling = cpl.coupling(path_to_file=path_to_input)
+   my_coupling = cpl.coupling()
    # Input for interior
    # Mearth units
    M_P = 50.
@@ -301,10 +296,10 @@ We can combine the pressure-temperature profile from the interior and the atmosp
    # Run coupled interior-atmosphere model
    my_coupling.main(M_P, CMF, Teqpl, Tintpl, CO=CO_planet, log_FeH=log_FeHpl,Rguess=6.)
    # Hot planet model
-   my_coupling_hot = cpl.coupling(path_to_file=path_to_input)
+   my_coupling_hot = cpl.coupling()
    my_coupling_hot.main(M_P, CMF, 1000., Tintpl, CO=CO_planet, log_FeH=log_FeHpl,Rguess=6.)
    # Water phase diagram class
-   water_phase_lines = water_curv.water_curves(path_to_input)
+   water_phase_lines = water_curv.water_curves()
    # Plot
    fig,ax = plt.subplots(nrows=1,ncols=1)
    plt.title(r'M = 50 $M_{\oplus}$, CMF = 0.5, $T_{int}$ = 50 K, [Fe/H] = 250 x solar')

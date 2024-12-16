@@ -13,9 +13,7 @@ We first need to generate a grid of forward models. The next example is going to
    # Other Python modules
    import numpy as np
    import os
-   # Path to input files
-   # Dont forget the "/" at the end of the string
-   path_input = "/u/loacu/gastli_input_data/"
+
    Mjup = 318.
    Rjup = 11.2
    ## Equilibrium temperature
@@ -51,7 +49,7 @@ We first need to generate a grid of forward models. The next example is going to
               print('Sequence = ', counter, ' out of ', n_mrel)
               print('---------------')
               # Thermal evolution class object
-              my_therm_obj = therm.thermal_evolution(path_to_file=path_input, pow_law_formass=0.315)
+              my_therm_obj = therm.thermal_evolution(pow_law_formass=0.315)
               my_therm_obj.main(M_P, CMF, Teqpl, Tint_array, CO=0.55, log_FeH=logFeH)
               my_therm_obj.solve_thermal_evol_eq()
               # Save sequence of interior models

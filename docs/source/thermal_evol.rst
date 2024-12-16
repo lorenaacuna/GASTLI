@@ -18,11 +18,8 @@ To obtain the internal temperature (or luminosity) and radius as a function of a
    import gastli.Thermal_evolution as therm
    # Other Python modules
    import numpy as np
-   # Path to input files
-   # Dont forget the "/" at the end of the string
-   path_input = "/Users/acuna/Desktop/gastli_input_data/"
    # Create thermal evolution class object
-   my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
+   my_therm_obj = therm.thermal_evolution()
    # Input for interior
    M_P = 18.76     # Earth units
    # Equilibrium temperatures
@@ -57,11 +54,8 @@ Then this file can be read, and its columns are used to solve the luminosity dif
    import matplotlib.pyplot as plt
    from scipy import interpolate
    import pandas as pd
-   # Path to input files
-   # Dont forget the "/" at the end of the string
-   path_input = "/Users/acuna/Desktop/gastli_input_data/"
    # Create thermal evolution class
-   my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
+   my_therm_obj = therm.thermal_evolution()
    # Read in data saved in step 1
    data = pd.read_csv('thermal_sequence_HATP26b_CMF50_20xsolar.dat', sep='\s+',header=None,skiprows=1)
    my_therm_obj.f_S = data[0]

@@ -9,7 +9,7 @@ To install GASTLI, you need to:
 
 - have a Python 3.9+ installation,
 - have a fortran compiler, for example ``gfortran``,
-- **download the zip file for the input data** `here <https://www.dropbox.com/scl/fi/p2kawqp8gtzh5psn21tjc/gastli_input_data.zip?rlkey=fc0mfxvpck5mukkqhk1f8hkad&st=ggsa4zmk&dl=0>`_, and place it in a directory in your computer that is easy to find
+- **download the zip file for the input data** `here <https://www.dropbox.com/scl/fi/p2kawqp8gtzh5psn21tjc/gastli_input_data.zip?rlkey=fc0mfxvpck5mukkqhk1f8hkad&st=ggsa4zmk&dl=0>`_, and place it in a directory in your computer that is easy to find. See the subsection "Setting the input data path" below for instructions on how to specify the path of this directory.
 
 If you do not have Fortran installed, follow the Fortran installation instructions appropriate for your OS. We offer an installation guide for different OS below. Once Fortran is installed, you can then proceed with the GASTLI package installation. 
 
@@ -51,12 +51,41 @@ Then activate the environment:
 
     conda activate GASTLI_env
 
-After activating the environment, we will be ready to install GASTLI with pip, ``pip install gastli==0.9.1``
+After activating the environment, we will be ready to install GASTLI with pip, ``pip install gastli``
 
-.. warning::
 
-   The latest stable version is 0.9.1, which corresponds to the main branch. Version 0.9.2 is the development branch. We recommend users to make sure that the install version 0.9.1 if they use pip ``pip install gastli==0.9.1``
+Setting the input data path
+---------------------------
 
+After downloading the input data file (see "Prerequisites for basic installation"), place the ``gastli_input_data`` folder in any directory on your computer - just make sure you remember where, such as your Desktop. 
+
+Next, set the environment variable ``GASTLI_input_data_path`` to your ``.bash_profile``, ``.bashrc``, or ``.zshrc`` file, depending on your operating system and shell type. This variable should contain the path to the ``gastli_input_data`` folder on your computer. Here are examples of how to do this:
+
+- **On macOS**: Run the following command in your terminal: 
+
+.. code-block:: bash
+
+    echo 'export GASTLI_input_data_path="/Users/acuna/Desktop/gastli_input_data/"' >>~/.bash_profile
+
+- **On Linux**: Run the following command in your terminal: 
+
+.. code-block:: bash
+
+    echo 'export GASTLI_input_data_path="/Users/acuna/Desktop/gastli_input_data/"' >>~/.bashrc
+
+- **On a SLURM system**: Add the following line to your ``.sh`` script: 
+
+.. code-block:: bash
+
+    export GASTLI_input_data_path="/Users/acuna/Desktop/gastli_input_data/"
+
+You only need to add this line to your bash profile once.
+
+Alternatively, you can define the environment variable directly within your Python scripts. If you choose this method, add the following line to every script where you use GASTLI's functions or classes: 
+
+.. code-block:: python
+
+    os.environ['GASTLI_input_data_path']="/Users/acuna/Desktop/gastli_input_data/"
 
 
 Installation from source

@@ -7,9 +7,7 @@ import numpy as np
 import gastli.water_curves as water_curv
 import gastli.Coupling as cpl
 
-path_to_input = "/Users/acuna/Desktop/gastli_input_data/"
-
-my_coupling = cpl.coupling(path_to_file=path_to_input)
+my_coupling = cpl.coupling()
 
 
 # Input for interior
@@ -29,11 +27,11 @@ CO_planet = 0.55
 # Run coupled interior-atmosphere model
 my_coupling.main(M_P, CMF, Teqpl, Tintpl, CO=CO_planet, log_FeH=log_FeHpl,Rguess=6.)
 
-my_coupling_hot = cpl.coupling(path_to_file=path_to_input)
+my_coupling_hot = cpl.coupling()
 my_coupling_hot.main(M_P, CMF, 1000., Tintpl, CO=CO_planet, log_FeH=log_FeHpl,Rguess=6.)
 
 
-water_phase_lines = water_curv.water_curves(path_to_input)
+water_phase_lines = water_curv.water_curves()
 
 
 fig,ax = plt.subplots(nrows=1,ncols=1)

@@ -4,10 +4,11 @@
 import gastli.Coupling as cpl
 # Other Python modules
 import numpy as np
-# Specify path to input data folder
-path_to_input = "/Users/acuna/Desktop/gastli_input_data/"
+import os
+
+
 # Initialise coupling class
-my_coupling = cpl.coupling(path_to_file=path_to_input)
+my_coupling = cpl.coupling()
 
 # Input for interior
 # 1 Mjup in Mearth units

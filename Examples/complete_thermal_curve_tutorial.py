@@ -5,11 +5,8 @@ import gastli.constants as cte
 # Other Python modules
 import numpy as np
 import matplotlib.pyplot as plt
-# Path to input files
-# Dont forget the "/" at the end of the string
-path_input = "/Users/acuna/Desktop/gastli_input_data/"
 # Create thermal evolution class object
-my_therm_obj = therm.thermal_evolution(path_to_file=path_input)
+my_therm_obj = therm.thermal_evolution()
 # Input for interior
 M_P = 100.     # Earth units
 # Equilibrium temperatures

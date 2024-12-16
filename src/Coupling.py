@@ -6,6 +6,7 @@ import numpy as np
 import time
 import math
 import sys
+import os
 
 class coupling:
     r"""Class defining objects to run one interior-atmosphere coupled model. 
@@ -21,21 +22,22 @@ class coupling:
                 core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
     """
 
-    def __init__(self,path_to_file,name_grid=None,pow_law_formass=0.32,j_max=30):
+    def __init__(self,name_grid=None,pow_law_formass=0.32,j_max=30):
         self.pow_law_formass = pow_law_formass
-        self.path_to_file = path_to_file
+        #self.path_to_file = path_to_file
+        self.path_to_file = os.environ["GASTLI_input_data_path"]
         self.j_max = j_max
 
         # Initialise interior model
-        self.myplanet = int_planet(path_to_file=self.path_to_file, pow_law=self.pow_law_formass, j_max=self.j_max)
+        self.myplanet = int_planet(pow_law=self.pow_law_formass, j_max=self.j_max)
 
         self.myplanet.setup_parameters()
 
         # Initialise atm models
         if name_grid == None:
-            self.myatmmodel = atm_models_interp(path_to_file=self.path_to_file)
+            self.myatmmodel = atm_models_interp()
         else:
-            self.myatmmodel = atm_models_interp(path_to_file=self.path_to_file, name_grid=name_grid)
+            self.myatmmodel = atm_models_interp(name_grid=name_grid)
 
         # Important constants
         #self.M_P = 318.             # M in M_earth
@@ -158,7 +160,7 @@ class coupling:
                 print('Readjusting mass power law to ', self.pow_law_formass)
                 #print(self.path_to_file)
                 #print(self.pow_law_formass)
-                self.myplanet = int_planet(path_to_file=self.path_to_file, pow_law=self.pow_law_formass)
+                self.myplanet = int_planet(pow_law=self.pow_law_formass)
                 self.myplanet.setup_parameters()
 
                 ## Arrays

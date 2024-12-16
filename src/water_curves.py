@@ -3,11 +3,11 @@
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-
+import os
 
 
 class water_curves:
-    def __init__(self, path_to_file):
+    def __init__(self):
         """
         Object that contains plots water phase curves for phase diagram
 
@@ -19,9 +19,9 @@ class water_curves:
 
 
         # Arguments of __init__
-        self.path_to_file = path_to_file
+        self.path_to_file = os.environ["GASTLI_input_data_path"]
 
-        data = pd.read_csv(path_to_file+'Input/Plotting/water_curves.dat', sep='\s+')
+        data = pd.read_csv(os.path.join(self.path_to_file,'Input/Plotting/water_curves.dat'), sep='\s+')
 
         self.P1 = data['P(1)']
         self.P2 = data['P(2)']
@@ -32,7 +32,7 @@ class water_curves:
         self.P7 = data['P(7)']
         self.T = data['T']
 
-        self.points = pd.read_csv(path_to_file+'Input/Plotting/water_tpts.dat', sep='\s+')
+        self.points = pd.read_csv(os.path.join(self.path_to_file,'Input/Plotting/water_tpts.dat'), sep='\s+')
 
         #############################
         #############################

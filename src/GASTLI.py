@@ -5,6 +5,7 @@ from gastli.fortinput import fort_input as fi
 from gastli.gastli_interior import gastli_interior as interior
 
 import numpy as np
+import os
 #import time
 
 class int_planet:
@@ -32,13 +33,22 @@ class int_planet:
                 range [1:10]). Do not change
     """
 
-    def __init__(self, path_to_file, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
+    def __init__(self, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
                  pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11, 5e11, 5e11, 5e11, \
                                                      5e11, 5e11, 5e11, 5e11, 5e11, 5e11], corEOS=1):
 
 
         # Arguments of __init__
-        self.path_to_file = path_to_file
+        path_to_file = os.environ["GASTLI_input_data_path"]
+        os_path = path_to_file
+        last_character = os_path[-1:]
+        first_character = os_path[0]
+        if last_character != '/':
+            os_path = os_path + '/'
+        if first_character != '/':
+            os_path = '/' + os_path
+
+        self.path_to_file = os_path
         self.j_max = j_max
         self.cnt_conv_max = cnt_conv_max
         self.conv_prec = conv_prec
@@ -55,6 +65,8 @@ class int_planet:
         self.n_mat_max = dim.dimensions.n_mat_max
 
         # Load constant file
+        #print(path_to_file)
+        #print(self.path_to_file)
         self.Ttp,self.Ptp = fi.read_constants(self.path_to_file)
 
         # Load layer files

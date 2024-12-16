@@ -14,7 +14,7 @@ from scipy.integrate import odeint
 
 
 class thermal_evolution:
-    def __init__(self,path_to_file,pow_law_formass=0.32):
+    def __init__(self,pow_law_formass=0.32):
         r"""Class defining objects to calculate the thermal evolution for a constant mass, composition and equilibrium
             temperature
 
@@ -27,7 +27,6 @@ class thermal_evolution:
                 core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
         """
 
-        self.path_to_file = path_to_file
         self.pow_law_formass = pow_law_formass
 
 
@@ -148,7 +147,7 @@ class thermal_evolution:
 
             # Putting it here adds 1-2 secs more per each Tint computation, but it is safer
             # Create coupling class
-            self.my_coupling = cpl.coupling(path_to_file=self.path_to_file, pow_law_formass=self.pow_law_formass,\
+            self.my_coupling = cpl.coupling(pow_law_formass=self.pow_law_formass,\
                                             name_grid=name_grid,j_max=j_max)
 
             if np.isscalar(tolerance):

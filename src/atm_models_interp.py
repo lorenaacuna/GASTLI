@@ -191,7 +191,7 @@ def O_to_H_molecular(Z):
 
 
 class atm_models_interp:
-    def __init__(self,path_to_file,name_grid="gastli_default_atm_grid.hdf5"):
+    def __init__(self,name_grid="gastli_default_atm_grid.hdf5"):
         r"""Class defining object to carry out interpolation of atmospheric models
 
         Args:
@@ -229,9 +229,17 @@ class atm_models_interp:
         self.npoints = 130
 
         # Load atmosphere data
-        self.path_to_file = path_to_file
+        path_to_file = os.environ["GASTLI_input_data_path"]
+        self.path_to_file = os.path.join(path_to_file)
+        os_path = os.path.join(path_to_file)
+        first_character = os_path[0]
+        if first_character != '/':
+            os_path = '/' + os_path
+        self.path_to_file = os_path
 
-        file_atm = h5py.File(self.path_to_file+"Input/Atmospheric data/"+name_grid, 'r')
+        path_open = os.path.join(self.path_to_file,"Input/Atmospheric data/",name_grid)
+        #file_atm = h5py.File(self.path_to_file+"Input/Atmospheric data/"+name_grid, 'r')
+        file_atm = h5py.File(path_open, 'r')
 
         self.data_set_atm = file_atm['PT_profiles'][()]
         self.data_set_metal_mass_fractions = file_atm['metal_mass_fractions'][()]
@@ -276,8 +284,9 @@ class atm_models_interp:
         self.logrho = np.zeros(ntot)
 
         c = 0
-
-        file = open(self.path_to_file+'Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1', 'r')
+        new_path = os.path.join(self.path_to_file,'Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1')
+        #file = open(self.path_to_file+'Input/Chabrier/TABLEEOS_2021_TP_Y0275_v1', 'r')
+        file = open(new_path, 'r')
         Lines = file.readlines()
 
         for j in range(1, Nt + 1):
@@ -290,23 +299,29 @@ class atm_models_interp:
                 c = c + 1
 
 
-        data = pd.read_csv(self.path_to_file+"Tables/aqua_eos_pt_v1_0.dat",\
-                           sep='\s+', header=None, skiprows=19)
+        #data = pd.read_csv(self.path_to_file+"Tables/aqua_eos_pt_v1_0.dat",\
+        data = pd.read_csv(os.path.join(self.path_to_file,"Tables/aqua_eos_pt_v1_0.dat"), \
+                                   sep='\s+', header=None, skiprows=19)
         self.rho_aqua = np.asarray(data[2])
 
-        data = pd.read_csv(self.path_to_file+"Tables/P_AQUA_Pa.dat", sep='\s+', header=None)
+        #data = pd.read_csv(self.path_to_file+"Tables/P_AQUA_Pa.dat", sep='\s+', header=None)
+        data = pd.read_csv(os.path.join(self.path_to_file,"Tables/P_AQUA_Pa.dat"), sep='\s+', header=None)
         self.press_aqua = np.asarray(data[0])  # Pressure in Pa
 
-        data = pd.read_csv(self.path_to_file+"Tables/T_AQUA_K.dat", sep='\s+', header=None)
+        #data = pd.read_csv(self.path_to_file+"Tables/T_AQUA_K.dat", sep='\s+', header=None)
+        data = pd.read_csv(os.path.join(self.path_to_file, "Tables/T_AQUA_K.dat"), sep='\s+', header=None)
         self.temp_aqua = np.asarray(data[0])  # Temperature in K
 
-        data = pd.read_csv(self.path_to_file+"Input/Chabrier/HG23_Vmix_Smix.csv", sep=',', header=0)
+        #data = pd.read_csv(self.path_to_file+"Input/Chabrier/HG23_Vmix_Smix.csv", sep=',', header=0)
+        data = pd.read_csv(os.path.join(self.path_to_file,"Input/Chabrier/HG23_Vmix_Smix.csv"), sep=',', header=0)
         self.V_mix = np.asarray(data['Vmix'])
 
-        data = pd.read_csv(self.path_to_file+"Input/Chabrier/logP_HG23_corr.dat", sep='\s+', header=None)
+        #data = pd.read_csv(self.path_to_file+"Input/Chabrier/logP_HG23_corr.dat", sep='\s+', header=None)
+        data = pd.read_csv(os.path.join(self.path_to_file,"Input/Chabrier/logP_HG23_corr.dat"), sep='\s+', header=None)
         self.logP_Vmix = np.asarray(data[0])
 
-        data = pd.read_csv(self.path_to_file+"Input/Chabrier/logT_HG23_corr.dat", sep='\s+', header=None)
+        #data = pd.read_csv(self.path_to_file+"Input/Chabrier/logT_HG23_corr.dat", sep='\s+', header=None)
+        data = pd.read_csv(os.path.join(self.path_to_file,"Input/Chabrier/logT_HG23_corr.dat"), sep='\s+', header=None)
         self.logT_Vmix = np.asarray(data[0])
 
 

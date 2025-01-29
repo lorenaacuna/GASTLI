@@ -90,7 +90,7 @@ Users can find GASTLI's documentation [here](https://gastli.readthedocs.io/en/la
 
 # Acknowledgements
 
-We thank Yamila Miguel for sharing the reformatted EOS tables for silicate (dry sand) from the SESAME database. We acknowledge the support of the Data Science Group at the Max Planck Institute for Astronomy (MPIA) and especially Ivelina Momcheva for her invaluable assistance in optimizing the software and developing the GASTLI Python package. We thank Magali Deleuil, Olivier Mousis, Artyom Aguichine and Bastien Brugger for their contributions to the development of Marseille’s Super-Earth Interior (MSEI) model, on which GASTLI’s development is based.
+We thank Yamila Miguel for sharing the reformatted EOS tables for silicate (dry sand) from the SESAME database. We acknowledge the support of the Data Science Group at the Max Planck Institute for Astronomy (MPIA) and especially Ivelina Momcheva for her invaluable assistance in optimizing the software and developing the GASTLI Python package. We thank Magali Deleuil, Olivier Mousis, Artyom Aguichine and Bastien Brugger for their contributions to the development of Marseille’s Super-Earth Interior (MSEI) model, on which GASTLI’s development is based. We thank the two JOSS reviewers, Iva Laginja and Ryan MacDonald, for their suggestions to improve the manuscript, as well as the JOSS editor, Josh Borrow. 
 
 
 # References

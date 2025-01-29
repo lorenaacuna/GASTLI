@@ -55,6 +55,26 @@ The interior model module is contained in the `GASTLI.int_planet` class. The int
 
 The class `atm_models_interp` encloses the function that interpolates the atmospheric grid to obtain the temperature profile and interior boundary temperature. In addition, this class also provides the functions that calculate the atmospheric thickness and the atmosphere density profile. The latter is obtained by evaluating the EOS used by the interior module for H/He, and the AQUA water EOS [@Haldemann20]. The atmospheric grid class and the interior module class are then combined in the `Coupling` class. This class self-consistently couples the interior module and the atmosphere grids to calculate the boundary temperature of the outermost layer of the interior model. See @Acuna21 for a detailed description of the coupling algorithm, which has been used in previous work [@Aguichine21; @Acuna22; @Acuna23]. Finally, the class `Thermal_evolution` contains the functions necessary to evaluate a sequence of coupled interior-atmosphere models at different internal temperatures and solve the luminosity equation to obtain the internal temperatures and radii as a function of age [@Fortney13; @Poser19]. The complete validation of GASTLI against mass-radius relationships obtained with interior models used in previous work [@Fortney13; @Muller21] can be found in @gastli_science.
 
+# Similar tools
+
+
+
+| Name and link   | Type of software | Keywords    | Reference             | 
+| :-------------- | :--------------- | :---------- | :-------------------- | 
+| [MESA](https://docs.mesastar.org/en/latest/modules.html) | Interior structure model | Stars, hot Jupiters, gas giants; H/He and metals | @Paxton11; @Paxton13; @Paxton15; @Paxton18; @Paxton19 |
+| [Magrathea](https://github.com/Huang-CL/Magrathea)  | Interior structure model | Super-Earths, rocky planets; liquid water| @magrathea  |
+| [ExoInt](https://github.com/astro-seanwhy/ExoInt/tree/master)  | Interior structure model | Dry super-Earths, rocky planets; Fe, rock | @exoint |
+| [ExoPlex](https://github.com/CaymanUnterborn/ExoPlex)  | Interior structure model  | Dry super-Earths, rocky planets; Fe, rock | @Unterborn |
+| [plaNETic](https://github.com/joannegger/plaNETic)     | Trained neural network | Dry super-Earths, rocky planets; H/He, water, rock, Fe | @Egger24,@Haldemann24|
+| [ExoMDN](https://github.com/philippbaumeister/exomdn)  | Trained neural network | Super-Earths, sub-Neptunes; Fe, rock, liquid water, H/He. Retrievals only. | @Baumeister |
+| [Exoplanet Composition Interpolator](https://tools.emac.gsfc.nasa.gov/ECI/) | Grid interpolation (web interface)  | Sub-Neptunes; H/He, rock, Fe | @LF14 |
+| [HARDCORE](https://github.com/gsuissa/hardCORE?tab=readme-ov-file)       | Grid interpolation (web interface)  | Dry super-Earths, rocky planets; Fe, rock | @Suissa18 |
+| [planetsynth](https://github.com/tiny-hippo/planetsynth)| Grid interpolator | Gas giants; H/He, metals | @Muller21  | 
+| [SMINT](https://github.com/cpiaulet/smint#readme)|  Grid interpolator   | Sub-Neptunes; H/He, water, rock, Fe | @Piaulet21; Tables: @LF14, @Zeng16, @Agui21   | 
+| [mr-plotter](https://github.com/castro-gzlz/mr-plotter/tree/main)| Grid interpolator | Super-Earths, sub-Neptunes; H/He, water, rock, Fe | @Amadeo23; Tables: @LF14, @Zeng16, @Agui21, @Seager07, @Turbet20, @Haldemann24 | 
+| [Mardigras](https://github.com/an0wen/MARDIGRAS)|  Grid interpolator | Sub-Neptunes; Water, rock, Fe | @mardigras; Tables: @LF14, @Zeng16, @Agui21 | 
+[Public software tools that provide mass-radius curves and possibly thermal evolution tracks. We distinguish between open-source interior structure packages, and neural networks together with grid interpolators. The latter may use tables and data generated with proprietary interior structure model codes.]
+
 
 # Acknowledgements
 

@@ -70,9 +70,9 @@ The following table lists public software tools that provide mass-radius curves 
 | [Exoplanet Composition Interpolator](https://tools.emac.gsfc.nasa.gov/ECI/) | Grid interpolation (web interface)  | Sub-Neptunes; H/He, rock, Fe | @LF14 |
 | [HARDCORE](https://github.com/gsuissa/hardCORE?tab=readme-ov-file)       | Grid interpolation (web interface)  | Dry super-Earths, rocky planets; Fe, rock | @Suissa18 |
 | [planetsynth](https://github.com/tiny-hippo/planetsynth)| Grid interpolator | Gas giants; H/He, metals | @Muller21  | 
-| [SMINT](https://github.com/cpiaulet/smint#readme)|  Grid interpolator   | Sub-Neptunes; H/He, water, rock, Fe | @Piaulet21; Tables from @LF14, @Zeng16, @Agui21   | 
-| [mr-plotter](https://github.com/castro-gzlz/mr-plotter/tree/main)| Grid interpolator | Super-Earths, sub-Neptunes; H/He, water, rock, Fe | @Amadeo23; Tables from @LF14, @Zeng16, @Agui21, @Seager07, @Turbet20, @Haldemann24 | 
-| [Mardigras](https://github.com/an0wen/MARDIGRAS)|  Grid interpolator | Sub-Neptunes; Water, rock, Fe | @mardigras; Tables from @LF14, @Zeng16, @Agui21 | 
+| [SMINT](https://github.com/cpiaulet/smint#readme)|  Grid interpolator   | Sub-Neptunes; H/He, water, rock, Fe | @Piaulet21; Tables from @LF14, @Zeng16, @Zeng19, @Aguichine21   | 
+| [mr-plotter](https://github.com/castro-gzlz/mr-plotter/tree/main)| Grid interpolator | Super-Earths, sub-Neptunes; H/He, water, rock, Fe | @Amadeo23; Tables from @LF14, @Zeng16, @Zeng19, @Aguichine21, @Seager07, @Turbet20, @Haldemann24 | 
+| [Mardigras](https://github.com/an0wen/MARDIGRAS)|  Grid interpolator | Sub-Neptunes; Water, rock, Fe | @mardigras; Tables from @LF14, @Zeng19, @Aguichine21 | 
 
 # Documentation
 

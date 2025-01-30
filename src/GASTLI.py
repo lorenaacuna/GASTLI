@@ -33,7 +33,7 @@ class int_planet:
                 range [1:10]). Do not change
     """
 
-    def __init__(self, j_max=30, cnt_conv_max=3, conv_prec=1e-5, \
+    def __init__(self, j_max=100, j_min=15, cnt_conv_max=3, conv_prec=1e-5, \
                  pow_law=0.32, chk_EOS=0, EOS_lim_P=[5e11, 5e11, 5e11, 5e11, \
                                                      5e11, 5e11, 5e11, 5e11, 5e11, 5e11], corEOS=1):
 
@@ -50,6 +50,7 @@ class int_planet:
 
         self.path_to_file = os_path
         self.j_max = j_max
+        self.j_min = j_min
         self.cnt_conv_max = cnt_conv_max
         self.conv_prec = conv_prec
         self.pow_law = pow_law
@@ -236,7 +237,7 @@ class int_planet:
         gout, tout, pout, rhoarrout, cvout, Sout,\
         OtoHout, metalout = interior.gastli_interior_subroutine(self.j_max,\
         # Input: run variables & material data
-        self.cnt_conv_max,self.conv_prec,self.pow_law,self.chk_EOS, \
+        self.j_min,self.cnt_conv_max,self.conv_prec,self.pow_law,self.chk_EOS, \
         self.EOS_lim_P, self.corEOS, self.Ttp, self.Ptp, self.f_alloy,self.MgD, \
         self.MgSi, self.ilayer, self.use_lay, self.iEOS, self.EOS_th,self.n_mat, \
         self.del_T, self.x, self.Mmol, self.Z_eff, self.rho_0, self.T_0,self.K_0, \

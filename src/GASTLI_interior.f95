@@ -16,7 +16,7 @@ MODULE GASTLI_interior
 CONTAINS
 
 
-SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EOSin, EOS_lim_Pin, &
+SUBROUTINE GASTLI_interior_subroutine(j_maxin, j_minin, cnt_conv_maxin, conv_precin,pow_lawin,chk_EOSin, EOS_lim_Pin, &
            corEOSin, Ttpin, Ptpin, &
            f_alloyin, MgDin, MgSiin, ilayerin, use_layin, iEOSin, EOS_thin, n_matin, del_Tin, xin, Mmolin, Z_effin, &
            rho_0in, T_0in, K_0in, Kp_0in, gam_0in, qin, a_Tin, b_Tin, c_Tin, a_Pin,T_D0in, &
@@ -72,7 +72,7 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
                                       conv_precin      ! Precision of the convergence condition
 
 
-    INTEGER, INTENT(IN)                         :: j_maxin,               & ! Maximum number of iterations
+    INTEGER, INTENT(IN)                         :: j_maxin, j_minin,      & ! Maximum and minimum number of iterations
                                                    cnt_conv_maxin,        & ! Maximum number of detected oscillations
                                                    chk_EOSin,             & ! Index to check the validity range of EOS
                                                    corEOSin                 ! Type of correction for specific EOS
@@ -174,8 +174,8 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 
 
     INTEGER, DIMENSION(n_lay+1), INTENT(OUT)     :: interfaceout               ! Position of the lower interface of layers
-    INTEGER, DIMENSION(n_lay+1,100), INTENT(OUT) :: intrf_hist                 ! interfaceout but for all iterations
-    INTEGER, DIMENSION(100), INTENT(OUT) :: iter_num
+    INTEGER, DIMENSION(n_lay+1,1000), INTENT(OUT) :: intrf_hist                 ! interfaceout but for all iterations
+    INTEGER, DIMENSION(1000), INTENT(OUT) :: iter_num
 
 
 
@@ -227,6 +227,7 @@ SUBROUTINE GASTLI_interior_subroutine(j_maxin, cnt_conv_maxin, conv_precin,pow_l
 
   ! Model and EOS control parameters
   j_max = j_maxin 
+  j_min = j_minin
   cnt_conv_max = cnt_conv_maxin 
   conv_prec = conv_precin
   pow_law = pow_lawin
@@ -735,7 +736,10 @@ iter_num(j) = j
      IF (test) THEN ! Case 1: convergence reached
         WRITE(6,*) '[i] Convergence reached.'
         EXIT
-     ELSE IF (cnt_conv>=cnt_conv_max) THEN ! Case 2: detected oscillations around convergence
+     !ELSE IF (cnt_conv>=cnt_conv_max) THEN ! Case 2: detected oscillations around convergence
+      ELSE IF (cnt_conv>=cnt_conv_max.AND.j>j_min) THEN ! Case 2: detected oscillations around convergence
+      ! Lorena on 23 Jan 2025: added a minimum jmin to make sure it iterates for long enough
+      ! for the low gravity cases
         WRITE(6,*) '[i] Too many oscillations detected: exiting iterations loop.'
         WRITE(6,*) ''
         !WRITE(6,*) '/!\ WARNING: convergence not reached.'

@@ -109,7 +109,7 @@ MODULE parameters
   ! PARAMETERS
   ! ----------
 
-  INTEGER                                       :: j_max,               & ! Maximum number of iterations
+  INTEGER                                       :: j_max, j_min,        & ! Maximum and minimum number of iterations
                                                    cnt_conv_max,        & ! Maximum number of detected oscillations
                                                    chk_EOS,             & ! Index to check the validity range of EOS
                                                    corEOS                 ! Type of correction for specific EOS

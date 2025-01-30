@@ -44,7 +44,7 @@ class thermal_evolution:
 
 
     def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
-             tolerance=1e-3,P_surf=1e3,name_grid=None,j_max=30):
+             tolerance=1e-3,P_surf=1e3,name_grid=None,j_max=100,j_min=15):
         r"""Function that runs a series of interior structure models at different internal temperatures and gets
             the entropies. Necessary to run before solving the luminosity differential equation (thermal evolution).
 
@@ -148,7 +148,7 @@ class thermal_evolution:
             # Putting it here adds 1-2 secs more per each Tint computation, but it is safer
             # Create coupling class
             self.my_coupling = cpl.coupling(pow_law_formass=self.pow_law_formass,\
-                                            name_grid=name_grid,j_max=j_max)
+                                            name_grid=name_grid,j_max=j_max,j_min=j_min)
 
             if np.isscalar(tolerance):
                 tolerance_for_this_run = tolerance

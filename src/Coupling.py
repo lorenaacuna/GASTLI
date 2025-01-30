@@ -22,14 +22,15 @@ class coupling:
                 core mass fraction is very low (< 0.03 approx.) and/or planet is low mass (15-20 Earth masses approx.)
     """
 
-    def __init__(self,name_grid=None,pow_law_formass=0.32,j_max=30):
+    def __init__(self,name_grid=None,pow_law_formass=0.32,j_max=100,j_min=15):
         self.pow_law_formass = pow_law_formass
         #self.path_to_file = path_to_file
         self.path_to_file = os.environ["GASTLI_input_data_path"]
         self.j_max = j_max
+        self.j_min = j_min
 
         # Initialise interior model
-        self.myplanet = int_planet(pow_law=self.pow_law_formass, j_max=self.j_max)
+        self.myplanet = int_planet(pow_law=self.pow_law_formass, j_max=self.j_max, j_min=self.j_min)
 
         self.myplanet.setup_parameters()
 

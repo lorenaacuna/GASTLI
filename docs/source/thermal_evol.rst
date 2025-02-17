@@ -3,6 +3,11 @@
 Generating a thermal evolution curve
 =========================================
 
+.. note::
+
+   Download the full notebook : :download:`here </_static/thermal_evol.ipynb>`
+
+
 To obtain the internal temperature (or luminosity) and radius as a function of age, we need to use the GASTLI class ``Thermal_evolution``. This class obtains a sequence of static interior-atmosphere models at different internal temperatures with the function ``thermal_evolution_class_object.main()``. The input array ``Tint_array`` specifies the discreet internal temperatures at which the static models are computed. We recommend to save the sequence of interior models in a file, as in the example below. In this example, we name the thermal evolution class object ``my_therm_obj``. The output of the ``main()`` thermal class function is:
 
 - The derivative of the entropy **dS/dt** in SI units: ``thermal_evolution_class_object.f_S``

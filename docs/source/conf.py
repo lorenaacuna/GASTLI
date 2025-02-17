@@ -23,7 +23,7 @@ extensions = [
 autoapi_type = 'python'
 autoapi_dirs = ['../../src']
 
-html_logo = "gastli_logo_readthedocs.pdf"
+html_logo = "gastli_logo_readthedocs.png"
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),

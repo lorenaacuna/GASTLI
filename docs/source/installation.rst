@@ -51,7 +51,46 @@ Then activate the environment:
 
     conda activate GASTLI_env
 
-After activating the environment, we will be ready to install GASTLI with pip, ``pip install gastli``
+If instead you want to create a virtual environment, use the following command. This will create a new directory that contains all the files necessary to run the environment:
+
+.. code-block:: bash
+
+    python3 -m venv GASTLI_env
+
+Then activate it with:
+
+.. code-block:: bash
+
+    source GASTLI_env/bin/activate
+
+
+Once the environment is activated, we will be ready to install GASTLI's Python package. This can be done with pip:
+
+.. code-block:: bash
+
+    pip install gastli
+
+
+Or for a particular version of the package:
+
+.. code-block:: bash
+
+    pip install gastli==0.9.3
+
+
+The package can also be installed from source. This can be done by downloading the .zip file from the `GASTLI github repository <https://github.com/lorenaacuna/GASTLI>`_ while making sure you download the intended branch - main, or development - or using git to clone the repository in your local computer as explained `here <https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>`_:
+
+.. code-block:: bash
+
+    git clone https://github.com/lorenaacuna/GASTLI
+
+
+To move to the root directory and install the package, run in your terminal: 
+
+.. code-block:: bash
+
+    cd GASTLI
+    pip install .
 
 
 Setting the input data path
@@ -86,16 +125,6 @@ Alternatively, you can define the environment variable directly within your Pyth
 .. code-block:: python
 
     os.environ['GASTLI_input_data_path']="/Users/acuna/Desktop/gastli_input_data/"
-
-
-Installation from source
-------------------------
-
-You can download the .zip file from the `GASTLI github repository <https://github.com/lorenaacuna/GASTLI>`_, or use git to clone the repository in your local computer as explained `here <https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>`_. Make sure it is the main branch (and not the development one). Then from the root directory, run in your terminal: 
-
-.. code-block:: bash
-
-    pip install .
 
 
 Testing the installation

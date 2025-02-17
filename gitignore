@@ -1,0 +1,16 @@
+
+docs/_build/*
+docs/_build/html
+__pycache__
+.DS_Store
+*~
+*.so
+build/
+dist/
+/builds/
+*.pyc
+*.iml
+*.egg-info/
+.ipynb_checkpoints/
+.idea/
+.vs

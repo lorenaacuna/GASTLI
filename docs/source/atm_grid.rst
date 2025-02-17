@@ -2,6 +2,10 @@
 Atmospheric grid
 ================
 
+.. note::
+
+   Download the full notebook : :download:`here </_static/atm_grid.ipynb>`
+
 
 In this section, we indicate the applicability range of the default atmospheric grid, as well as the possible error messages associated to the atmospheric grid and what they mean. Finally, if the default grid does not cover the parameter space that you need (i.e higher equilibrium temperatures, higher metallicity in the envelope) or you want to change the assumptions on the atmosphere (i.e include clouds), we explain how you can use your custom atmospheric grid with GASTLI.
 

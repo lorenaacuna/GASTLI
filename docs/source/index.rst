@@ -40,14 +40,26 @@ Contents
 
 .. toctree::
    :maxdepth: 1
-   :caption: User Guide
+   :caption: Installation
 
    installation
-   test_suite
-   contributing
+
+.. toctree::
+   :maxdepth: 1
+   :caption: User Guide
+
    tutorial
    atm_grid
    retrieval
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Code Documentation
+
+   test_suite
+   contributing
+   
+   
 
 
 Release Notes

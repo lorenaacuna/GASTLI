@@ -2,6 +2,11 @@
 Interior retrievals
 ===================
 
+.. note::
+
+   Download the full notebook : :download:`here </_static/retrieval.ipynb>`
+
+
 In this page we show a tutorial on how to obtain a grid of GASTLI models to run a retrieval on mass, radius, age, and atmospheric metallicity.
 
 We first need to generate a grid of forward models. The next example is going to consist of more than 4000 models. Each model takes between 2-10 second, so this may take up to 12 hours, depending on the computer architecture and number of threads/cores available for parallelization. Hence, we recommend setting up this step of the calculation in a cluster. The following code saves each thermal evolution curve in a file:

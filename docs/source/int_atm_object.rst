@@ -3,7 +3,9 @@
 Creating an interior-atmosphere object
 ======================================
 
-> **Note:** [Download full notebook here](https://raw.githubusercontent.com/lorenaacuna/GASTLI_public/main/docs/source/int_atm_object.ipynb)
+.. note::
+
+   Download the full notebook here: `int_atm_object.ipynb <https://github.com/lorenaacuna/GASTLI/raw/main/docs/source/int_atm_object.ipynb>`__
 
 
 You can start a simple interior-atmosphere object to generate one model by initialising the ``coupling`` class:

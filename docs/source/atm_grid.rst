@@ -124,8 +124,8 @@ An example snippet to create a grid with such format:
    Teqs = np.arange(100.,1100.,100)
    Tints = np.arange(50.,1000.,100)
    press_atm = np.logspace(-6, 3, 130) # note: all temperature profiles have the same pressure array 
-   n_CO = len(COs)                     # this may not be the case for all atmospheric models
-   n_FeH = len(FeHs)
+   n_CO = len(COs)                     # this is the case for our petitcode grid (GASTLI's default for warm gas giants).
+   n_FeH = len(FeHs)                   # This may not be the case for all libraries of atmospheric models
    n_logg = len(loggs)
    n_Teq = len(Teqs)
    n_Tint = len(Tints)

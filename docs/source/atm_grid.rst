@@ -118,13 +118,13 @@ An example snippet to create a grid with such format:
    import numpy as np
    import h5py
    # Define arrays for grid
-   COs = ...
-   FeHs = ...
-   loggs = ...
-   Teqs = ...
-   Tints = ...
-   press_atm = ...
-   n_CO = len(COs)
+   COs = np.asarray([0.10,0.55])
+   FeHs = np.asarray([-2.,0.,1.,2.,2.4])
+   loggs = np.linspace(np.log10(400.0),np.log10(15000.0),num=5)
+   Teqs = np.arange(100.,1100.,100)
+   Tints = np.arange(50.,1000.,100)
+   press_atm = np.logspace(-6, 3, 130) # note: all temperature profiles have the same pressure array 
+   n_CO = len(COs)                     # this may not be the case for all atmospheric models
    n_FeH = len(FeHs)
    n_logg = len(loggs)
    n_Teq = len(Teqs)
@@ -174,8 +174,20 @@ An example snippet to create a grid with such format:
            for i_logg, logg in enumerate(loggs):
                for i_eq, Teq in enumerate(Teqs):
                    for i_int, Tint in enumerate(Tints):
-                       ...
-                       data_set_temp[i_CO, i_FeH, i_logg, i_eq, i_int, :] = ...
-                       data_set_mmf[i_CO, i_FeH, i_logg, i_eq, i_int, :] = ...
+                       # locate file with temperature profile
+                       target_folder_path = 'PTcode models/'+folder_strings[i_CO][i_FeH]+'/run_folders/'+\
+                                         header_strings[i_CO][i_FeH]+\
+                                         '_log_'+str(np.round(logg,2))+'_Teq_' + str(np.round(Teq, 3))+'_Tint_' +\
+                                         str(np.round(Tint, 3))
+                       
+                       # read file with temperature and MMF profiles               
+                       data = pd.read_csv(target_folder_path + "/res_files/it_files/res_struct_curr.dat", sep='\s+',\
+                                           header=None, skiprows=2)
+                        
+                       temp = data[1]
+                       mmf_prof = data[2]
+
+                       data_set_temp[i_CO, i_FeH, i_logg, i_eq, i_int, :] = data[1]
+                       data_set_mmf[i_CO, i_FeH, i_logg, i_eq, i_int, :] = data[2]
    f.close() 
 

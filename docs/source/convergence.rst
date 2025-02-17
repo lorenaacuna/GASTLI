@@ -2,6 +2,10 @@
 Convergence
 ===========
 
+.. note::
+
+   Download the full notebook : :download:`here </_static/convergence.ipynb>`
+
 There are a few input parameters that can help ease convergence of the interior-atmosphere coupling algorithm. These are:
 
 - The **radius initial guess** in Earth radii: ``Rguess`` (default value is 11.2 Earth radii)

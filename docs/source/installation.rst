@@ -104,19 +104,19 @@ Next, set the environment variable ``GASTLI_input_data_path`` to your ``.bash_pr
 
 .. code-block:: bash
 
-    echo 'export GASTLI_input_data_path="/Users/acuna/Desktop/gastli_input_data/"' >>~/.bash_profile
+    echo 'export GASTLI_input_data_path="/PATH/TO/YOUR/FOLDER/gastli_input_data/"' >>~/.bash_profile
 
 - **On Linux**: Run the following command in your terminal: 
 
 .. code-block:: bash
 
-    echo 'export GASTLI_input_data_path="/Users/acuna/Desktop/gastli_input_data/"' >>~/.bashrc
+    echo 'export GASTLI_input_data_path="/PATH/TO/YOUR/FOLDER/gastli_input_data/"' >>~/.bashrc
 
 - **On a SLURM system**: Add the following line to your ``.sh`` script: 
 
 .. code-block:: bash
 
-    export GASTLI_input_data_path="/Users/acuna/Desktop/gastli_input_data/"
+    export GASTLI_input_data_path="/PATH/TO/YOUR/FOLDER/gastli_input_data/"
 
 You only need to add this line to your bash profile once.
 
@@ -124,7 +124,7 @@ Alternatively, you can define the environment variable directly within your Pyth
 
 .. code-block:: python
 
-    os.environ['GASTLI_input_data_path']="/Users/acuna/Desktop/gastli_input_data/"
+    os.environ['GASTLI_input_data_path']="/PATH/TO/YOUR/FOLDER/gastli_input_data/"
 
 
 Testing the installation

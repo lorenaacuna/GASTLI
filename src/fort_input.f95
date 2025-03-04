@@ -325,7 +325,7 @@ CONTAINS
   Np = 441
 
  
-  OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/Mazevet_water/EOS_water_mazevet.dat", status='OLD', action = 'READ') 
+  OPEN(UNIT = 158,file=TRIM(ADJUSTL(path_to_file))//"Input/Mazevet_water/EOS_water_Mazevet.dat", status='OLD', action = 'READ') 
 
   READ(158,*) table_mazevet_water
 

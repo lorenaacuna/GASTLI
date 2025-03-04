@@ -1,5 +1,11 @@
 .. :changelog:
 
+1.0.0 (4 March 2025)
+~~~~~~~~~~~~~~~~~~
+
+- Release with final changes from JOSS review
+
+
 0.9.3 (16 December 2024)
 ~~~~~~~~~~~~~~~~~~
 

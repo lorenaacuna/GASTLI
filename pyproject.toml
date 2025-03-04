@@ -9,7 +9,7 @@ requires = [
 
 [project]
 name = "gastli"
-version = "0.9.3"
+version = "1.0.0"
 description = "The GAS gianT modeL for Interiors"
 repository = "https://github.com/lorenaacuna/GASTLI"
 documentation = "https://gastli.readthedocs.io/en/latest/"

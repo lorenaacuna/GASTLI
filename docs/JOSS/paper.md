@@ -12,11 +12,13 @@ authors:
     orcid: 0000-0002-9147-7925
     affiliation: "1" 
   - name: Laura Kreidberg
+    orcid: 0000-0003-0514-1147
     affiliation: "1"
   - name: Meng Zhai
     orcid: 0000-0003-1207-3787
     affiliation: "1,2"
   - name: Paul Mollière
+    orcid: 0000-0003-4096-7067
     affiliation: "1"
   - name: Morgan Fouesneau
     orcid: 0000-0001-9256-5516

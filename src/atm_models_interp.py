@@ -591,7 +591,7 @@ class atm_models_interp:
 
 
 
-    def calc_thickness(self,Rbulk,Matm_earthunits):
+    def calc_thickness(self,Rbulk,Matm_earthunits,Z_atm):
         r'''Calculates thickness of atmosphere
 
         Args:
@@ -629,8 +629,9 @@ class atm_models_interp:
 
         Mbulk =  ( ((g0/100)/9.8) * (Rbulk_inm/Rearth)**2 )  # In Mearth units
 
-        Z = self.MMF_surf
-        mu = Z * 18. + (1 - Z) * 2.33
+
+        #Z = self.MMF_surf
+        mu = Z_atm * 18. + (1 - Z_atm) * 2.33
 
 
 

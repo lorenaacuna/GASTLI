@@ -1,5 +1,10 @@
 .. :changelog:
 
+1.0.1 (15 July 2025)
+~~~~~~~~~~~~~~~~~~
+
+- Fixed bug reported by T. Gisler
+
 1.0.0 (4 March 2025)
 ~~~~~~~~~~~~~~~~~~
 

@@ -45,7 +45,7 @@ class coupling:
 
 
     def main(self,M_P,x_core,Teq,Tint,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
-             tolerance=1e-3,guillot=False,P_surf=1e3):
+             tolerance=1e-3,guillot=False,P_surf=1e3,kappa_IR=0.01,gamma=0.4):
         r"""Function that runs coupled interior-atmosphere model
             ## Output parameters of atmosphere class ##
             To access the output parameters of the atmosphere class, such as the atmospheric thickness or profiles,
@@ -95,6 +95,10 @@ class coupling:
             P_surf:
                 Boundary pressure between interior and atmosphere. Default is 1000 bars. For models with high Tint
                 you may need to decrease it to 9.5 bars (if using the default atm. grid)
+            kappa_IR (float, optional):
+                The infrared opacity in units of :math:`\\rm cm^2/s`. Default is 0.01.
+            gamma (float, optional):
+                The ratio between the visual and infrared opacity. Default is 0.4.
 
         Return:
             Rtot:

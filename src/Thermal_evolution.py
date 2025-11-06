@@ -44,7 +44,7 @@ class thermal_evolution:
 
 
     def main(self,M_P,x_core,Teq,Tint_array,CO=0.55,log_FeH=0.,Zenv=0.03,FeH_flag=True,Tguess=2000.,Rguess=11.2,\
-             tolerance=1e-3,P_surf=1e3,name_grid=None,j_max=30):
+             tolerance=1e-3,guillot=False,P_surf=1e3,kappa_IR=0.01,gamma=0.4,name_grid=None,j_max=30):
         r"""Function that runs a series of interior structure models at different internal temperatures and gets
             the entropies. Necessary to run before solving the luminosity differential equation (thermal evolution).
 
@@ -79,9 +79,15 @@ class thermal_evolution:
                 relative difference in radius between interior-atm. steps. Default is 0.001.
                 If a scalar is provided, it will be that same value across the thermal sequence. If an array, it must be
                 the same size as Tint_array, and its elements will be used in the coupled model one by one.
+            guillot (optional):
+                False if you do not want to use Guillot 2010 atm. profile
             P_surf (optional):
                 Boundary pressure between interior and atmosphere. Default is 1000 bars. For models with high Tint
                 you may need to decrease it to 9.5 bars (if using the default atm. grid)
+            kappa_IR (float, optional):
+                The infrared opacity in units of :math:`\\rm cm^2/s`. Default is 0.01.
+            gamma (float, optional):
+                The ratio between the visual and infrared opacity. Default is 0.4.
             name_grid (optional):
                 name of custom grid (if you do not want to use the default)
             j_max (optional):
@@ -165,11 +171,15 @@ class thermal_evolution:
             if FeH_flag==True:
                 self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
                                       log_FeH=self.logFeH, Tguess=Tguess, Rguess=Rguess,\
-                                      tolerance=tolerance_for_this_run,P_surf=Psurf_for_this_run)
+                                      tolerance=tolerance_for_this_run,
+                                      guillot=guillot,P_surf=Psurf_for_this_run,
+                                      kappa_IR=kappa_IR,gamma=gamma)
             else:
                 self.my_coupling.main(self.M_P, self.x_core, self.Teq, self.Tint_array[i], CO=self.CO,\
                                       FeH_flag=False, Zenv=self.Zenv, Rguess=Rguess,\
-                                      Tguess=Tguess, tolerance=tolerance_for_this_run,P_surf=Psurf_for_this_run)
+                                      Tguess=Tguess, tolerance=tolerance_for_this_run,
+                                      guillot=guillot,P_surf=Psurf_for_this_run,
+                                      kappa_IR=kappa_IR,gamma=gamma)
 
 
             # Entropy

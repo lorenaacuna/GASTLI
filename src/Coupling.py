@@ -271,12 +271,8 @@ class coupling:
         self.Matm_earthunits = Matm/self.Mearth
         self.Mtot = self.M_P + self.Matm_earthunits
         self.CMF_conv = (M_P*x_core)/self.Mtot
-
-        if FeH_flag == True:
-            self.myatmmodel.calc_thickness(self.Rbulk_Rjup,self.Matm_earthunits,Z_atm=self.MMF_surf)
-        else:
-            self.myatmmodel.calc_thickness(self.Rbulk_Rjup, self.Matm_earthunits, Z_atm=self.Zenv)
-
+        
+        self.myatmmodel.calc_thickness(self.Rbulk_Rjup, self.Matm_earthunits, Z_atm=self.Zenv)
 
         self.Rtot = self.myatmmodel.total_radius
         """

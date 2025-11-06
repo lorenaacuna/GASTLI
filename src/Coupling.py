@@ -224,10 +224,10 @@ class coupling:
 
             # Atm model
             if FeH_flag == True:
-                self.myatmmodel.calc_PTprofile(self.Tint,self.g_surf_planet,self.Teq,guillot=guillot,P_surf=P_surf)
+                self.myatmmodel.calc_PTprofile(self.Tint,self.g_surf_planet,self.Teq,guillot=guillot,P_surf=P_surf,kappa_IR=kappa_IR,gamma=gamma)
             else:
-                self.myatmmodel.calc_PTprofile(self.Tint, self.g_surf_planet, self.Teq, self.Zenv, FeH_flag=False,\
-                                               CO_def=self.CO_pl,guillot=guillot,P_surf=P_surf)
+                self.myatmmodel.calc_PTprofile(self.Tint, self.g_surf_planet, self.Teq, self.Zenv, FeH_flag=False,CO_def=self.CO_pl,
+                guillot=guillot,P_surf=P_surf,kappa_IR=kappa_IR,gamma=gamma)
 
             """
             print('Atm. models from prt')

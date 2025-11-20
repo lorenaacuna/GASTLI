@@ -431,7 +431,7 @@ class atm_models_interp:
 
 
 
-    def calc_PTprofile(self,Tint,g_surf,Teq,Zenv=0.03,FeH_flag=True,CO_def=0.55,guillot=False,P_surf=1e3):
+    def calc_PTprofile(self,Tint,g_surf,Teq,Zenv=0.03,FeH_flag=True,CO_def=0.55,guillot=False,P_surf=1e3,kappa_IR=0.01,gamma=0.4):
         r'''Calculation of pressure-temperature atmospheric profile by interpolating the grid of data of
             atmospheric models
 
@@ -452,6 +452,16 @@ class atm_models_interp:
                 (appendix A1) to interpolate the PT profiles from atmospheric grid
             Zenv (optional):
                 atmospheric metal mass fraction (for FeH_flag = False). Default value is 0.03.
+            guillot (optional):
+                False if you do not want to use Guillot 2010 atm. profile
+            P_surf:
+                Boundary pressure between interior and atmosphere. Default is 1000 bars.
+                For models with high Tint you may need to decrease it to 9.5 bars 
+                (if using the default atm. grid)
+            kappa_IR (float, optional):
+                The infrared opacity in units of :math:`\\rm cm^2/s`. Default is 0.01.
+            gamma (float, optional):
+                The ratio between the visual and infrared opacity. Default is 0.4.
 
         Returns:
             Pprofile:
@@ -529,9 +539,6 @@ class atm_models_interp:
         '''
 
         if guillot==True:
-            kappa_IR = 0.01
-            gamma = 0.4
-
             gravity = 1e1 ** logg_pl
 
             Guillot10_model = Guillot10.guillot_global(self.press_atm, kappa_IR, gamma, gravity,\

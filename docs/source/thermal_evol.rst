@@ -44,7 +44,7 @@ To obtain the internal temperature (or luminosity) and radius as a function of a
    data[:,3] = my_therm_obj.Tint_array
    data[:,4] = my_therm_obj.Rtot_TE*Rjup
    data[:,5] = my_therm_obj.Rbulk_TE*Rjup
-   data[:,6] = my_therm_obj.Tsurf_TE*Rjup
+   data[:,6] = my_therm_obj.Tsurf_TE
    fmt = '%1.4e','%1.4e','%1.4e','%1.4e','%1.4e','%1.4e','%1.4e'
    np.savetxt('thermal_sequence_HATP26b_CMF50_20xsolar.dat', data,header='f_S s_mean_TE s_top_TE Tint Rtot Rbulk    Tsurf',comments='',fmt=fmt)
 

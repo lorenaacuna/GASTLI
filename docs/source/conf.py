@@ -7,7 +7,7 @@ copyright = '2024, Acuña'
 author = 'Acuña'
 
 release = '1.0'
-version = '1.0.0'
+version = '1.0.2'
 
 # -- General configuration
 

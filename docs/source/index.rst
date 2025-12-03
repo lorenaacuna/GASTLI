@@ -3,6 +3,7 @@ GASTLI: The GAS gianT modeL for Interiors
 =========================================
 
 Welcome to the **GASTLI** documentation! GASTLI is a user-friendly Python package developed to support both observers and expert modelers in modeling of exoplanet interiors with volatile-rich envelopes. 
+THIS IS A TEST
 
 Key features:
 =============

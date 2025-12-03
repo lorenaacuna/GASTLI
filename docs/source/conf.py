@@ -25,7 +25,7 @@ autoapi_dirs = ['../../src']
 
 autosummary_generate = True
 # start: suggested by chatgpt
-#autoapi_root = 'autoapi'              # default, but good to be explicit
+autoapi_root = 'autoapi'              # default, but good to be explicit
 autoapi_add_toctree_entry = False     # don't auto-insert into TOC
 autoapi_keep_files = True
 # end

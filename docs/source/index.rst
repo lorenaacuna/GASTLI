@@ -58,6 +58,7 @@ Contents
 
    test_suite
    contributing
+   api
    
    
 

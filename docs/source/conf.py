@@ -23,6 +23,8 @@ extensions = [
 autoapi_type = 'python'
 autoapi_dirs = ['../../src']
 
+autosummary_generate = True
+
 html_logo = "gastli_logo_readthedocs.png"
 
 intersphinx_mapping = {
